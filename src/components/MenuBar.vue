@@ -28,7 +28,6 @@
             v-on:mouseover="ValidationIcon ='big'" v-on:mouseleave="ValidationIcon ='big disabled'" :class="ValidationIconStatus"></i>
         </form>
         
-        <p>Ici ma page home quant je ne suis pas loger</p>
     </div>
 </template>
 
