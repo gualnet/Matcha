@@ -96,7 +96,55 @@ func (m *Models) Insert(cond map[string]string) {
 	
 	sqlReq := "INSERT INTO " + m.TableName + " ("
 	sqlReq = sqlReq + strings.Join(column, ", ") + ") VALUES ("
-	sqlReq = sqlReq + strings.Join(value, ", ") + ")"
+	sqlReq = sqlReq + strings.Join(value, ", ") + ");"
+	fmt.Println(sqlReq)
+
+	stmt, err := m.DbConnexion.Prepare(sqlReq)
+	checkErr(err)
+	_, err = stmt.Exec()
+	checkErr(err)
+}
+
+func (m *Models) Update(condSet, condWhere map[string]string) {
+	// println(m.DbConnexion)
+	m.initDbConn()
+	// println(m.DbConnexion)
+
+	var setSlc []string
+	var whereSlc []string
+	for key, val := range condSet {
+		setSlc = append(setSlc, "`"+key+"`='"+val+"'")
+	}
+	// fmt.Println("set:", setSlc)
+	for key, val := range condWhere {
+		whereSlc = append(whereSlc, "`"+key+"`='"+val+"'")
+	}
+	// fmt.Println("where:", whereSlc)
+	
+	sqlReq := "UPDATE " + m.TableName + " SET "
+	sqlReq = sqlReq + strings.Join(setSlc, ", ") + " WHERE "
+	sqlReq = sqlReq + strings.Join(whereSlc, ", ") + ";"
+	fmt.Println(sqlReq)
+
+	stmt, err := m.DbConnexion.Prepare(sqlReq)
+	checkErr(err)
+	_, err = stmt.Exec()
+	checkErr(err)
+}
+
+func (m *Models) Delete(cond map[string]string) {
+	// println(m.DbConnexion)
+	m.initDbConn()
+	// println(m.DbConnexion)
+
+	var champsSlc []string
+	for key, val := range cond {
+		champsSlc = append(champsSlc, "`"+key+"`='"+val+"'")
+	}
+	fmt.Println(champsSlc)
+	
+	sqlReq := "DELETE FROM " + m.TableName + " WHERE "
+	sqlReq = sqlReq + strings.Join(champsSlc, " AND ") + ";"
 	fmt.Println(sqlReq)
 
 	stmt, err := m.DbConnexion.Prepare(sqlReq)

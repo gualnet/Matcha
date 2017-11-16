@@ -20,23 +20,30 @@ func main() {
 	var host string
 	var port string
 
-	// var conditions = map[string]string{
-	// 	// "UserId": "3",
-	// 	"login": "test",
-	// }
 	var conditions = map[string]string{
-		"login": 		"testInsert",
-		"Age": 			"26",
-		"FirstName": 	"test",
-		"LastName":		"Insert",
+		"UserId": "3",
+		// "login": "test",
 	}
+	// var condS = map[string]string{
+	// 	"login": 		"testUpdate",
+	// 	"Age": 			"62",
+	// 	"FirstName": 	"test_updated",
+	// 	"LastName":		"Insert_updated",
+	// 	"Orientation":	"Bi",
+	// 	"Gender": 		"Female",
+	// }
+	// var condW = map[string]string{
+	// 	"UserId": "3",
+	// }
 
 	var userModel models.Models
 	userModel.TableName = "Users"
 
 	// userModel.FindAll()
 	// userModel.FindWhere(conditions)
-	userModel.Insert(conditions)
+	// userModel.Insert(conditions)
+	// userModel.Update(condS, condW)
+	userModel.Delete(conditions)
 	
 
 	os.Exit(0)
