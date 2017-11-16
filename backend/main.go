@@ -6,13 +6,13 @@ import (
 	"os"
 	"time"
 	"flag"
-	// "database/sql"
 	"log"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 
-	models "matcha/models"
+	// myModels "matcha/models"
+	myHandlers "matcha/handlers"
 )
 
 func main() {
@@ -20,10 +20,10 @@ func main() {
 	var host string
 	var port string
 
-	var conditions = map[string]string{
-		"UserId": "3",
-		// "login": "test",
-	}
+	// var conditions = map[string]string{
+	// 	"UserId": "3",
+	// 	// "login": "test",
+	// }
 	// var condS = map[string]string{
 	// 	"login": 		"testUpdate",
 	// 	"Age": 			"62",
@@ -36,17 +36,16 @@ func main() {
 	// 	"UserId": "3",
 	// }
 
-	var userModel models.Models
-	userModel.TableName = "Users"
+	// var userModel myModels.Models
+	// userModel.TableName = "Users"
 
 	// userModel.FindAll()
 	// userModel.FindWhere(conditions)
 	// userModel.Insert(conditions)
 	// userModel.Update(condS, condW)
-	userModel.Delete(conditions)
+	// userModel.Delete(conditions)
 	
 
-	os.Exit(0)
 	// flag.StringVar(&entry, "entry", "./index.html", "the entrypoint to serve.")
 	// flag.StringVar(&static, "static", ".", "the directory to serve static files from.")
 	flag.StringVar(&host, "host", "127.0.0.1:", "the `host` to listen on.")
@@ -73,7 +72,8 @@ func main() {
 	r.PathPrefix("/static/js/").HandlerFunc(distJsHandler())
 	r.PathPrefix("/src").HandlerFunc(distSrcHandler())
 	
-	r.PathPrefix("/signin").HandlerFunc(signinHandler())
+	r.PathPrefix("/signin").HandlerFunc(myHandlers.SigninHandler())
+	
 	
 	// Catch-all: Serve our JavaScript application's entry-point (index.html).
 	r.PathPrefix("/").HandlerFunc(indexHandler("./dist/index.html"))
@@ -87,25 +87,6 @@ func main() {
 	}
 	
 	log.Fatal(srv.ListenAndServe())
-}
-
-func signinHandler () func (w http.ResponseWriter, r *http.Request) {
-	fn := func (w http.ResponseWriter, r *http.Request) {
-		fmt.Println("signinHandler")	
-		fmt.Println("method: " + r.Method)
-		
-			if r.Method == "POST" {
-				r.ParseForm()
-				fmt.Println(r.Form)
-				fmt.Println("username", r.Form["login"])
-				fmt.Println("password", r.Form["password"])
-				http.ServeFile(w, r, "./validate.html")
-			} else if r.Method == "GET" {
-				r.ParseForm()
-				fmt.Println(r.Form)
-			}
-	}
-	return http.HandlerFunc(fn)
 }
 
 func distJsHandler() func(w http.ResponseWriter, r *http.Request){
