@@ -66,15 +66,14 @@ func main() {
 	// Optional: Use a custom 404 handler for our API paths.
 	// api.NotFoundHandler = JSONNotFound
 
+	
+	// Serve my routes
+	r.PathPrefix("/signin").HandlerFunc(myHandlers.SigninHandler())
+	
 	// Serve static assets directly.
-	// r.PathPrefix("/dist/static").Handler(http.FileServer(http.Dir(static)))
 	r.PathPrefix("/static/css/").HandlerFunc(distCssHandler())
 	r.PathPrefix("/static/js/").HandlerFunc(distJsHandler())
 	r.PathPrefix("/src").HandlerFunc(distSrcHandler())
-	
-	r.PathPrefix("/signin").HandlerFunc(myHandlers.SigninHandler())
-	
-	
 	// Catch-all: Serve our JavaScript application's entry-point (index.html).
 	r.PathPrefix("/").HandlerFunc(indexHandler("./dist/index.html"))
 

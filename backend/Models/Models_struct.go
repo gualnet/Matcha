@@ -4,7 +4,8 @@ import (
 	"strings"
 	"fmt"
 	"database/sql"
-	// "text/template"
+
+	myStructs "matcha/Structs"
 )
 
 type Models struct {
@@ -16,42 +17,14 @@ type Models struct {
 func (m *Models) initDbConn() {
 	m.dbDsn = "root:root@tcp(localhost:8889)/db_matcha"
 	if m.DbConnexion == nil {
-		fmt.Println("VUUUUUU")
+		fmt.Println("user model init db link")
 		dbConn, err := sql.Open("mysql", m.dbDsn)
 		checkErr(err)
 		m.DbConnexion = dbConn
 	}
 }
 
-func (m *Models) FindAll() {
-	// println(m.DbConnexion)
-	m.initDbConn()
-	// println(m.DbConnexion)
-
-	sqlReq := "SELECT * FROM " + m.TableName
-	fmt.Println("My request [" + sqlReq + "]")
-
-
-	stmt, err := m.DbConnexion.Prepare(sqlReq)
-	checkErr(err)
-	fmt.Println("Statement: ")
-	fmt.Println(stmt)
-	
-	// result, err := stmt.Exec()
-	result, err := stmt.Query()
-	fmt.Println("Result: ")
-	// fmt.Println(result.Next())
-	for result.Next() {
-		var UserId int
-		var Login, Password, FirstName, LastName, Mail, Gender, Orientation	string
-
-		err := result.Scan(&UserId, &Login, &Password, &FirstName, &LastName, &Mail, &Gender, &Orientation)
-		checkErr(err)
-		fmt.Println(UserId, Login, Password, FirstName, LastName, Mail, Gender, Orientation)
-	}
-}
-
-func (m *Models) FindWhere(cond map[string]string ) {
+func (m *Models) FindWhere(cond map[string]string ) ([]myStructs.UserInfo) {
 	// println(m.DbConnexion)
 	m.initDbConn()
 	// println(m.DbConnexion)
@@ -60,8 +33,8 @@ func (m *Models) FindWhere(cond map[string]string ) {
 	var champsSlc []string
 	for key, val := range cond {
 		champsSlc = append(champsSlc, "`"+key+"`='"+val+"'")
-		// fmt.Println(champsSlc)
 	}
+	// fmt.Println(champsSlc)
 	sqlReq = sqlReq + strings.Join(champsSlc, " AND ")
 	fmt.Println(sqlReq)
 	
@@ -69,14 +42,14 @@ func (m *Models) FindWhere(cond map[string]string ) {
 	checkErr(err)
 	result, err := stmt.Query()
 	checkErr(err)
+	var resultsContent []myStructs.UserInfo
 	for result.Next() {
-		var UserId int
-		var Login, Password, FirstName, LastName, Age, Mail, Gender, Orientation	string
-		
-		err := result.Scan(&UserId, &Login, &Password, &FirstName, &LastName, &Age, &Mail, &Gender, &Orientation)
+		var UsrInfo myStructs.UserInfo
+		err := result.Scan(&UsrInfo.UserId, &UsrInfo.Login, &UsrInfo.Password, &UsrInfo.FirstName, &UsrInfo.LastName, &UsrInfo.Age, &UsrInfo.Mail, &UsrInfo.Gender, &UsrInfo.Orientation)
 		checkErr(err)
-		fmt.Println(UserId, Login, Password, FirstName, LastName, Age, Mail, Gender, Orientation)
+		resultsContent = append(resultsContent, UsrInfo)
 	}
+	return resultsContent
 }
 
 func (m *Models) Insert(cond map[string]string) {
@@ -141,7 +114,7 @@ func (m *Models) Delete(cond map[string]string) {
 	for key, val := range cond {
 		champsSlc = append(champsSlc, "`"+key+"`='"+val+"'")
 	}
-	fmt.Println(champsSlc)
+	// fmt.Println(champsSlc)
 	
 	sqlReq := "DELETE FROM " + m.TableName + " WHERE "
 	sqlReq = sqlReq + strings.Join(champsSlc, " AND ") + ";"
@@ -159,3 +132,38 @@ func checkErr(err error) {
 		panic(err)
 	}
 }
+
+// func (m *Models) FindAll() ([]myStructs.UserInfo) {
+// 	// println(m.DbConnexion)
+// 	m.initDbConn()
+// 	// println(m.DbConnexion)
+
+// 	sqlReq := "SELECT * FROM " + m.TableName
+// 	fmt.Println("My request [" + sqlReq + "]")
+
+
+// 	stmt, err := m.DbConnexion.Prepare(sqlReq)
+// 	checkErr(err)
+// 	fmt.Println("Statement: ")
+// 	fmt.Println(stmt)
+	
+// 	// result, err := stmt.Exec()
+// 	result, err := stmt.Query()
+// 	fmt.Println("Result: ")
+// 	// fmt.Println(result.Next())
+// 	var resultsContent []myStructs.UserInfo
+// 	for result.Next() {
+// 		// var UserId int
+// 		// var Login, Password, FirstName, LastName, Mail, Gender, Orientation	string
+
+// 		// err := result.Scan(&UserId, &Login, &Password, &FirstName, &LastName, &Mail, &Gender, &Orientation)
+// 		// checkErr(err)
+// 		// fmt.Println(UserId, Login, Password, FirstName, LastName, Mail, Gender, Orientation)
+// 		var UsrInfo myStructs.UserInfo
+// 		err := result.Scan(&UsrInfo.UserId, &UsrInfo.Login, &UsrInfo.Password, &UsrInfo.FirstName, &UsrInfo.LastName, &UsrInfo.Age, &UsrInfo.Mail, &UsrInfo.Gender, &UsrInfo.Orientation)
+// 		checkErr(err)
+// 		resultsContent = append(resultsContent, UsrInfo)
+// 		fmt.Println("GOOOD")
+// 	}
+// 	return resultsContent
+// }
