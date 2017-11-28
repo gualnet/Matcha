@@ -1,9 +1,16 @@
 class UserStore {
-
-    constructor () {
-        console.log("Init User Store")
-        this.loginId = none;
-        this.login = none;
+    
+    constructor(){
+        this.states = {
+            logState: false,
+        }
     }
 
+    setState(newValue) {
+        console.log("Setting new user state value to" + newValue, "##00FF50")
+        this.states.logState = newValue
+
+    }
 }
+
+export default new UserStore()

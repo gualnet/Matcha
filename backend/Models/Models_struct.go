@@ -19,7 +19,7 @@ func (m *Models) initDbConn() {
 	if m.DbConnexion == nil {
 		fmt.Println("user model init db link")
 		dbConn, err := sql.Open("mysql", m.dbDsn)
-		checkErr(err)
+		checkErr(err, "001")
 		m.DbConnexion = dbConn
 	}
 }
@@ -28,27 +28,36 @@ func (m *Models) FindWhere(cond map[string]string ) ([]myStructs.UserInfo) {
 	// println(m.DbConnexion)
 	m.initDbConn()
 	// println(m.DbConnexion)
-
+	
 	sqlReq := "SELECT * FROM " + m.TableName + " WHERE "
 	var champsSlc []string
 	for key, val := range cond {
-		champsSlc = append(champsSlc, "`"+key+"`='"+val+"'")
+		champsSlc = append(champsSlc, key+"='"+val+"'")
 	}
 	// fmt.Println(champsSlc)
 	sqlReq = sqlReq + strings.Join(champsSlc, " AND ")
 	fmt.Println(sqlReq)
 	
 	stmt, err := m.DbConnexion.Prepare(sqlReq)
-	checkErr(err)
+	checkErr(err, "002")
+	if stmt == nil {
+		return nil
+	}
 	result, err := stmt.Query()
-	checkErr(err)
+	checkErr(err, "002b")
+	if err != nil {
+		return nil
+	}
 	var resultsContent []myStructs.UserInfo
 	for result.Next() {
 		var UsrInfo myStructs.UserInfo
 		err := result.Scan(&UsrInfo.UserId, &UsrInfo.Login, &UsrInfo.Password, &UsrInfo.FirstName, &UsrInfo.LastName, &UsrInfo.Age, &UsrInfo.Mail, &UsrInfo.Gender, &UsrInfo.Orientation)
-		checkErr(err)
+		fmt.Println(UsrInfo)
+		checkErr(err, "003")
 		resultsContent = append(resultsContent, UsrInfo)
 	}
+
+	fmt.Println("-->", resultsContent)
 	return resultsContent
 }
 
@@ -73,9 +82,9 @@ func (m *Models) Insert(cond map[string]string) {
 	fmt.Println(sqlReq)
 
 	stmt, err := m.DbConnexion.Prepare(sqlReq)
-	checkErr(err)
+	checkErr(err, "004")
 	_, err = stmt.Exec()
-	checkErr(err)
+	checkErr(err, "005")
 }
 
 func (m *Models) Update(condSet, condWhere map[string]string) {
@@ -100,9 +109,9 @@ func (m *Models) Update(condSet, condWhere map[string]string) {
 	fmt.Println(sqlReq)
 
 	stmt, err := m.DbConnexion.Prepare(sqlReq)
-	checkErr(err)
+	checkErr(err, "006")
 	_, err = stmt.Exec()
-	checkErr(err)
+	checkErr(err, "007")
 }
 
 func (m *Models) Delete(cond map[string]string) {
@@ -121,15 +130,17 @@ func (m *Models) Delete(cond map[string]string) {
 	fmt.Println(sqlReq)
 
 	stmt, err := m.DbConnexion.Prepare(sqlReq)
-	checkErr(err)
+	checkErr(err, "008")
 	_, err = stmt.Exec()
-	checkErr(err)
+	checkErr(err, "009")
 }
 
-func checkErr(err error) {
+func checkErr(err error, errRef string) {
 	if err != nil {
-		fmt.Println("YA UNE ERREUR -> Model_struct!")
-		panic(err)
+		fmt.Println("YA UNE ERREUR [" + errRef + "]-> Model_struct!")
+		if errRef != "002" {
+			panic(err)
+		}
 	}
 }
 

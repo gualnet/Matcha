@@ -1,7 +1,6 @@
 <template>
 
     <div class="container FormSignup">
-        Ici mon signup form
 
         <form action="NOACTION" class="ui form signup">
             <div class="fields">

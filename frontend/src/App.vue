@@ -1,9 +1,10 @@
+
 <template>
 
   <div id="app">
-
+    
     <router-view name="menubar"/>
-    <router-view name="formsignup"/>
+    
     <router-view/>
 
   </div>
@@ -14,7 +15,10 @@
 <script>
 
 export default {
-  name: 'app'
+  name: 'app',
+
+
 }
+
 
 </script>
