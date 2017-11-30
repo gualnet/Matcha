@@ -70,6 +70,8 @@ func main() {
 	// Serve my routes
 	r.PathPrefix("/api/signin").HandlerFunc(myHandlers.SigninHandler())
 	r.PathPrefix("/api/signup").HandlerFunc(myHandlers.SignupHandler())
+	r.PathPrefix("/api/authconf").HandlerFunc(myHandlers.AuthConfHandler())
+
 	
 	// Serve static assets directly.
 	r.PathPrefix("/static/css/").HandlerFunc(distCssHandler())

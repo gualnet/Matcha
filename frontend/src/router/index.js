@@ -7,6 +7,8 @@ import ProfilView from '@/views/profilView'
 import MenuBar from '@/components/MenuBar'
 import StoredMenuBar from '@/components/StoredMenuBar'
 import FormSignup from '@/components/FormSignup'
+import MailValidation from '@/components/mailValidation'
+
 
 
 
@@ -44,6 +46,13 @@ export default new Router({
       components: {
         default: ProfilView,
         menubar: MenuBar,
+      }
+    },
+
+    {
+      path: "/mailvalidation/:token",
+      components: {
+        default: MailValidation,
       }
     },
     

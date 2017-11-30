@@ -2,6 +2,7 @@
 
 <div class="container" id="HomeWrapper">
     <h2>HOME PAGE</h2>
+    {{this.$userStore.states.logState}}
 
     <div class="container FormSignup" v-bind:class="{ invisible: loginState }">
 
@@ -89,7 +90,7 @@ export default {
                 this.getUrl = "http://127.0.0.1:8000/api/signup/" + this.inpFName + "/" +
                 this.inpLName + "/" + this.inpLogin + "/" + this.inpMail + "/" + this.inpPwd;
 
-                axios.post(this.getUrl)
+                axios.put(this.getUrl)
                 .then(response => {
                     if(response.data != null) {
                         console.log("check error: " + response.data);

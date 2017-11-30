@@ -5,6 +5,7 @@ import (
 
 type UserInfo struct {
 	UserId		uint
+	UserToken	string
 	Login		string
 	Password	string
 	FirstName	string

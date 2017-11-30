@@ -51,7 +51,7 @@ func (m *Models) FindWhere(cond map[string]string ) ([]myStructs.UserInfo) {
 	var resultsContent []myStructs.UserInfo
 	for result.Next() {
 		var UsrInfo myStructs.UserInfo
-		err := result.Scan(&UsrInfo.UserId, &UsrInfo.Login, &UsrInfo.Password, &UsrInfo.FirstName, &UsrInfo.LastName, &UsrInfo.Age, &UsrInfo.Mail, &UsrInfo.Gender, &UsrInfo.Orientation)
+		err := result.Scan(&UsrInfo.UserId, &UsrInfo.UserToken, &UsrInfo.Login, &UsrInfo.Password, &UsrInfo.FirstName, &UsrInfo.LastName, &UsrInfo.Age, &UsrInfo.Mail, &UsrInfo.Gender, &UsrInfo.Orientation)
 		fmt.Println(UsrInfo)
 		checkErr(err, "003")
 		resultsContent = append(resultsContent, UsrInfo)
