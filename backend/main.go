@@ -20,34 +20,6 @@ func main() {
 	var host string
 	var port string
 
-	// var conditions = map[string]string{
-	// 	"UserId": "3",
-	// 	// "login": "test",
-	// }
-	// var condS = map[string]string{
-	// 	"login": 		"testUpdate",
-	// 	"Age": 			"62",
-	// 	"FirstName": 	"test_updated",
-	// 	"LastName":		"Insert_updated",
-	// 	"Orientation":	"Bi",
-	// 	"Gender": 		"Female",
-	// }
-	// var condW = map[string]string{
-	// 	"UserId": "3",
-	// }
-
-	// var userModel myModels.Models
-	// userModel.TableName = "Users"
-
-	// userModel.FindAll()
-	// userModel.FindWhere(conditions)
-	// userModel.Insert(conditions)
-	// userModel.Update(condS, condW)
-	// userModel.Delete(conditions)
-	
-
-	// flag.StringVar(&entry, "entry", "./index.html", "the entrypoint to serve.")
-	// flag.StringVar(&static, "static", ".", "the directory to serve static files from.")
 	flag.StringVar(&host, "host", "127.0.0.1:", "the `host` to listen on.")
 	flag.StringVar(&port, "port", "8000", "the `port` to listen on.")
 	flag.Parse()
@@ -67,6 +39,7 @@ func main() {
 	// api.NotFoundHandler = JSONNotFound
 
 	
+
 	// Serve my routes
 	r.PathPrefix("/api/signin").HandlerFunc(myHandlers.SigninHandler())
 	r.PathPrefix("/api/signup").HandlerFunc(myHandlers.SignupHandler())
@@ -141,7 +114,10 @@ func distSrcHandler() func(w http.ResponseWriter, r *http.Request){
 }
 
 func indexHandler(entrypoint string) func(w http.ResponseWriter, r *http.Request) {
-	// fmt.Println("DistSrcHandler")	
+	// fmt.Println("DistSrcHandler")
+	
+	//start user sessions
+	
 	fn := func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("service de index.html")
 		http.ServeFile(w, r, entrypoint)

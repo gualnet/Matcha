@@ -47,21 +47,21 @@ import Vuex from 'vuex'
 import { mapGetters, mapActions } from 'vuex'
 
 import store from '../stores'
+import cookieManager from '../classes/CookieManager_class'
+var cookie = new cookieManager();
 
 export default {
 
     data: function () {
         return {
-            // state: userStore.states,
             userInfo: null,
-            // getUrl: "",
+            // loginState: false,
 
             // //for modal view
             isModalShow: false,
             // //for btn
             isGreen: false,
             isRed: false,
-
             // //login form data
             inpLogin: null,
             inpPwd: null,
@@ -72,27 +72,25 @@ export default {
     computed: {
 
         ...Vuex.mapGetters([
-            'getUser',
-            'getUserLogState',
+            'getCookieState',
+            'getCookieToken',
         ]),
-        
-        loginState: function() {
-            console.log("CALL to computed login state")
-            console.log("result: " + store.getters.getUserLogState)
-            return store.getters.getUserLogState
-        }
+
+        loginState: function(){
+            if(store.getters.getCookieState)
+                return true;
+            return false;
+        },
+
     },
 
     methods: {
 
         ...Vuex.mapActions([
-            'setLogState',
+            'setCookieState',
+            'setCookieToken',
         ]),
 
-        changeLogState () { 
-            console.log("COUCOU-> " + this.loginState)
-            
-        },
         showLoginForm () {
             console.log("ShowLoginForm")
             this.isModalShow = true;
@@ -114,10 +112,11 @@ export default {
                     if(response.data != null) {
                         this.userInfo = response.data[0];
                         this.isModalShow = false;
-                        store.dispatch('setLogState', true)
+                        store.dispatch("setCookieState", true)
+                        store.dispatch("setCookieToken", response.data[0].UserToken)
                     }
                 })
-                console.log("userInfo: " + this.userInfo)
+                // console.log("111userInfo: " + this.userInfo)
                 console.log("%cLog: End submitCreds()", "color: #F000FF")
             }
             else {
@@ -127,13 +126,10 @@ export default {
             this.inpPwd = null;
         },
         setToLogout() {
-            store.dispatch('setLogState', false)
+            store.dispatch("setCookieState", false)
         }
     },
-    
-    // watch: {
-       
-    // },
+
 }
 
 // #-----#-----#-----#-----#-----#

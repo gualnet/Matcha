@@ -50,12 +50,13 @@
 <script>
 import axios from 'axios'
 import Vuex from 'vuex'
-import { mapGetters, mapActions } from 'vuex' 
+import { mapGetters, mapActions } from 'vuex'
 
 import store from '../stores'
+import cookieManager from '../classes/CookieManager_class'
+var cookie = new cookieManager();
 
 export default {
-
 
     data: function () {
         return {
@@ -75,20 +76,21 @@ export default {
     computed: {
 
         ...Vuex.mapGetters([
-            'getUser',
-            'getUserLogState',
+            'getCookieState',
+            'getCookieToken',
         ]),
         
-        loginState: function() {
-            console.log("CALL to computed login state")
-            console.log("result: " + store.getters.getUserLogState)
-            return store.getters.getUserLogState
-        }
+        loginState: function(){
+            if(store.getters.getCookieState)
+                return true;
+            return false;
+        },
     },
     methods: {
 
         ...Vuex.mapActions([
-            'setLogState',
+            'setCookieState',
+            'setCookieToken',
         ]),
 
         submitSup: function() {
@@ -114,7 +116,6 @@ export default {
                             console.log("BINGO002")
                         }
                     }
-                    
                 })
             }
         },
