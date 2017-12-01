@@ -5,14 +5,7 @@ import HomeView from '@/views/homeView'
 import ProfilView from '@/views/profilView'
 
 import MenuBar from '@/components/MenuBar'
-import StoredMenuBar from '@/components/StoredMenuBar'
-import FormSignup from '@/components/FormSignup'
 import MailValidation from '@/components/mailValidation'
-
-
-
-
-
 
 Vue.use(Router)
 

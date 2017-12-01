@@ -26,7 +26,7 @@ export default {
                 } else {
                     // alert("your account is active")
 
-                    this.$userStore.setState = true;
+                    // this.$userStore.setState = true;
                     document.location.href = "/home"
                 }
             }

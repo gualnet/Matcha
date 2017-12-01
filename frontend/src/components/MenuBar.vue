@@ -2,7 +2,7 @@
 
     <div id="menuWrapper">
         
-        {{ loginState }}
+        <pre>component MenuBar: loginState[{{ loginState }}]</pre>
         <div class="ui five item menu" id="menubar">
             <router-link to="/home" class="item">Home</router-link>
             <router-link to="/profil" class="item">Profile</router-link>
@@ -43,18 +43,16 @@
 
 <script>
 import axios from 'axios'
-import userStore from '@/stores/UserStore'
+import Vuex from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
+import store from '../stores'
 
 export default {
 
-    // props: function () {
-        
-    // }
-    
     data: function () {
         return {
-            state: userStore.states,
+            // state: userStore.states,
             userInfo: null,
             // getUrl: "",
 
@@ -71,7 +69,26 @@ export default {
         }
     },
 
+    computed: {
+
+        ...Vuex.mapGetters([
+            'getUser',
+            'getUserLogState',
+        ]),
+        
+        loginState: function() {
+            console.log("CALL to computed login state")
+            console.log("result: " + store.getters.getUserLogState)
+            return store.getters.getUserLogState
+        }
+    },
+
     methods: {
+
+        ...Vuex.mapActions([
+            'setLogState',
+        ]),
+
         changeLogState () { 
             console.log("COUCOU-> " + this.loginState)
             
@@ -97,6 +114,7 @@ export default {
                     if(response.data != null) {
                         this.userInfo = response.data[0];
                         this.isModalShow = false;
+                        store.dispatch('setLogState', true)
                     }
                 })
                 console.log("userInfo: " + this.userInfo)
@@ -108,35 +126,14 @@ export default {
             this.inpLogin = null;
             this.inpPwd = null;
         },
-        setToLogin() {
-            userStore.setState(true)
-        },
         setToLogout() {
-            userStore.setState(false)
+            store.dispatch('setLogState', false)
         }
     },
     
-    watch: {
-        userInfo: function() {
-            console.log("WATCH USERINFO:" + this.userInfo)
-            if(this.userInfo != null)
-            {
-                console.log("%clog : SignIn OK", "color: #F000FF")
-                // console.log("-->" + this.userInfo.LastName)
-                // userStore.state = true;
-                this.setToLogin();                
-                // this.isModalShow =/ false;
-            }
-        },
-    },
-
-    computed: {
-        loginState: function() {
-            console.log("computed loginstate")
-            return this.state.logState
-        }
-    }
-
+    // watch: {
+       
+    // },
 }
 
 // #-----#-----#-----#-----#-----#

@@ -2,8 +2,7 @@
 
 <div class="container" id="HomeWrapper">
     <h2>HOME PAGE</h2>
-    {{this.$userStore.states.logState}}
-
+    <pre>component homeView: loginState[{{ loginState }}]</pre>
     <div class="container FormSignup" v-bind:class="{ invisible: loginState }">
 
         <form action="NOACTION" class="ui form signup">
@@ -50,14 +49,16 @@
 
 <script>
 import axios from 'axios'
-import userStore from '@/stores/UserStore'
+import Vuex from 'vuex'
+import { mapGetters, mapActions } from 'vuex' 
+
+import store from '../stores'
 
 export default {
+
+
     data: function () {
         return {
-            usrStates: userStore.states,
-
-
             //form inputs
             inpFName: null,
             inpLName: null,
@@ -72,12 +73,25 @@ export default {
         }
     },
     computed: {
-        loginState: function () {
-            return this.usrStates.logState
+
+        ...Vuex.mapGetters([
+            'getUser',
+            'getUserLogState',
+        ]),
+        
+        loginState: function() {
+            console.log("CALL to computed login state")
+            console.log("result: " + store.getters.getUserLogState)
+            return store.getters.getUserLogState
         }
     },
     methods: {
-        submitSup: function () {
+
+        ...Vuex.mapActions([
+            'setLogState',
+        ]),
+
+        submitSup: function() {
             console.log("Call SubmitSup")
             console.log(this.inpFName, this.inpLName, this.inpLogin, this.inpMail, this.inpPwd)
             if(this.inpFName == "" || this.inpFName == "" ||
@@ -100,9 +114,10 @@ export default {
                             console.log("BINGO002")
                         }
                     }
+                    
                 })
             }
-        }
+        },
     },
 
 }
