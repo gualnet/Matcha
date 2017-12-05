@@ -44,6 +44,7 @@ func main() {
 	r.PathPrefix("/api/signin").HandlerFunc(myHandlers.SigninHandler())
 	r.PathPrefix("/api/signup").HandlerFunc(myHandlers.SignupHandler())
 	r.PathPrefix("/api/authconf").HandlerFunc(myHandlers.AuthConfHandler())
+	r.PathPrefix("/api/rstpwd").HandlerFunc(myHandlers.RstPwdHandler())
 
 	
 	// Serve static assets directly.

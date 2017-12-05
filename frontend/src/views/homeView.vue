@@ -5,7 +5,7 @@
     <pre>component homeView: loginState[{{ loginState }}]</pre>
     <div class="container FormSignup" v-bind:class="{ invisible: loginState }">
 
-        <form action="NOACTION" class="ui form signup">
+        <form action="" class="ui form signup">
             <div class="fields">
 
                 <div class="field">

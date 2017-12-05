@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 import HomeView from '@/views/homeView'
 import ProfilView from '@/views/profilView'
+import RstPwdView from '@/views/rstpwdView'
 
 import MenuBar from '@/components/MenuBar'
 import MailValidation from '@/components/mailValidation'
@@ -46,6 +47,13 @@ export default new Router({
       path: "/mailvalidation/:token",
       components: {
         default: MailValidation,
+      }
+    },
+    
+    {
+      path: "/rstpwd/:token",
+      components: {
+        default: RstPwdView,
       }
     },
     

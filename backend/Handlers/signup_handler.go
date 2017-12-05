@@ -100,7 +100,7 @@ func sendConfirmMail(to string, body string) {
 	fmt.Println("start func msg send")
 	var userModel myModels.Models
 	userModel.TableName = "Users"
-	cond := map[string]string{
+	cond := map[string]string {
 		"FirstName":	"mailer",
 		"LastName":		"mailer",
 		"Login":		"guillaume.aly@gmail.com",
@@ -109,7 +109,7 @@ func sendConfirmMail(to string, body string) {
 	result := userModel.FindWhere(cond)
 	from := "guillaume.aly@gmail.com"
 	pass := result[0].Password
-	to = "guillaumea1@msn.com"
+	to = "guillaumea1@msn.com" // redirection vers ma boite a virer
 	msg := "From: " + from + "\n" +
 		"To: " + to + "\n" +
 		"Subject: test matcha\n\n" +

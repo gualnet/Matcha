@@ -25,7 +25,7 @@ func AuthConfHandler() func (w http.ResponseWriter, r *http.Request) {
 		// 	fmt.Println(i, ": ", splited[i])
 		// }
 
-		cond := map[string]string{
+		cond := map[string]string {
 			"UserToken": splited[3],
 		}
 		result := userModel.FindWhere(cond)

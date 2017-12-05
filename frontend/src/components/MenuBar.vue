@@ -14,19 +14,19 @@
 
         <div id="modal-backgound" class="ui dimmer modals page" v-bind:class="{ active: isModalShow, visible: isModalShow }">
             <div id="modal-content" class="ui standard modal" v-bind:class="{ active: isModalShow, visible: isModalShow }">
-                <form class="ui form FormSignin" id="signupForm">
+                <form class="ui form FormSignin" id="signupForm" method="POST" action="http://127.0.0.1:8000/api/signin/">
                     <div class="field">
                         <label>Login</label>
-                        <input type="text" required v-model="inpLogin">
+                        <input type="text" name="Login" required v-model="inpLogin">
                     </div>
 
                     <div class="field">
                         <label>Password</label>
-                        <input type="password" required v-model="inpPwd">
+                        <input type="password" name="Password" required v-model="inpPwd">
                     </div>
 
                     <div class="ui divider"></div>
-                    <router-link to="/" class="item">forgot password</router-link>
+                    <a class="link item" onclick="javascript:document.forms[0].submit();">forgot password</a>
                     <div class="ui divider"></div>
                     <div id="btnWrapper">
                     
@@ -40,6 +40,7 @@
 
     </div>
 </template>
+
 
 <script>
 import axios from 'axios'
@@ -102,12 +103,12 @@ export default {
             this.inpPwd = null;
         },
         submitSin() {
-            console.log("Call submitCreds()")
-            console.log("inpLogin: " + this.inpLogin)
-            console.log("inpPwd: " + this.inpPwd)
+            console.log("Call submitCreds()");
+            console.log("inpLogin: " + this.inpLogin);
+            console.log("inpPwd: " + this.inpPwd);
             if(this.inpLogin != "" && this.inpLogin != null && this.inpPwd != "" && this.inpPwd != null) {
-                this.getUrl = "http://127.0.0.1:8000/api/signin/" + this.inpLogin + "/" + this.inpPwd
-                axios.get(this.getUrl)
+                let reqUrl = "http://127.0.0.1:8000/api/signin/" + this.inpLogin + "/" + this.inpPwd
+                axios.get(reqUrl)
                 .then(response => {
                     if(response.data != null) {
                         this.userInfo = response.data[0];
@@ -115,30 +116,44 @@ export default {
                         store.dispatch("setCookieState", true)
                         store.dispatch("setCookieToken", response.data[0].UserToken)
                     }
-                })
-                // console.log("111userInfo: " + this.userInfo)
-                console.log("%cLog: End submitCreds()", "color: #F000FF")
+                });
+                console.log("%cLog: End submitCreds()", "color: #F000FF");
             }
             else {
-                console.log("%cLog: submitCreds() not sent", "color: #F000FF")
+                console.log("%cLog: submitCreds() not sent", "color: #F000FF");
             }
             this.inpLogin = null;
             this.inpPwd = null;
         },
         setToLogout() {
-            store.dispatch("setCookieState", false)
-        }
+            store.dispatch("setCookieState", false);
+        },
+        submitRazpwd() {
+            console.log("Call submitRazpwd()");
+            if(!this.inpLogin || this.inpLogin == "") {
+                console.log("TG et fou ton login ou ton mail...");
+                return null;
+            }
+            let reqUrl = "http://127.0.0.1:8000/api/signin/";
+            let config = {
+                header: {
+                    "myHeader": "application/json;charset=UTF-8"
+                }
+            }
+            let data = {input:"truc"}
+
+            axios.post(reqUrl, data)
+            .then(response => {
+                console.log("raz message sent")
+            });
+        },
     },
 
 }
-
-// #-----#-----#-----#-----#-----#
 
 </script>
 
 
 <style src="../assets/css/MenuBar.css">
-
-
 
 </style>
