@@ -1,0 +1,62 @@
+	Afficher une variable:
+{{ nom de ma variable }}
+
+initialiser un element:
+
+new Vue({
+	el: '#element' // l'element sur lequel j'init vuejs
+
+	// data est un tableau qui contient toutes les variable qui vont
+	// etre injecté dans la vue
+	data: {
+		message: "blablabla"
+	}
+
+	// defini les fonctions qui peuvent etre appelee dans la vue
+	methods: {
+		nomDeMethode: function () {
+			..code..
+		}
+	}
+
+
+	// defini une propriete qui sera appelee uniquement si une variable contenu dans celle-ci
+	// vient a etre modifiée
+	computed: {
+		nomDePropriete: definition de la propriete
+		//exemple
+		truc: function () {
+			..blabla..
+			return machin-truc
+		}
+	}
+
+	//lorsque la propriete defini est modifié, appelle la fonction associee
+	watch: {
+		message: function () {
+			blablabla
+		}
+	}
+
+})
+
+#-----#-----#-----#-----#-----#
+
+	LES DIRECTIVES
+
+v-bind
+v-if / v-else
+v-show
+v-for
+
+	Les modifieurs
+(.prevent, .stop, .lazy, .trim, ....)
+permet d'affiner la gestion d'evenements
+
+#-----#-----#-----#-----#-----#
+
+	LES COMPOSANTS
+
+#-----#-----#-----#-----#-----#
+
+	VueX -> flux

@@ -16,6 +16,11 @@ export default new Vuex.Store ({
         cookie: {
             usrState: false,
             usrToken: false,
+        },
+
+        global: {
+            BACK_HOST: "http://127.0.0.1:8000",
+            FRONT_HOST: "http://127.0.0.1:8080",
         }
     },
 
@@ -40,6 +45,8 @@ export default new Vuex.Store ({
     getters: {
         getCookieState: state => state.cookie.usrState,
         getCookieToken: state => state.cookie.usrToken,
+        getGlobalBHOST: state => state.global.BACK_HOST,
+        getGlobalFHOST: state => state.global.FRONT_HOST,
 
         // getUser: state => state.user,
         // getUserLogged: state => state.user.logged,
@@ -48,7 +55,7 @@ export default new Vuex.Store ({
 
     actions: {
         setCookieState: (store, value) => {
-            console.log("CALL STORE ACTION setCookieState")
+            // console.log("CALL STORE ACTION setCookieState")
             cookie.setCookie("usrState", value, 2)
             store.commit("SET_COOKIE_STATE", value)
             if(value == false) {
@@ -58,26 +65,26 @@ export default new Vuex.Store ({
         },
 
         setCookieToken: (store, value) => {
-            console.log("CALL STORE ACTION setCookieToken")
+            // console.log("CALL STORE ACTION setCookieToken")
             cookie.setCookie("usrToken", value, 2)
             store.commit("SET_COOKIE_TOKEN", value)
         },
 
         checkCookie: (store) => {
-            console.log("CALL STORE ACTION checkCookie")
+            // console.log("CALL STORE ACTION checkCookie")
             let resState = cookie.getCookie("usrState")
             let resToken = cookie.getCookie("usrToken")
-            console.log("checkCookie test res : " + resState + " | " + resToken)
+            // console.log("checkCookie test res : " + resState + " | " + resToken)
             if(resState == "true" && resToken != "") {
-                console.log("checkCookie reset cas 1")
+                // console.log("checkCookie reset cas 1")
                 store.commit("SET_COOKIE_STATE", resState)
                 store.commit("SET_COOKIE_TOKEN", resToken)
             } else if (resState != "" && resToken == "") {
-                console.log("checkCookie reset cas 2")
+                // console.log("checkCookie reset cas 2")
                 cookie.setCookie("usrState", "false", 2)
                 store.commit("SET_COOKIE_STATE", false)
             } else if ((resState == "" || resState == "false") && resToken != "") {
-                console.log("checkCookie reset cas 3")
+                // console.log("checkCookie reset cas 3")
                 cookie.setCookie("usrState", "false", 2)
                 cookie.setCookie("usrToken", "false", 0)
                 store.commit("SET_COOKIE_STATE", "")

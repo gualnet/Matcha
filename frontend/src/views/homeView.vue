@@ -94,8 +94,8 @@ export default {
         ]),
 
         submitSup: function() {
-            console.log("Call SubmitSup")
-            console.log(this.inpFName, this.inpLName, this.inpLogin, this.inpMail, this.inpPwd)
+            // console.log("Call SubmitSup")
+            // console.log(this.inpFName, this.inpLName, this.inpLogin, this.inpMail, this.inpPwd)
             if(this.inpFName == "" || this.inpFName == "" ||
             this.inpLName == "" || this.inpLName == null ||
             this.inpLogin == "" || this.inpLogin == null ||
@@ -109,11 +109,11 @@ export default {
                 axios.put(this.getUrl)
                 .then(response => {
                     if(response.data != null) {
-                        console.log("check error: " + response.data);
+                        // console.log("check error: " + response.data);
                         if(response.data["error"] == "Login already used") {
-                            console.log("BINGO001")
+                            // console.log("BINGO001")
                         } else if (response.data["error"] == "Mail already used") {
-                            console.log("BINGO002")
+                            // console.log("BINGO002")
                         }
                     }
                 })

@@ -93,19 +93,19 @@ export default {
         ]),
 
         showLoginForm () {
-            console.log("ShowLoginForm")
+            // console.log("ShowLoginForm")
             this.isModalShow = true;
         },
         hideLoginForm () {
-            console.log("hideLoginForm: ")
+            // console.log("hideLoginForm: ")
             this.isModalShow = false;
             this.inpLogin = null;
             this.inpPwd = null;
         },
         submitSin() {
-            console.log("Call submitCreds()");
-            console.log("inpLogin: " + this.inpLogin);
-            console.log("inpPwd: " + this.inpPwd);
+            // console.log("Call submitCreds()");
+            // console.log("inpLogin: " + this.inpLogin);
+            // console.log("inpPwd: " + this.inpPwd);
             if(this.inpLogin != "" && this.inpLogin != null && this.inpPwd != "" && this.inpPwd != null) {
                 let reqUrl = "http://127.0.0.1:8000/api/signin/" + this.inpLogin + "/" + this.inpPwd
                 axios.get(reqUrl)
@@ -117,10 +117,10 @@ export default {
                         store.dispatch("setCookieToken", response.data[0].UserToken)
                     }
                 });
-                console.log("%cLog: End submitCreds()", "color: #F000FF");
+                // console.log("%cLog: End submitCreds()", "color: #F000FF");
             }
             else {
-                console.log("%cLog: submitCreds() not sent", "color: #F000FF");
+                // console.log("%cLog: submitCreds() not sent", "color: #F000FF");
             }
             this.inpLogin = null;
             this.inpPwd = null;
