@@ -1,6 +1,33 @@
-// import databaseConf from "../config/database";
+
 import Models from "./Models";
 
-class Users extends Models {
-	constructor()
+export class UsersMdl extends Models {
+	constructor() {
+		console.log("constructor class UsersMdl");
+		super();
+	}
+	destructor() {
+		console.log("destructor class UsersMdl");
+		
+	}
+
+	find() {
+		console.log("UsersMdl func find");
+	}
+	
+	insert() {
+		console.log("UsersMdl func insert");
+	}
+	
+	delete() {
+		console.log("UsersMdl func delete");
+	}
+
+	release() {
+		console.log("realese class UsersMdl");
+		super.release();
+	}
+
 }
+
+// export default class UsersMdl;

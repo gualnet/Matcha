@@ -9,13 +9,14 @@ class Models {
 			console.log("tetative de connexion a la bdd: "+databaseConf.host+":"+
 			databaseConf.port+".");
 		}
-		const dbConn = mysql.createConnection({
-			host     : databaseConf.host,
-			user     : databaseConf.user,
-			password : databaseConf.password,
-			database : databaseConf.dbName
+		this.dbConn = mysql.createConnection({
+			host		: databaseConf.host,
+			port		: databaseConf.port,
+			user		: databaseConf.user,
+			password	: databaseConf.password,
+			database	: databaseConf.dbName
 		});
-		dbConn.connect(
+		this.dbConn.connect(
 			// callback sur erreur de connexion
 			(err) => {
 				if (err && serverConf.debugMsg) {
@@ -28,12 +29,13 @@ class Models {
 			}
 		)
 	}
-
-	filterNewInputs() {
-
+	// No destructor.. all the ressources that need to be realease at the end.
+	release() {
+		console.log("realese class Models");
 	}
 
 	find() {
+		console.log("Model func find");
 		
 	}
 }
