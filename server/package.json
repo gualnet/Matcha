@@ -23,7 +23,8 @@
   "homepage": "https://github.com/gualnet/Matcha#readme",
   "dependencies": {
     "express": "^4.16.3",
-    "mysql": "^2.16.0"
+    "mysql": "^2.16.0",
+    "mysql2": "^1.6.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",

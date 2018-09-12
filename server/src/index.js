@@ -2,7 +2,7 @@
 // IMPORTS
 const Express = require('express');
 const BodyParser = require('body-parser');
-const apiRouter = require('./apiRouter').router;
+import { router as apiRouter } from './apiRouter';
 
 // Initialisation
 const server = Express();

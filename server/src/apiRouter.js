@@ -1,6 +1,6 @@
 // Imports
 const Express = require("express");
-const UsersCtrl = require("../controlers/UsersCtrl").UsersCtrl;
+import { UsersCtrl } from '../controlers/UsersCtrl';
 
 
 // Routes

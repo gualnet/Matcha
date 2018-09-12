@@ -1,10 +1,18 @@
 
 import databaseConf from "../config/database";
-import mysql from "mysql";
+// import mysql from "mysql";
+import mysql from "mysql2";
 import serverConf from "../config/server";
 
-class Models {
+export default class Models {
 	constructor() {
+		this.tableName = "Users";
+		// Reminder
+		// this.tableColumn = [
+		// 	"UserId", "UserToken", "Login",
+		// 	"Password", "FirstName", "LastName",
+		// 	"Age", "Mail", "Gender", "Orientation"
+		// ];
 		if (serverConf.debugMsg) {
 			// console.log("Constructor class Models");
 			// console.log("tetative de connexion a la bdd: "+databaseConf.host+":"+
@@ -31,14 +39,30 @@ class Models {
 		)
 	}
 	// No destructor.. all the ressources that need to be realease at the end.
-	release() {
+	releaseConn() {
 		console.log("realese class Models");
+		this.dbConn.end;
 	}
 
-	find() {
-		console.log("Model func find");
-		
+	find(column, values, callbackFunc) {
+		// console.log("column.length: ", column.length)
+		if (column.length !== values.length) {
+			console.log(`ERROR:\n\tcolumn ${column}\n\tvalues ${values}`);
+			return (false);
+		}
+		let reqSql = ` SELECT * FROM ${this.tableName} WHERE `;
+		if (column.length > 1) {
+			for (let i = 0; i < column.length - 1; i++) {
+				reqSql += `${column[i]} = '${values[i]}' OR `;
+			}
+		}
+		reqSql += `${column[column.length - 1]} = '${values[values.length - 1]}';`;
+		console.log(`FIND TEST ${reqSql}`);
+		this.dbConn.execute(reqSql,
+			(error, results, fields) => {
+				if (error) throw error;
+				callbackFunc(results);
+			})
 	}
 }
 
-export default Models;

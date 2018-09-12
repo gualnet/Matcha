@@ -1,14 +1,32 @@
 
 import Models from "./Models";
 
-export class UsersMdl extends Models {
+export default class UsersMdl extends Models {
 	constructor() {
 		// console.log("constructor class UsersMdl");
 		super();
 	}
 
-	find() {
-		console.log("UsersMdl func find");
+	createNewUser(values) {
+		console.log("Values:\n", values);
+		let {login, mail, password} = values;
+		login = this.dbConn.escape(login);
+		mail = this.dbConn.escape(mail);
+		password = this.dbConn.escape(password);
+
+		let reqSql = ` INSERT into ${this.tableName} (Login, Mail, Password, UserToken) `;
+		reqSql += `VALUES (${login}, ${mail}, ${password}, "none");`;
+		console.log(`SQL request: ${reqSql}`);
+
+		this.dbConn.query(reqSql,
+			(err, res, fields) => {
+				if (err) throw err;
+				console.log(`ERROR: `, err, "\n");
+				console.log(`RESULT: `, res, "\n");
+				console.log(`fields: `, fields);
+			})
+
+
 	}
 	
 	insert() {
