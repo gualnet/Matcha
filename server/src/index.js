@@ -1,4 +1,4 @@
-// "use strict"
+"use strict"
 // IMPORTS
 const Express = require('express');
 const BodyParser = require('body-parser');
@@ -22,5 +22,5 @@ server.get("/", (req, res) => {
 server.use("/api/", apiRouter());
 
 server.listen(8080, () => {
-	console.log("Listen");
+	// console.log("Listen");
 })

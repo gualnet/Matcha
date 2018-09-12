@@ -1,3 +1,4 @@
+
 import databaseConf from "../config/database";
 import mysql from "mysql";
 import serverConf from "../config/server";
@@ -5,9 +6,9 @@ import serverConf from "../config/server";
 class Models {
 	constructor() {
 		if (serverConf.debugMsg) {
-			console.log("Constructor class Models");
-			console.log("tetative de connexion a la bdd: "+databaseConf.host+":"+
-			databaseConf.port+".");
+			// console.log("Constructor class Models");
+			// console.log("tetative de connexion a la bdd: "+databaseConf.host+":"+
+			// databaseConf.port+".");
 		}
 		this.dbConn = mysql.createConnection({
 			host		: databaseConf.host,

@@ -3,12 +3,8 @@ import Models from "./Models";
 
 export class UsersMdl extends Models {
 	constructor() {
-		console.log("constructor class UsersMdl");
+		// console.log("constructor class UsersMdl");
 		super();
-	}
-	destructor() {
-		console.log("destructor class UsersMdl");
-		
 	}
 
 	find() {
