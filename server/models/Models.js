@@ -42,32 +42,88 @@ export default class Models {
 		this.dbConn.end;
 	}
 
-	async find(column, values, callbackFunc) {
-		// console.log("column.length: ", column.length)
-		if (column.length !== values.length) {
-			console.log(`ERROR:\n\tcolumn ${column}\n\tvalues ${values}`);
-			return (false);
-		}
-		let reqSql = ` SELECT * FROM ${this.tableName} WHERE `;
-		if (column.length > 1) {
-			for (let i = 0; i < column.length - 1; i++) {
-				reqSql += `${column[i]} = '${values[i]}' OR `;
+	find(column, values) {
+		return new Promise( (resolve, reject) => {
+			if (column.length !== values.length) {
+				console.log(`ERROR:\n\tcolumn ${column}\n\tvalues ${values}`);
+				return (false);
 			}
-		}
-		reqSql += `${column[column.length - 1]} = '${values[values.length - 1]}';`;
-		console.log(`FIND TEST ${reqSql}`);
-		await this.dbConn.execute(reqSql,
-			(error, results, fields) => {
-				if (error) throw error;
-				callbackFunc(results);
-				if (results.length === 0) {
-					console.log("COUCOU01");
-					return (false);
-				} else {
-					console.log("COUCOU02");
-					return (true);
+			let reqSql = ` SELECT * FROM ${this.tableName} WHERE `;
+			if (column.length > 1) {
+				for (let i = 0; i < column.length - 1; i++) {
+					reqSql += `${column[i]} = '${values[i]}' OR `;
 				}
-			})
+			}
+			reqSql += `${column[column.length - 1]} = '${values[values.length - 1]}';`;
+			console.log(`FIND TEST ${reqSql}`);
+			this.dbConn.execute(reqSql,
+				(error, results, fields) => {
+					console.log("plop");
+					if (error) {
+						throw error;
+					}
+					resolve(results);
+					reject(results);
+				}
+			)
+		});
+	}
+
+	insert(column, values) {
+		return new Promise( (resolve, reject) => {
+			console.log("coucou", column.length, "and", values.length);
+			if (column.length !== values.length) {
+				console.log(`ERROR:\n\tcolumn ${column}\n\tvalues ${values}`);
+				return (false);
+			}
+
+			let reqSql = ` INSERT INTO ${this.tableName} (`;
+			if (column.length > 1) {
+				for (let i = 0; i < column.length - 1; i++) {
+					reqSql += `${column[i]}, `;
+				}
+			}
+			reqSql += `${column[column.length - 1]}) VALUES (`;
+			if (values.length > 1) {
+				for (let i = 0; i < values.length - 1; i++) {
+					reqSql += `'${values[i]}', `;
+				}
+			}
+			reqSql += `'${values[values.length - 1]}');`;
+
+			console.log(`INSERT TEST: `, reqSql);
+			this.dbConn.execute(reqSql,
+				(error, results, fields) => {
+					if (error) throw error;
+					resolve(results);
+					reject(results);
+				}
+			)
+		});
+	}
+
+	delete(column, values) {
+		return new Promise( (resolve, reject) => {
+			if (column.length !== values.length) {
+				console.log(`ERROR:\n\tcolumn ${column}\n\tvalues ${values}`);
+				return (false);
+			}
+			let reqSql = ` DELETE FROM ${this.tableName} WHERE `;
+			if (column.length > 1) {
+				for (let i = 0; i < column.length - 1; i++) {
+					reqSql += `${column[i]} = '${values[i]}' AND `;
+				}
+			}
+			reqSql += `${column[column.length - 1]} = '${values[values.length - 1]}';`;
+			console.log(`DELETE TEST ${reqSql}`);
+			this.dbConn.execute(reqSql,
+				(error, results, fields) => {
+					if (error) throw error;
+					resolve(results);
+					reject(results);
+				}
+			)
+		});
 	}
 }
 

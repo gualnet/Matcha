@@ -22,9 +22,11 @@
   },
   "homepage": "https://github.com/gualnet/Matcha#readme",
   "dependencies": {
+    "bcrypt": "^3.0.0",
     "express": "^4.16.3",
     "mysql": "^2.16.0",
-    "mysql2": "^1.6.1"
+    "mysql2": "^1.6.1",
+    "nodemailer": "^4.6.8"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",

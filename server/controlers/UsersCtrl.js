@@ -1,5 +1,5 @@
 
-import UsersMdl from '../models/Users';
+import UsersMdl from '../models/UsersMdl';
 
 const usersFuncs = {
 	inputsVerifs: (login="", mail="", password="") => {
@@ -39,7 +39,6 @@ exports.UsersCtrl = {
 		for (let elem in retTab) {
 			// console.log(`retTab.elem={${retTab[elem]}}`);
 			if (!retTab[elem]) {
-				console.log("BOOOM01");
 				userMdl.releaseConn();
 				return (res.status(400).type('json').json({ error: {...retTab} }));
 			}
@@ -49,30 +48,46 @@ exports.UsersCtrl = {
 		const userMdl = new UsersMdl();
 		
 		// test if login or mail already exists
-		// const sqlResult = userMdl.find(["Login", "Mail"], ["titi", "mailbidon"], //pour test
-		userMdl.find(["Login", "Mail"], [login, mail],
-			(results) => {
-				// console.log("laaaaa", results);
-				console.log("results length: ", results.length);
-				if (results.length !== 0) {
-					let error = {};
-					console.log(results[0].Login);
-					if (results[0].Login === login) {
-						error[login] = "used";
-					}
-					if (results[0].Mail === mail) {
-						error[mail] = "used";
-					}
-					console.log("BOOOM02");
-					return (res.status(400).type('json').json({ error }));
-				} else {
-					// on cree et envoi la requete sur la db
-					userMdl.createNewUser({login, mail, password});
-					userMdl.releaseConn();
-					console.log("BOOOM03");
-					return (res.status(201).type('json').json({ 'Success': 'new user registered' }));
+		userMdl.find(["Login", "Mail"], [login, mail])
+		.then( (results) => {
+			// console.log("async results: ", results);
+			if (results.length !== 0) {
+				let error = {};
+				if (results[0].Login === login) {
+					error[login] = "used";
 				}
-		});
+				if (results[0].Mail === mail) {
+					error[mail] = "used";
+				}
+				return (res.status(400).type('json').json({ error }));
+			} else {
+				// on cree et envoi la requete sur la db
+				console.log("coucou");
+				userMdl.createNewUser(["Login", "Mail", "Password"], [login, mail, password])
+				.then ((result) => {
+					console.log("coucou");
+					console.log("createNewUser result: ", result);
+
+					// ! pour tests je delete le user qui vient d'etre ajoute
+					userMdl.delete(["mail"], [mail])
+					.then((result) => {
+						console.log(`DELETE RESULT `, result);
+					})
+					// ! end
+				})
+				.catch( (error) => {
+					console.error("UsersCtrl_err00", error);
+				});
+
+				
+
+				userMdl.releaseConn();
+				return (res.status(201).type('json').json({ 'Success': 'new user registered' }));
+			}
+		})
+		.catch( (error) => {
+			console.error("UsersCtrl_err01", error);
+		})
 	},
 
 	login: (req, res) => {

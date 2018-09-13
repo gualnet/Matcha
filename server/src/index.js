@@ -2,6 +2,7 @@
 // IMPORTS
 const Express = require('express');
 const BodyParser = require('body-parser');
+import serverConf from '../config/server';
 import { router as apiRouter } from './apiRouter';
 
 // Initialisation
@@ -22,6 +23,6 @@ server.get("/", (req, res) => {
 
 server.use("/api/", apiRouter());
 
-server.listen(8080, () => {
+server.listen(serverConf.serverPORT, () => {
 	// console.log("Listen");
 })
