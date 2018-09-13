@@ -7,7 +7,7 @@ export default class UsersMdl extends Models {
 		super();
 	}
 
-	createNewUser(values) {
+	async createNewUser(values) {
 		console.log("Values:\n", values);
 		let {login, mail, password} = values;
 		login = this.dbConn.escape(login);
@@ -18,12 +18,12 @@ export default class UsersMdl extends Models {
 		reqSql += `VALUES (${login}, ${mail}, ${password}, "none");`;
 		console.log(`SQL request: ${reqSql}`);
 
-		this.dbConn.query(reqSql,
+		await this.dbConn.query(reqSql,
 			(err, res, fields) => {
 				if (err) throw err;
-				console.log(`ERROR: `, err, "\n");
-				console.log(`RESULT: `, res, "\n");
-				console.log(`fields: `, fields);
+				// console.log(`ERROR: `, err, "\n");
+				// console.log(`RESULT: `, res, "\n");
+				// console.log(`fields: `, fields);
 			})
 
 

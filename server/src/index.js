@@ -15,6 +15,7 @@ server.use(BodyParser.json());
 
 // Routes
 server.get("/", (req, res) => {
+	console.log("BOOOM000");
 	res.setHeader("Content-Type", "text/html");
 	res.status(200).send("<h1> Welcome </h1>");
 });
