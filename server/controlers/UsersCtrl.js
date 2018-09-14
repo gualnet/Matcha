@@ -87,8 +87,27 @@ exports.UsersCtrl = {
 
 	login: (req, res) => {
 		console.log("UsersCtrl func login");
-		return (res.type('json').json({
-			'test': 'login'
+		const {login, password} = {...req.body};
+		// console.log(`login:${login} and password:${password}`);
+
+		// Todo: verif login/password
+
+		// Todo: generate token
+
+
+
+
+
+
+
+
+
+
+
+
+
+		return (res.status(400).type('json').json({
+			'error': 'BOOOOOOOOOOU'
 		}));
 	},
 	
@@ -107,11 +126,11 @@ exports.UsersCtrl = {
 			if (error) throw error;
 			console.log("laaaaaaaaaa: ", response);
 			if (response.affectedRows !== 1) {
-				res.type('json').json({
+				res.status(400).type('json').json({
 					'error': `Number of affected row incorrect = [${response.affectedRows}]`
 				})
 			} else if (response.affectedRows === 1) {
-				res.type('json').json({
+				res.status(201).type('json').json({
 					'paramReceived': {
 						'ul': req.query.ul,
 						'ua': req.query.ua
@@ -130,7 +149,7 @@ exports.UsersCtrl = {
 					}
 				});
 			} else {
-				res.type('json').json({
+				res.status(400).type('json').json({
 					'error': 'unknown error'
 				})
 			}
