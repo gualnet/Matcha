@@ -31,7 +31,7 @@ export default class Models {
 					": " + err.stack);
 				}
 				else if (serverConf.debugMsg){
-					console.log("Success: connected to " + databaseConf.dbName);
+					// console.log("Success: connected to " + databaseConf.dbName);
 				}
 			}
 		)
@@ -58,7 +58,6 @@ export default class Models {
 			console.log(`FIND TEST ${reqSql}`);
 			this.dbConn.execute(reqSql,
 				(error, results, fields) => {
-					console.log("plop");
 					if (error) {
 						throw error;
 					}
@@ -69,38 +68,53 @@ export default class Models {
 		});
 	}
 
-	insert(column, values) {
-		return new Promise( (resolve, reject) => {
-			console.log("coucou", column.length, "and", values.length);
-			if (column.length !== values.length) {
-				console.log(`ERROR:\n\tcolumn ${column}\n\tvalues ${values}`);
-				return (false);
-			}
+	async insert(column, values) {
+		if (column.length !== values.length) {
+			console.log(`ERROR:\n\tcolumn ${column}\n\tvalues ${values}`);
+			return (false);
+		}
 
-			let reqSql = ` INSERT INTO ${this.tableName} (`;
-			if (column.length > 1) {
-				for (let i = 0; i < column.length - 1; i++) {
-					reqSql += `${column[i]}, `;
-				}
+		let reqSql = ` INSERT INTO ${this.tableName} (`;
+		if (column.length > 1) {
+			for (let i = 0; i < column.length - 1; i++) {
+				reqSql += `${column[i]}, `;
 			}
-			reqSql += `${column[column.length - 1]}) VALUES (`;
-			if (values.length > 1) {
-				for (let i = 0; i < values.length - 1; i++) {
-					reqSql += `'${values[i]}', `;
-				}
+		}
+		reqSql += `${column[column.length - 1]}) VALUES (`;
+		if (values.length > 1) {
+			for (let i = 0; i < values.length - 1; i++) {
+				reqSql += `'${values[i]}', `;
 			}
-			reqSql += `'${values[values.length - 1]}');`;
+		}
+		reqSql += `'${values[values.length - 1]}');`;
 
-			console.log(`INSERT TEST: `, reqSql);
-			this.dbConn.execute(reqSql,
-				(error, results, fields) => {
-					if (error) throw error;
-					resolve(results);
-					reject(results);
-				}
-			)
-		});
+		console.log(`INSERT TEST: `, reqSql);
+		const response = await this.dbConn.execute(reqSql);
+		return (response);
 	}
+
+	update(column, oldValues, newValues, callbackToApply) {
+		if (column.length !== oldValues.length || column.length !== newValues.length) {
+			console.log(`ERROR:\n\tcolumn ${column}\n\tvalues ${values}`);
+			return ({error: "update bad_params"});
+		}
+		let reqSql = `UPDATE ${this.tableName} SET `;
+		if (column.length > 1) {
+			for (let i = 0; i < column.length - 1; i++) {
+				reqSql += `${column[i]} = '${newValues[i]}' AND `;
+			}
+		}
+		reqSql += `${column[column.length - 1]} = '${newValues[newValues.length - 1]}' WHERE `;
+		reqSql += `${column[0]} = '${oldValues[0]}'`;
+
+		console.log(`UPDATE REQUEST=${reqSql}`);
+		const test = (error, response, fields) => {
+			if (error) throw error;
+			console.log("innner", response);
+			return (response);
+		};
+		this.dbConn.execute(reqSql, callbackToApply)
+	};
 
 	delete(column, values) {
 		return new Promise( (resolve, reject) => {

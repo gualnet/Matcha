@@ -61,25 +61,20 @@ exports.UsersCtrl = {
 				}
 				return (res.status(400).type('json').json({ error }));
 			} else {
-				// on cree et envoi la requete sur la db
-				console.log("coucou");
+				// Creation du nouvel utilisateur
 				userMdl.createNewUser(["Login", "Mail", "Password"], [login, mail, password])
 				.then ((result) => {
-					console.log("coucou");
-					console.log("createNewUser result: ", result);
-
+					// console.log("createNewUser result: ", result);
 					// ! pour tests je delete le user qui vient d'etre ajoute
-					userMdl.delete(["mail"], [mail])
-					.then((result) => {
-						console.log(`DELETE RESULT `, result);
-					})
+					// userMdl.delete(["mail"], [mail])
+					// .then((result) => {
+					// 	// console.log(`DELETE RESULT `, result);
+					// })
 					// ! end
 				})
 				.catch( (error) => {
 					console.error("UsersCtrl_err00", error);
 				});
-
-				
 
 				userMdl.releaseConn();
 				return (res.status(201).type('json').json({ 'Success': 'new user registered' }));
@@ -102,5 +97,45 @@ exports.UsersCtrl = {
 		return (res.type('json').json({
 			'test': 'login'
 		}));
+	},
+
+	accountActivation: async (req, res) => {
+		// console.log("account activation.. ");
+		const userMdl = new UsersMdl();
+		console.log("0");
+		const response = await userMdl.accountActive(req.query, (error, response, fields) => {
+			if (error) throw error;
+			console.log("laaaaaaaaaa: ", response);
+			if (response.affectedRows !== 1) {
+				res.type('json').json({
+					'error': `Number of affected row incorrect = [${response.affectedRows}]`
+				})
+			} else if (response.affectedRows === 1) {
+				res.type('json').json({
+					'paramReceived': {
+						'ul': req.query.ul,
+						'ua': req.query.ua
+					},
+					'docInfo': {
+						'currentPage': 'accountActivation',
+						'redirectTo': 'Home',
+					},
+					'success': {
+
+					},
+					'userState': {
+						'login': 'true',
+						'usrId': '',
+						'userToken': ''
+					}
+				});
+			} else {
+				res.type('json').json({
+					'error': 'unknown error'
+				})
+			}
+		});
+
+
 	}
 }

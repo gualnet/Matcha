@@ -3,7 +3,7 @@
 const serverConf = {
 	debugMsg: true,
 	serverIP: "127.0.0.1",
-	serverPORT: 8080,
+	serverPORT: 8880,
 	serverURL: "http://localhost:"
 }
 
