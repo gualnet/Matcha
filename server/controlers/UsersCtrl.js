@@ -26,7 +26,7 @@ const usersFuncs = {
 }
 
 exports.UsersCtrl = {
-	registerNewUser: (req, res) => {
+	registerNewUser: async (req, res) => {
 		console.log("UsersCtrl func register");
 		
 		//recup / verif des donnees
@@ -43,46 +43,37 @@ exports.UsersCtrl = {
 				return (res.status(400).type('json').json({ error: {...retTab} }));
 			}
 		}
-		
-		
-		const userMdl = new UsersMdl();
-		
-		// test if login or mail already exists
-		userMdl.find(["Login", "Mail"], [login, mail])
-		.then( (results) => {
-			// console.log("async results: ", results);
-			if (results.length !== 0) {
-				let error = {};
-				if (results[0].Login === login) {
-					error[login] = "used";
-				}
-				if (results[0].Mail === mail) {
-					error[mail] = "used";
-				}
-				return (res.status(400).type('json').json({ error }));
-			} else {
-				// Creation du nouvel utilisateur
-				userMdl.createNewUser(["Login", "Mail", "Password"], [login, mail, password])
-				.then ((result) => {
-					// console.log("createNewUser result: ", result);
-					// ! pour tests je delete le user qui vient d'etre ajoute
-					// userMdl.delete(["mail"], [mail])
-					// .then((result) => {
-					// 	// console.log(`DELETE RESULT `, result);
-					// })
-					// ! end
-				})
-				.catch( (error) => {
-					console.error("UsersCtrl_err00", error);
-				});
 
-				userMdl.releaseConn();
-				return (res.status(201).type('json').json({ 'Success': 'new user registered' }));
+		const userMdl = new UsersMdl();
+		// test if login or mail already exists
+		const response = await userMdl.find(["Login", "Mail"], [login, mail]);
+		console.log("find response ", response);
+		if (response.length !== 0) {
+			let error = {};
+			if (response[0].login === login) {
+				error[login] = used;
 			}
-		})
-		.catch( (error) => {
-			console.error("UsersCtrl_err01", error);
-		})
+			if (response[0].mail === mail) {
+				error[mail] = used;
+			}
+			return (res.status(400).type('json').json({ error }));
+		} else {
+			// Creation du nouvel utilisateur
+			userMdl.createNewUser(["Login", "Mail", "Password"], [login, mail, password])
+			.then((response) => {
+				console.log("create new user response: ", response);
+				return (res.status(201).type('json').json({ 
+					'docInfo': {
+						'currentPage': 'accountActivation',
+						'redirectTo': 'Home',
+					},
+					'Success': 'new user registered'
+				}));
+			})
+			.catch((error) => {
+				console.log("create new user error: ", error);
+			})
+		}
 	},
 
 	login: (req, res) => {
@@ -93,18 +84,6 @@ exports.UsersCtrl = {
 		// Todo: verif login/password
 
 		// Todo: generate token
-
-
-
-
-
-
-
-
-
-
-
-
 
 		return (res.status(400).type('json').json({
 			'error': 'BOOOOOOOOOOU'
@@ -122,39 +101,36 @@ exports.UsersCtrl = {
 		// console.log("account activation.. ");
 		const userMdl = new UsersMdl();
 		console.log("0");
-		const response = await userMdl.accountActive(req.query, (error, response, fields) => {
-			if (error) throw error;
-			console.log("laaaaaaaaaa: ", response);
-			if (response.affectedRows !== 1) {
-				res.status(400).type('json').json({
-					'error': `Number of affected row incorrect = [${response.affectedRows}]`
-				})
-			} else if (response.affectedRows === 1) {
-				res.status(201).type('json').json({
-					'paramReceived': {
-						'ul': req.query.ul,
-						'ua': req.query.ua
-					},
-					'docInfo': {
-						'currentPage': 'accountActivation',
-						'redirectTo': 'Home',
-					},
-					'success': {
+		const response = await userMdl.accountActive(req.query);
+		console.log(`END response: `, response);
+		console.log("---------------------");
+		if (response.affectedRows !== 1) {
+			res.status(400).type('json').json({
+				'error': `Number of affected row incorrect = [${response.affectedRows}]`
+			})
+		} else if (response.affectedRows === 1) {
+			res.status(201).type('json').json({
+				'paramReceived': {
+					'ul': req.query.ul,
+					'ua': req.query.ua
+				},
+				'docInfo': {
+					'currentPage': 'accountActivation',
+					'redirectTo': 'Home',
+				},
+				'success': {
 
-					},
-					'userState': {
-						'login': 'true',
-						'usrId': '',
-						'userToken': ''
-					}
-				});
-			} else {
-				res.status(400).type('json').json({
-					'error': 'unknown error'
-				})
-			}
-		});
-
-
+				},
+				'userState': {
+					'login': 'true',
+					'usrId': '',
+					'userToken': ''
+				}
+			});
+		} else {
+			res.status(400).type('json').json({
+				'error': 'unknown error'
+			})
+		}
 	}
 }

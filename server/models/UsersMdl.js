@@ -50,9 +50,9 @@ export default class UsersMdl extends Models {
 	async createNewUser(column, values) {
 		// console.log("Values:\n", values);
 		// let {login, mail, password} = values;
-		const login = this.dbConn.escape(values[0]);
-		const mail = this.dbConn.escape(values[1]);
-		const password = this.dbConn.escape(values[2]);
+		const login = values[0];
+		const mail = values[1];
+		const password = values[2];
 		// console.log(`params ${login}, ${mail}, ${password}`);
 
 		let timestamp = new Date().getTime();
@@ -68,17 +68,15 @@ export default class UsersMdl extends Models {
 		return (response);
 	}
 
-	async accountActive(oldParams, callback) {
+	async accountActive(oldParams) {
 		// console.log("start ", oldParams);
-		const response = await this.update(["UserToken"], [oldParams.ua], ["0000"], callback);
+		const response = await this.update(["UserToken"], {
+			old: [oldParams.ua],
+			new: ["0000"]
+		});
 		// console.log("+accountActive response: ", response);
 		// console.log("---------------------");
 		return (response);
-	}
-	
-	release() {
-		console.log("realese class UsersMdl");
-		super.release();
 	}
 
 }

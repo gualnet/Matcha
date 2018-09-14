@@ -26,7 +26,8 @@
     "express": "^4.16.3",
     "mysql": "^2.16.0",
     "mysql2": "^1.6.1",
-    "nodemailer": "^4.6.8"
+    "nodemailer": "^4.6.8",
+    "promisify": "0.0.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",
