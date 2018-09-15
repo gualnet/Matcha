@@ -18,10 +18,10 @@ export default class Models {
 
   /**
    * * func find
-   * @param values {where: {column: value, ...}}
+   * @param values: {where: {column: value, ...}}
   **/
   // TODO convert like update
-  async find (values) {
+  async find (values, andOr = 'AND') {
     if (Object.values(values.where).length === 0) {
       console.error('ERROR in models > find(): ', values)
       return new Error('ERROR empty values', 'Models.js > find')
@@ -32,7 +32,7 @@ export default class Models {
     if (objectLen > 1) {
       for (i = 0; i < objectLen - 1; i++) {
         const whereVal = pool.escape(Object.entries(values.where)[i][1])
-        reqSql += `${Object.entries(values.where)[i][0]} = ${whereVal} AND `
+        reqSql += `${Object.entries(values.where)[i][0]} = ${whereVal} ${andOr} `
       }
     }
     const whereVal = pool.escape(Object.entries(values.where)[i][1])
@@ -81,7 +81,7 @@ export default class Models {
 
   /**
    * * func update
-   * @param values {set: {column: value, ...}, where: {column: value, ...}}
+   * @param values: {set: {column: value, ...}, where: {column: value, ...}}
   **/
   async update (values) {
     // console.log('Object: ', values)
@@ -121,14 +121,14 @@ export default class Models {
 
   /**
    * * func delete
-   * @param values {where: {column: value, ...}}
+   * @param values: {where: {column: value, ...}}
   **/
   // TODO convert like update
   async delete (values) {
     // console.log('Object: ', values)
 
     if (Object.values(values.where).length === 0) {
-      console.error('ERROR in models > delete(): ', values)
+      // console.error('ERROR in models > delete(): ', values)
       return new Error('ERROR empty values', 'Models.js > delete')
     }
 

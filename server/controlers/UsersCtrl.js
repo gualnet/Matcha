@@ -81,12 +81,28 @@ exports.UsersCtrl = {
     }
   },
 
-  login: (req, res) => {
+  login: async (req, res) => {
     console.log('UsersCtrl func login')
+    const userMdl = new UsersMdl()
     const { login, password } = { ...req.body }
+    // password = 'truc'
     console.log(`login:${login} and password:${password}`)
 
     // Todo: verif login/password
+    const response = await userMdl.getUser({
+      Login: login,
+      Password: password
+    })
+    console.log('login response ', response)
+    console.log('login response key ', Object.keys(response).length)
+    if (Object.values(response).length !== 0) {
+
+    } else {
+      console.log('bad authentification')
+      return (res.status(401).type('json').json({
+        error: 'bad authentification'
+      }))
+    }
 
     // Todo: generate token
 

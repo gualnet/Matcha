@@ -85,6 +85,19 @@ export default class UsersMdl extends Models {
     // console.log('---------------------')
     return (response)
   }
+
+  async getUser (params) {
+    var wrapper = {}
+    Object.entries(params).forEach(
+      ([key, val]) => {
+        wrapper[key] = val
+      })
+    console.log('wrapper: ', wrapper)
+    const response = await this.find({
+      where: wrapper
+    })
+    return (response)
+  }
 }
 
 // export default class UsersMdl
