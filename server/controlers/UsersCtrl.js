@@ -30,9 +30,10 @@ exports.UsersCtrl = {
     console.log('UsersCtrl func register')
 
     // recup / verif des donnees
-    const login = req.body.login
-    const mail = req.body.mail
-    const password = req.body.password
+    // const login = req.body.login
+    // const mail = req.body.mail
+    // const password = req.body.password
+    const { login, mail, password } = { ...req.body }
     // console.log("login: ", login, "\nmail: ", mail, "\npassword:", password, "\n")
 
     const retTab = usersFuncs.inputsVerifs(login, mail, password)
@@ -45,7 +46,12 @@ exports.UsersCtrl = {
 
     const userMdl = new UsersMdl()
     // test if login or mail already exists
-    const response = await userMdl.find(['Login', 'Mail'], [login, mail])
+    const response = await userMdl.find({
+      where: {
+        Login: login,
+        Mail: mail
+      }
+    })
     console.log('find response ', response)
     if (response.length !== 0) {
       let error = {}
@@ -58,7 +64,7 @@ exports.UsersCtrl = {
       return (res.status(400).type('json').json({ error }))
     } else {
       // Creation du nouvel utilisateur
-      userMdl.createNewUser(['Login', 'Mail', 'Password'], [login, mail, password])
+      userMdl.createNewUser(login, mail, password)
         .then((response) => {
           console.log('create new user response: ', response)
           return (res.status(201).type('json').json({
@@ -100,6 +106,13 @@ exports.UsersCtrl = {
     // console.log("account activation.. ");
     const userMdl = new UsersMdl()
     console.log('0')
+    if (!req.query.ul || !req.query.ua) {
+      console.log('ERREUR: ', req.query.ul, '|', req.query.ua)
+      res.status(400).type('json').json({
+        'error': 'undefined required parameter'
+      })
+      return
+    }
     const response = await userMdl.accountActive(req.query)
     console.log(`END response: `, response)
     console.log('---------------------')

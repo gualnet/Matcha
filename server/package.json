@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "npx babel src -d lib/src && npx babel --watch config -d lib/config && npx babel --watch controlers -d lib/controlers && npx --watch babel models -d lib/models",
-    "start": "npx nodemon --exec npx eslint . && npx babel-node src/index.js",
+    "lint": "npx nodemon --exec npx eslint .",
+    "start": "npx nodemon --exec npx babel-node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

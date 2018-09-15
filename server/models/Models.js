@@ -1,3 +1,4 @@
+
 import pool from '../config/database'
 import serverConf from '../config/server'
 
@@ -15,42 +16,63 @@ export default class Models {
   }
   // No destructor.. all the ressources that need to be realease at the end.
 
-  async find (column, values) {
-    if (column.length !== values.length) {
-      console.log(`ERROR:\n\tcolumn ${column}\n\tvalues ${values}`)
-      return (false)
+  /**
+   * * func find
+   * @param values {where: {column: value, ...}}
+  **/
+  // TODO convert like update
+  async find (values) {
+    if (Object.values(values.where).length === 0) {
+      console.error('ERROR in models > find(): ', values)
+      return new Error('ERROR empty values', 'Models.js > find')
     }
     let reqSql = ` SELECT * FROM ${this.tableName} WHERE `
-    if (column.length > 1) {
-      for (let i = 0; i < column.length - 1; i++) {
-        reqSql += `${column[i]} = '${values[i]}' OR `
+    const objectLen = Object.values(values.where).length
+    let i = 0
+    if (objectLen > 1) {
+      for (i = 0; i < objectLen - 1; i++) {
+        const whereVal = pool.escape(Object.entries(values.where)[i][1])
+        reqSql += `${Object.entries(values.where)[i][0]} = ${whereVal} AND `
       }
     }
-    reqSql += `${column[column.length - 1]} = '${values[values.length - 1]}'`
+    const whereVal = pool.escape(Object.entries(values.where)[i][1])
+    reqSql += `${Object.entries(values.where)[i][0]} = ${whereVal};`
     console.log(`FIND TEST ${reqSql}`)
     const response = await pool.query(reqSql)
     return (response)
   }
 
-  async insert (column, values) {
-    if (column.length !== values.length) {
-      console.log(`ERROR:\n\tcolumn ${column}\n\tvalues ${values}`)
-      return (false)
+  /**
+   * * func insert
+   * @param values: {values: {column: value, ...}}
+  **/
+  // TODO convert like update
+  async insert (values) {
+    console.log('INSERT Object: ', values)
+
+    if (Object.values(values.where).length === 0) {
+      console.error('ERROR in models > insert(): ', values)
+      return new Error('ERROR empty values', 'Models.js > insert')
     }
 
     let reqSql = ` INSERT INTO ${this.tableName} (`
-    if (column.length > 1) {
-      for (let i = 0; i < column.length - 1; i++) {
-        reqSql += `${column[i]}, `
+    const objectLen = Object.values(values.where).length
+    let i = 0
+    if (objectLen > 1) {
+      for (i = 0; i < objectLen - 1; i++) {
+        reqSql += `${Object.entries(values.where)[i][0]}, `
       }
     }
-    reqSql += `${column[column.length - 1]}) VALUES (`
-    if (values.length > 1) {
-      for (let i = 0; i < values.length - 1; i++) {
-        reqSql += `'${values[i]}', `
+    reqSql += `${Object.entries(values.where)[i][0]}) VALUES (`
+
+    if (objectLen > 1) {
+      for (i = 0; i < objectLen - 1; i++) {
+        const escapedValue = pool.escape(Object.entries(values.where)[i][1])
+        reqSql += `${escapedValue}, `
       }
     }
-    reqSql += `'${values[values.length - 1]}')`
+    const escapedValue = pool.escape(Object.entries(values.where)[i][1])
+    reqSql += `${escapedValue});`
 
     console.log(`INSERT TEST: `, reqSql)
     const response = await pool.query(reqSql)
@@ -59,52 +81,68 @@ export default class Models {
 
   /**
    * * func update
-   * @param colum ['colum_name', ...]
-   * @param Values {old: [old_values, ...], new: [new_values, ...]}
+   * @param values {set: {column: value, ...}, where: {column: value, ...}}
   **/
-  async update (column, values) {
-    console.log('Object: ', values)
-    console.log('Object entries: ', Object.entries(values))
-    console.log('Object.old: ', values.old)
-    console.log('Object.new: ', values.new)
-    if (column.length !== values.old.length || column.length !== values.new.length) {
-      console.log(`ERROR:\n\tcolumn ${column}\n\tvalues `, values)
-      return ({ error: 'update bad_params' })
+  async update (values) {
+    // console.log('Object: ', values)
+    if (Object.values(values.where).length === 0) {
+      console.error('ERROR in models > delete(): ', values)
     }
+
     let reqSql = `UPDATE ${this.tableName} SET `
-    if (column.length > 1) {
-      for (let i = 0; i < column.length - 1; i++) {
-        reqSql += `${column[i]} = '${values.new[i]}' AND `
+    let objectLen = Object.values(values.set).length
+    let i = 0
+    if (objectLen > 1) {
+      for (i = 0; i < objectLen - 1; i++) {
+        const setVal = pool.escape(Object.entries(values.set)[i][1])
+        reqSql += `${Object.entries(values.set)[i][0]} = ${setVal}, `
       }
     }
-    reqSql += `${column[column.length - 1]} = '${values.new[values.new.length - 1]}' WHERE `
-    if (column.length > 1) {
-      for (let i = 0; i < column.length - 1; i++) {
-        reqSql += `${column[i]} = '${values.old[i]}' AND `
+    const setVal = pool.escape(Object.entries(values.set)[i][1])
+    reqSql += `${Object.entries(values.set)[i][0]} = ${setVal} WHERE `
+
+    objectLen = Object.values(values.where).length
+    i = 0
+    if (objectLen > 1) {
+      for (i = 0; i < objectLen - 1; i++) {
+        const whereVal = pool.escape(Object.entries(values.where)[i][1])
+        reqSql += `${Object.entries(values.where)[i][0]} = ${whereVal} AND `
       }
     }
-    reqSql += `${column[column.length - 1]} = '${values.old[values.old.length - 1]}'`
+    const whereVal = pool.escape(Object.entries(values.where)[i][1])
+    reqSql += `${Object.entries(values.where)[i][0]} = ${whereVal};`
 
     console.log(`UPDATE REQUEST=${reqSql}`)
-
-    // const response = await pool.query(reqSql)
+    const response = await pool.query(reqSql)
     // console.log(`UPDATE RESPONSE: `, response)
-    // console.log("---------------------")
-    // return (response)
+    // console.log('---------------------')
+    return (response)
   }
 
-  async delete (column, values) {
-    if (column.length !== values.length) {
-      console.log(`ERROR:\n\tcolumn ${column}\n\tvalues ${values}`)
-      return (false)
+  /**
+   * * func delete
+   * @param values {where: {column: value, ...}}
+  **/
+  // TODO convert like update
+  async delete (values) {
+    // console.log('Object: ', values)
+
+    if (Object.values(values.where).length === 0) {
+      console.error('ERROR in models > delete(): ', values)
+      return new Error('ERROR empty values', 'Models.js > delete')
     }
+
     let reqSql = ` DELETE FROM ${this.tableName} WHERE `
-    if (column.length > 1) {
-      for (let i = 0; i < column.length - 1; i++) {
-        reqSql += `${column[i]} = '${values[i]}' AND `
+    const objectLen = Object.values(values.where).length
+    let i = 0
+    if (objectLen > 1) {
+      for (i = 0; i < objectLen - 1; i++) {
+        const whereVal = pool.escape(Object.entries(values.where)[i][1])
+        reqSql += `${Object.entries(values.where)[i][0]} = ${whereVal} AND `
       }
     }
-    reqSql += `${column[column.length - 1]} = '${values[values.length - 1]}'`
+    const whereVal = pool.escape(Object.entries(values.where)[i][1])
+    reqSql += `${Object.entries(values.where)[i][0]} = ${whereVal};`
     console.log(`DELETE TEST ${reqSql}`)
     const response = await pool.query(reqSql)
     return (response)
