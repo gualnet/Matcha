@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "npx babel src -d lib/src && npx babel --watch config -d lib/config && npx babel --watch controlers -d lib/controlers && npx --watch babel models -d lib/models",
-    "start": "/usr/local/lib/node_modules/node/lib/node_modules/nodemon/bin/nodemon.js --exec npx babel-node src/index.js",
+    "start": "npx nodemon --exec npx eslint . && npx babel-node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -36,6 +36,12 @@
     "@babel/plugin-transform-runtime": "^7.0.0",
     "@babel/polyfill": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
-    "@babel/runtime": "^7.0.0"
+    "@babel/runtime": "^7.0.0",
+    "eslint": "^5.6.0",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0"
   }
 }
