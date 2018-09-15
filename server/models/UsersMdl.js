@@ -1,5 +1,5 @@
 
-import serverConf from '../config/server'
+import serverConf from '../utils/server'
 import Models from './Models'
 const bcrypt = require('bcrypt')
 const nodemailer = require('nodemailer')
@@ -86,7 +86,7 @@ export default class UsersMdl extends Models {
     return (response)
   }
 
-  async getUser (params) {
+  async getUser (params, andOr = '') {
     var wrapper = {}
     Object.entries(params).forEach(
       ([key, val]) => {
@@ -95,7 +95,7 @@ export default class UsersMdl extends Models {
     console.log('wrapper: ', wrapper)
     const response = await this.find({
       where: wrapper
-    })
+    }, andOr)
     return (response)
   }
 }

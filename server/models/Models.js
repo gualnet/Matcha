@@ -1,6 +1,6 @@
 
-import pool from '../config/database'
-import serverConf from '../config/server'
+import pool from '../utils/database'
+import serverConf from '../utils/server'
 
 export default class Models {
   constructor () {

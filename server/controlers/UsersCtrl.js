@@ -1,5 +1,7 @@
 
 import UsersMdl from '../models/UsersMdl'
+import bcrypt from 'bcrypt'
+import tokenUtil from '../utils/token_util'
 
 const usersFuncs = {
   inputsVerifs: (login = '', mail = '', password = '') => {
@@ -30,17 +32,16 @@ exports.UsersCtrl = {
     console.log('UsersCtrl func register')
 
     // recup / verif des donnees
-    // const login = req.body.login
-    // const mail = req.body.mail
-    // const password = req.body.password
     const { login, mail, password } = { ...req.body }
     // console.log("login: ", login, "\nmail: ", mail, "\npassword:", password, "\n")
-
     const retTab = usersFuncs.inputsVerifs(login, mail, password)
     for (let elem in retTab) {
       // console.log(`retTab.elem={${retTab[elem]}}`)
       if (!retTab[elem]) {
-        return (res.status(400).type('json').json({ error: { ...retTab } }))
+        return (res.status(400).type('json').json({ error: {
+          login: retTab.verifLogin,
+          mail: retTab.verifMail
+        } }))
       }
     }
 
@@ -51,16 +52,20 @@ exports.UsersCtrl = {
         Login: login,
         Mail: mail
       }
-    })
-    console.log('find response ', response)
+    }, 'OR')
+    console.log('find response0 ', response)
+
     if (response.length !== 0) {
       let error = {}
-      if (response[0].login === login) {
+      if (response[0].Login === login) {
+        console.log('On passe ici')
         error[login] = 'used'
       }
-      if (response[0].mail === mail) {
+      if (response[0].Mail === mail) {
+        console.log('On passe la')
         error[mail] = 'used'
       }
+      console.log('TEST ERRROR: ', error)
       return (res.status(400).type('json').json({ error }))
     } else {
       // Creation du nouvel utilisateur
@@ -85,36 +90,69 @@ exports.UsersCtrl = {
     console.log('UsersCtrl func login')
     const userMdl = new UsersMdl()
     const { login, password } = { ...req.body }
-    // password = 'truc'
     console.log(`login:${login} and password:${password}`)
 
-    // Todo: verif login/password
     const response = await userMdl.getUser({
       Login: login,
-      Password: password
-    })
+      Mail: login // to connect with email address
+    }, 'OR')
     console.log('login response ', response)
-    console.log('login response key ', Object.keys(response).length)
-    if (Object.values(response).length !== 0) {
 
+    if (Object.values(response).length !== 0 &&
+    bcrypt.compareSync(password, response[0].Password)) {
+      // console.log('login response ', response[0].Password)
+      if (response[0].UserToken !== 'activated' && response[0].UserToken !== 'disconnected') {
+        return (res.status(401).type('json').json({
+          error: 'bad authentification'
+        }))
+      }
+      let r = response[0]
+      r.UserToken = tokenUtil.genUserToken(r)
+      userMdl.update({
+        set: {
+          UserToken: r.UserToken
+        },
+        where: {
+          UserId: r.UserId
+        }
+      })
+      return (res.status(201).type('json').json({
+        'success': 'login ok',
+        'userState': {
+          uid: r.UserId,
+          token: r.UserToken
+        }
+      }))
     } else {
       console.log('bad authentification')
       return (res.status(401).type('json').json({
         error: 'bad authentification'
       }))
     }
-
-    // Todo: generate token
-
-    return (res.status(400).type('json').json({
-      'error': 'BOOOOOOOOOOU'
-    }))
   },
 
-  logout: (req, res) => {
+  logout: async (req, res) => {
+    const userMdl = new UsersMdl()
     console.log('UsersCtrl func logout')
-    return (res.type('json').json({
-      'test': 'login'
+    const { uid, token } = { ...req.body }
+    console.log(`uid:${uid}, token:${token}`)
+    const response = await userMdl.update({
+      set: {
+        UserToken: 'disconnected'
+      },
+      where: {
+        UserId: uid,
+        UserToken: token
+      }
+    })
+    console.log('userLogout: ', response)
+    if (response.affectedRows === 0) {
+      return (res.status(401).type('json').json({
+        'error': 'logout'
+      }))
+    }
+    return (res.status(200).type('json').json({
+      'success': 'logout'
     }))
   },
 

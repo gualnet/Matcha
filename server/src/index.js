@@ -1,6 +1,6 @@
 'use strict'
 // IMPORTS
-import serverConf from '../config/server'
+import serverConf from '../utils/server'
 import { router as apiRouter } from './apiRouter'
 const Express = require('express')
 const BodyParser = require('body-parser')
