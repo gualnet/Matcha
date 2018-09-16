@@ -6,10 +6,12 @@ const Express = require('express')
 exports.router = () => {
   const apiRouter = Express.Router()
 
-  apiRouter.route('/users/register/').post(UsersCtrl.registerNewUser)
-  apiRouter.route('/users/accountActivation/').get(UsersCtrl.accountActivation)
-  apiRouter.route('/users/login/').post(UsersCtrl.login)
-  apiRouter.route('/users/logout/').post(UsersCtrl.logout)
+  apiRouter.route('/user/register/').post(UsersCtrl.registerNewUser)
+  apiRouter.route('/user/login/').post(UsersCtrl.login)
+  apiRouter.route('/user/logout/').post(UsersCtrl.logout)
+  apiRouter.route('/user/activation').get(UsersCtrl.accountActivation)
+  apiRouter.route('/user/resetpass').post(UsersCtrl.resetAccountPassword)
+  apiRouter.route('/user/profil').get(UsersCtrl.getUserProfil).put(UsersCtrl.updateUserProfil)
 
   return apiRouter
 }

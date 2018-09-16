@@ -1,6 +1,6 @@
 // IMPORTS
 import jwt from 'jsonwebtoken'
-import srvConf from "../utils/server"
+import srvConf from '../utils/server'
 
 module.exports = {
   genUserToken: (userData) => {
@@ -15,7 +15,13 @@ module.exports = {
       age: userData.Age,
       mail: userData.Mail,
       gender: userData.Gender,
-      orientation: userData.Orientation
+      orientation: userData.Orientation,
+      bio: userData.Bio,
+      interest: userData.Interest,
+      popularity: userData.Popularity,
+      geoAuth: userData.GeolocAuth,
+      BlockUsrList: userData.BlockedUsers,
+      reported: userData.Reported
     }
     const token = jwt.sign(truc, srvConf.jwtSignSecret, { expiresIn: srvConf.jwtTokenDuration })
     console.log('TOKEN GEN: ', token)

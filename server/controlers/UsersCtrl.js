@@ -4,24 +4,32 @@ import bcrypt from 'bcrypt'
 import tokenUtil from '../utils/token_util'
 
 const usersFuncs = {
-  inputsVerifs: (login = '', mail = '', password = '') => {
+  inputsVerifs: (params) => {
     let retTab = {
       verifLogin: true,
       verifMail: true,
-      verifPassword: true
+      verifPassword: true,
+      veriFirstName: true,
+      verifLastName: true
     }
     const regexMail = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
     // regexPassword for mini 8chars 1alpha 1num
     const regexPassword = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
 
-    if (login === '' || login.length < 2 || login.length > 60) {
+    if (params.login === '' || params.login.length < 2 || params.login.length > 25) {
       retTab.verifLogin = false
     }
-    if (mail === '' || !regexMail.test(mail) || mail.length > 250) {
+    if (params.mail === '' || !regexMail.test(params.mail) || params.mail.length > 100) {
       retTab.verifMail = false
     }
-    if (password === '' || !regexPassword.test(password) || password.length > 250) {
+    if (params.password === '' || !regexPassword.test(params.password) || params.password.length > 100) {
       retTab.verifPassword = false
+    }
+    if (params.firstName === '' || params.firstName.length < 2 || params.firstName.length > 60) {
+      retTab.verifFirstName = false
+    }
+    if (params.lastName === '' || params.lastName.length < 2 || params.lastName.length > 60) {
+      retTab.verifLastName = false
     }
     return (retTab)
   }
@@ -32,9 +40,9 @@ exports.UsersCtrl = {
     console.log('UsersCtrl func register')
 
     // recup / verif des donnees
-    const { login, mail, password } = { ...req.body }
-    // console.log("login: ", login, "\nmail: ", mail, "\npassword:", password, "\n")
-    const retTab = usersFuncs.inputsVerifs(login, mail, password)
+    let params = { ...req.body }
+    console.log('PARAMS: ', params)
+    const retTab = usersFuncs.inputsVerifs(params)
     for (let elem in retTab) {
       // console.log(`retTab.elem={${retTab[elem]}}`)
       if (!retTab[elem]) {
@@ -49,27 +57,27 @@ exports.UsersCtrl = {
     // test if login or mail already exists
     const response = await userMdl.find({
       where: {
-        Login: login,
-        Mail: mail
+        Login: params.login,
+        Mail: params.mail
       }
     }, 'OR')
     console.log('find response0 ', response)
 
     if (response.length !== 0) {
       let error = {}
-      if (response[0].Login === login) {
+      if (response[0].Login === params.login) {
         console.log('On passe ici')
-        error[login] = 'used'
+        error[params.login] = 'used'
       }
-      if (response[0].Mail === mail) {
+      if (response[0].Mail === params.mail) {
         console.log('On passe la')
-        error[mail] = 'used'
+        error[params.mail] = 'used'
       }
       console.log('TEST ERRROR: ', error)
       return (res.status(400).type('json').json({ error }))
     } else {
       // Creation du nouvel utilisateur
-      userMdl.createNewUser(login, mail, password)
+      userMdl.createNewUser(params)
         .then((response) => {
           console.log('create new user response: ', response)
           return (res.status(201).type('json').json({
@@ -198,5 +206,29 @@ exports.UsersCtrl = {
         'error': 'unknown error'
       })
     }
+  },
+
+  resetAccountPassword: (req, res) => {
+    console.log('reset account password')
+    
+  },
+
+  getUserProfil: (req, res) => {
+
+    console.log('get user profil1: ', req.headers)
+    console.log('get user profil2: ', req.headers['x-forwarded-for'])
+    console.log('get user profil31: ', req.connection)
+    console.log('get user profil32: ', req.connection.remoteAddress)
+    console.log('get user profil41: ', req.socket)
+    console.log('get user profil42: ', req.socket.remoteAddress)
+    console.log('get user profil51: ', req.connection.socket)
+    console.log('get user profil52: ', req.connection.socket.remoteAddress)
+
+
+  },
+
+  updateUserProfil: (req, res) => {
+    console.log('update user profil')
+
   }
 }

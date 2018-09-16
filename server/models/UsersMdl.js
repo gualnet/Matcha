@@ -5,10 +5,6 @@ const bcrypt = require('bcrypt')
 const nodemailer = require('nodemailer')
 
 const sendNewUserMailConfirmation = (login, mail, hash) => {
-  // on slice pour enlever les '
-  // login = login.slice(1, login.length - 1)
-  // mail = mail.slice(1, mail.length - 1)
-
   const transporter = nodemailer.createTransport({
     host: 'smtp.ethereal.email',
     port: 587,
@@ -20,7 +16,7 @@ const sendNewUserMailConfirmation = (login, mail, hash) => {
   let htmlMsg = (`<h2>Hey ${login} </h2>\r\n`)
   htmlMsg += (`Your subsciption process is about to end.. `)
   htmlMsg += (`<p>To confirme your email adress click <a href='`)
-  htmlMsg += (`http://localhost:${serverConf.serverPORT}/api/users/accountActivation/?ul=${login}&ua=${hash}`)
+  htmlMsg += (`http://localhost:${serverConf.serverPORT}/api/user/activation/?ul=${login}&ua=${hash}`)
   htmlMsg += (`'><span>HERE</span></a></p>\r\n`)
   console.log('MAIL PREVIEW:', htmlMsg)
   const mailOption = {
@@ -40,33 +36,33 @@ const sendNewUserMailConfirmation = (login, mail, hash) => {
 }
 
 export default class UsersMdl extends Models {
-  // constructor () {
-  //   super()
-  //   // console.log('constructor class UsersMdl')
-  // }
+  constructor () {
+    super('Users')
+  }
 
-  async createNewUser (login, mail, password) {
+  async createNewUser (params) {
     // console.log('Values:\n', values)
-    console.log(`params ${login}, ${mail}, ${password}`)
+    console.log(`params ${params.login}, ${params.mail}, ${params.password}`)
 
     let timestamp = new Date().getTime()
     let token = ''
-    token.concat(timestamp, mail)
-    // console.log('CONCAT'', concat, ''')
+    token.concat(timestamp, params.mail)
 
     const salt = bcrypt.genSaltSync(10)
-    const passHashed = bcrypt.hashSync(password, salt)
+    const passHashed = bcrypt.hashSync(params.password, salt)
     const tokenHashed = bcrypt.hashSync(token, salt)
     const values = {
       where: {
-        Login: login,
-        Mail: mail,
+        Login: params.login,
+        Mail: params.mail,
         Password: passHashed,
-        UserToken: tokenHashed
+        UserToken: tokenHashed,
+        FirstName: params.firstName,
+        lastName: params.lastName
       }
     }
     const response = await this.insert(values)
-    sendNewUserMailConfirmation(login, mail, tokenHashed)
+    sendNewUserMailConfirmation(params.login, params.mail, tokenHashed)
     return (response)
   }
 
@@ -99,5 +95,3 @@ export default class UsersMdl extends Models {
     return (response)
   }
 }
-
-// export default class UsersMdl

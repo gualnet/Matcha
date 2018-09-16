@@ -3,8 +3,8 @@ import pool from '../utils/database'
 import serverConf from '../utils/server'
 
 export default class Models {
-  constructor () {
-    this.tableName = 'Users'
+  constructor (tableName) {
+    this.tableName = tableName
     // * Reminder users table Columns
     // "UserId", "UserToken", "Login",
     // "Password", "FirstName", "LastName",
@@ -20,7 +20,6 @@ export default class Models {
    * * func find
    * @param values: {where: {column: value, ...}}
   **/
-  // TODO convert like update
   async find (values, andOr = 'AND') {
     if (Object.values(values.where).length === 0) {
       console.error('ERROR in models > find(): ', values)
@@ -46,7 +45,6 @@ export default class Models {
    * * func insert
    * @param values: {values: {column: value, ...}}
   **/
-  // TODO convert like update
   async insert (values) {
     console.log('INSERT Object: ', values)
 
@@ -123,7 +121,6 @@ export default class Models {
    * * func delete
    * @param values: {where: {column: value, ...}}
   **/
-  // TODO convert like update
   async delete (values) {
     // console.log('Object: ', values)
 
