@@ -61,9 +61,14 @@ export default class UsersMdl extends Models {
         lastName: params.lastName
       }
     }
-    const response = await this.insert(values)
-    sendNewUserMailConfirmation(params.login, params.mail, tokenHashed)
-    return (response)
+    try {
+      const response = await this.insert(values)
+      sendNewUserMailConfirmation(params.login, params.mail, tokenHashed)
+      return (response)
+    } catch (error) {
+      console.error('ERROR createNewUser: ', error.code)
+      throw error
+    }
   }
 
   async accountActive (params) {

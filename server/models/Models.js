@@ -37,8 +37,13 @@ export default class Models {
     const whereVal = pool.escape(Object.entries(values.where)[i][1])
     reqSql += `${Object.entries(values.where)[i][0]} = ${whereVal};`
     console.log(`FIND TEST ${reqSql}`)
-    const response = await pool.query(reqSql)
-    return (response)
+
+    try {
+      const response = await pool.query(reqSql)
+      return (response)
+    } catch (error) {
+      throw error
+    }
   }
 
   /**
@@ -71,10 +76,14 @@ export default class Models {
     }
     const escapedValue = pool.escape(Object.entries(values.where)[i][1])
     reqSql += `${escapedValue});`
-
     console.log(`INSERT TEST: `, reqSql)
-    const response = await pool.query(reqSql)
-    return (response)
+
+    try {
+      const response = await pool.query(reqSql)
+      return (response)
+    } catch (error) {
+      throw error
+    }
   }
 
   /**
@@ -111,10 +120,13 @@ export default class Models {
     reqSql += `${Object.entries(values.where)[i][0]} = ${whereVal};`
 
     console.log(`UPDATE REQUEST=${reqSql}`)
-    const response = await pool.query(reqSql)
-    // console.log(`UPDATE RESPONSE: `, response)
-    // console.log('---------------------')
-    return (response)
+
+    try {
+      const response = await pool.query(reqSql)
+      return (response)
+    } catch (error) {
+      throw error
+    }
   }
 
   /**
@@ -141,7 +153,12 @@ export default class Models {
     const whereVal = pool.escape(Object.entries(values.where)[i][1])
     reqSql += `${Object.entries(values.where)[i][0]} = ${whereVal};`
     console.log(`DELETE TEST ${reqSql}`)
-    const response = await pool.query(reqSql)
-    return (response)
+
+    try {
+      const response = await pool.query(reqSql)
+      return (response)
+    } catch (error) {
+      throw error
+    }
   }
 }
