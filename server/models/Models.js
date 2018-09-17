@@ -2,19 +2,21 @@
 import pool from '../utils/database'
 import serverConf from '../utils/server'
 
+// * Reminder users table Columns
+// "UserId", "UserToken", "Login",
+// "Password", "FirstName", "LastName",
+// "Age", "Mail", "Gender", "Orientation"
+// 'Bio', 'Interest', 'Popularity'
+// 'GeolocAuth', 'BlockedUsers', 'Reported'
+// *
+
 export default class Models {
   constructor (tableName) {
     this.tableName = tableName
-    // * Reminder users table Columns
-    // "UserId", "UserToken", "Login",
-    // "Password", "FirstName", "LastName",
-    // "Age", "Mail", "Gender", "Orientation"
-    // *
     if (serverConf.debugMsg) {
       console.log('Constructor class Models')
     }
   }
-  // No destructor.. all the ressources that need to be realease at the end.
 
   /**
    * * func find
