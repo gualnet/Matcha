@@ -2,38 +2,7 @@
 import UsersMdl from '../models/UsersMdl'
 import bcrypt from 'bcrypt'
 import tokenUtil from '../utils/token_util'
-
-const usersFuncs = {
-  inputsVerifs: (params) => {
-    let retTab = {
-      verifLogin: true,
-      verifMail: true,
-      verifPassword: true,
-      veriFirstName: true,
-      verifLastName: true
-    }
-    const regexMail = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
-    // regexPassword for mini 8chars 1alpha 1num
-    const regexPassword = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
-
-    if (params.login === '' || params.login.length < 2 || params.login.length > 25) {
-      retTab.verifLogin = false
-    }
-    if (params.mail === '' || !regexMail.test(params.mail) || params.mail.length > 100) {
-      retTab.verifMail = false
-    }
-    if (params.password === '' || !regexPassword.test(params.password) || params.password.length > 100) {
-      retTab.verifPassword = false
-    }
-    if (params.firstName === '' || params.firstName.length < 2 || params.firstName.length > 60) {
-      retTab.verifFirstName = false
-    }
-    if (params.lastName === '' || params.lastName.length < 2 || params.lastName.length > 60) {
-      retTab.verifLastName = false
-    }
-    return (retTab)
-  }
-}
+import serverConf from '../utils/server';
 
 const profilInputVerif = (params) => {
   console.log('VERIF PARAMS: ', params)
@@ -125,11 +94,12 @@ const profilInputVerif = (params) => {
 exports.UsersCtrl = {
   registerNewUser: async (req, res) => {
     console.log('UsersCtrl func register')
-
     // recup / verif des donnees
     let params = { ...req.body }
+    // console.log('req.body: ', req.body)
+    // console.log('req.query: ', req.body.login)
     console.log('PARAMS: ', params)
-    const retTab = usersFuncs.inputsVerifs(params)
+    const retTab = profilInputVerif(params)
     for (let elem in retTab) {
       // console.log(`retTab.elem={${retTab[elem]}}`)
       if (!retTab[elem]) {
@@ -144,21 +114,21 @@ exports.UsersCtrl = {
     // test if login or mail already exists
     const response = await userMdl.find({
       where: {
-        Login: params.login,
-        Mail: params.mail
+        Login: params.Login,
+        Mail: params.Mail
       }
     }, 'OR')
     console.log('find response0 ', response)
 
     if (response.length !== 0) {
       let error = {}
-      if (response[0].Login === params.login) {
+      if (response[0].Login === params.Login) {
         console.log('On passe ici')
-        error[params.login] = 'used'
+        error[params.Login] = 'used'
       }
-      if (response[0].Mail === params.mail) {
+      if (response[0].Mail === params.Mail) {
         console.log('On passe la')
-        error[params.mail] = 'used'
+        error[params.Mail] = 'used'
       }
       console.log('TEST ERRROR: ', error)
       return (res.status(400).type('json').json({ error }))
@@ -172,7 +142,7 @@ exports.UsersCtrl = {
               'currentPage': 'accountActivation',
               'redirectTo': 'Home'
             },
-            'Success': 'new user registered'
+            'success': 'registration'
           }))
         })
         .catch((error) => {
@@ -184,17 +154,19 @@ exports.UsersCtrl = {
   login: async (req, res) => {
     console.log('UsersCtrl func login')
     const userMdl = new UsersMdl()
-    const { login, password } = { ...req.body }
-    console.log(`login:${login} and password:${password}`)
+    console.log('req.body: ', req.body)
+    console.log('req.query: ', req.body.Login)
+    const { Login, Password } = { ...req.body }
+    console.log(`login:${Login} and password:${Password}`)
 
     const response = await userMdl.getUser({
-      Login: login,
-      Mail: login // to connect with email address
+      Login: Login,
+      Mail: Login // to connect with email address
     }, 'OR')
     console.log('login response ', response)
 
     if (Object.values(response).length !== 0 &&
-    bcrypt.compareSync(password, response[0].Password)) {
+    bcrypt.compareSync(Password, response[0].Password)) {
       // console.log('login response ', response[0].Password)
       if (response[0].UserToken !== 'activated' && response[0].UserToken !== 'disconnected') {
         return (res.status(401).type('json').json({
@@ -212,7 +184,7 @@ exports.UsersCtrl = {
         }
       })
       return (res.status(201).type('json').json({
-        'success': 'login ok',
+        'success': 'login',
         'userState': {
           uid: r.UserId,
           token: r.UserToken
@@ -267,27 +239,29 @@ exports.UsersCtrl = {
     console.log('---------------------')
     if (response.affectedRows !== 1) {
       res.status(400).type('json').json({
-        'error': `Number of affected row incorrect = [${response.affectedRows}]`
+        // 'error': `Number of affected row incorrect = [${response.affectedRows}]`
+        'error': `Wrong activation token`
       })
     } else if (response.affectedRows === 1) {
-      res.status(201).type('json').json({
-        'paramReceived': {
-          'ul': req.query.ul,
-          'ua': req.query.ua
-        },
-        'docInfo': {
-          'currentPage': 'accountActivation',
-          'redirectTo': 'Home'
-        },
-        'success': {
+      // res.status(201).type('json').json({
+      //   'paramReceived': {
+      //     'ul': req.query.ul,
+      //     'ua': req.query.ua
+      //   },
+      //   'docInfo': {
+      //     'currentPage': 'accountActivation',
+      //     'redirectTo': 'home'
+      //   },
+      //   'success': {
 
-        },
-        'userState': {
-          'login': 'false',
-          'usrId': '',
-          'userToken': ''
-        }
-      })
+      //   },
+      //   'userState': {
+      //     'login': 'false',
+      //     'usrId': '',
+      //     'userToken': ''
+      //   }
+      // })
+      res.status(201).redirect(serverConf.frontURL)
     } else {
       res.status(400).type('json').json({
         'error': 'unknown error'

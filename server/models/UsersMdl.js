@@ -21,7 +21,8 @@ const sendNewUserMailConfirmation = (login, mail, hash) => {
   console.log('MAIL PREVIEW:', htmlMsg)
   const mailOption = {
     from: 'admin@matcha.fr',
-    to: 'galy@student.42.fr',
+    // to: 'galy@student.42.fr',
+    to: mail,
     subject: 'email confirmation',
     html: htmlMsg
   }
@@ -42,28 +43,28 @@ export default class UsersMdl extends Models {
 
   async createNewUser (params) {
     // console.log('Values:\n', values)
-    console.log(`params ${params.login}, ${params.mail}, ${params.password}`)
+    console.log(`params ${params.Login}, ${params.Mail}, ${params.Password}`)
 
     let timestamp = new Date().getTime()
     let token = ''
-    token.concat(timestamp, params.mail)
+    token.concat(timestamp, params.Mail)
 
     const salt = bcrypt.genSaltSync(10)
-    const passHashed = bcrypt.hashSync(params.password, salt)
+    const passHashed = bcrypt.hashSync(params.Password, salt)
     const tokenHashed = bcrypt.hashSync(token, salt)
     const values = {
       where: {
-        Login: params.login,
-        Mail: params.mail,
+        Login: params.Login,
+        Mail: params.Mail,
         Password: passHashed,
         UserToken: tokenHashed,
-        FirstName: params.firstName,
-        lastName: params.lastName
+        FirstName: params.FirstName,
+        lastName: params.LastName
       }
     }
     try {
       const response = await this.insert(values)
-      sendNewUserMailConfirmation(params.login, params.mail, tokenHashed)
+      sendNewUserMailConfirmation(params.Login, params.Mail, tokenHashed)
       return (response)
     } catch (error) {
       console.error('ERROR createNewUser: ', error.code)

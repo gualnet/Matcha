@@ -1,18 +1,24 @@
 
-// IMPORTS
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
-/* eslint-enable no-unused-vars */
-import { css } from '../css/App.css'
+import { BrowserRouter } from 'react-router-dom'
 
-console.log('CSS: ', css)
+// Components
+import AppRouter from './AppRouter.jsx'
+import NavBar from '../components/NavBar.jsx'
+
+// import { css } from '../css/App.scss'
+/* eslint-enable no-unused-vars */
 
 export default class App extends Component {
   render () {
     return (
-      <div className='AppWrapper'>
-        <h1> Mon app </h1>
-      </div>
+      <BrowserRouter>
+        <div className='appWrapper'>
+          <NavBar />
+          <AppRouter />
+        </div>
+      </BrowserRouter>
     )
   }
 }

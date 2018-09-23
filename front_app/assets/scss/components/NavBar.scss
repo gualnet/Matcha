@@ -1,0 +1,9 @@
+// @import 'NavBarButtons'
+@import '../palette.scss';
+
+.NavBar {
+	background-color: $color2;
+	border: solid red;
+	margin: 0 0 0 0;
+	width: 100vw; height: 10vh;
+}
