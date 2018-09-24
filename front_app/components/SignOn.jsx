@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
+import css from '../assets/scss/components/SignOn.scss'
 /* eslint-enable no-unused-vars */
 import axios from 'axios'
 
@@ -8,19 +9,20 @@ export default class SignOnForm extends Component {
   constructor () {
     super()
     this.state = {
-      // formData
+      // compte enregistrer pour les tests
       Login: 'jonny',
       FirstName: 'john',
       LastName: 'nom2famille',
       Mail: 'mail@mail.fr',
       Password: 'Passle01'
     }
+    // this.context = this.props.userContext
   }
 
   // * arrow func (auto bind this)
   formHandleChange = (event, descriptor) => {
     console.log('DESCRIPTOR: ', descriptor)
-    // console.log('EVENT: ', event)
+    console.log('EVENT: ', event)
     if (!event.target) {
       return (false)
     } else {
@@ -68,69 +70,107 @@ export default class SignOnForm extends Component {
   }
 
   render () {
+    const userContext = this.props.userContext
     return (
       <div className='signonWrapper'>
         <form
-          className='signonForm'
+          className='box'
+          id='signonForm'
           method="post"
           onSubmit={ (e) => this.submitForm(e) }
         >
-          <ul>
-            <li>Login</li>
-            <input
-              // autoComplete='Your login'
-              type='text'
-              name='login'
-              onChange={ (e) => this.formHandleChange(e, 'login') }
-              required='yes'
-              value={this.state.Login}
-            ></input>
 
-            <li>First Name</li>
-            <input
-              autoComplete='Your login'
-              type='text'
-              name="firstName"
-              onChange={ (e) => this.formHandleChange(e, 'firstName') }
-              required='yes'
-              value={this.state.FirstName}
-            ></input>
+          <p>Sign on User id: {userContext.uid}</p>
+          <p>sign in token: {userContext.token}</p>
+          <div className='field'>
+            <p className='control'>
+              <label className='label'>Login</label>
+              <input
+                className='input is-small'
+                name='login'
+                type='text'
+                autoComplete='login'
+                onChange={ (e) => this.formHandleChange(e, 'login') }
+                required='yes'
+                value={this.state.Login}
+              />
+            </p>
+          </div>
 
-            <li>Last Name</li>
-            <input
-              autoComplete='blabla'
-              type='text'
-              name="lastName"
-              onChange={ (e) => this.formHandleChange(e, 'lastName') }
-              required='yes'
-              value={this.state.LastName}
-            ></input>
+          <div className='field'>
+            <p className='control'>
+              <label className='label'>First Name</label>
+              <input
+                className='input is-small'
+                name="firstName"
+                type='text'
+                autoComplete='first name'
+                onChange={ (e) => this.formHandleChange(e, 'firstName') }
+                required='yes'
+                value={this.state.FirstName}
+              />
+            </p>
+          </div>
 
-            <li>Mail</li>
-            <input
-              autoComplete='blabla'
-              type='email'
-              name="mail"
-              onChange={ (e) => this.formHandleChange(e, 'mail') }
-              required='yes'
-              value={this.state.Mail}
-            ></input>
+          <div className='field'>
+            <p className='control'>
+              <label className='label'>Last Name</label>
+              <input
+                className='input is-small'
+                name="lastName"
+                type='text'
+                autoComplete='last name'
+                onChange={ (e) => this.formHandleChange(e, 'lastName') }
+                required='yes'
+                value={this.state.LastName}
+              />
+            </p>
+          </div>
 
-            <li>Password</li>
-            <input
-              autoComplete='blabla'
-              type='password'
-              name="password"
-              onChange={ (e) => this.formHandleChange(e, 'password') }
-              required='yes'
-              value={this.state.Password}
-            ></input>
+          <div className='field'>
+            <label className='label'>Mail</label>
+            <p className='control has-icons-left'>
+              <input
+                className='input is-small'
+                name="mail"
+                type='email'
+                autoComplete='mail'
+                onChange={ (e) => this.formHandleChange(e, 'mail') }
+                required='yes'
+                value={this.state.Mail}
+              />
+              <span className="icon is-small is-left">
+                <i className="fas fa-envelope"></i>
+              </span>
+            </p>
+          </div>
 
-            <button
-              type="submit"
-              value="submit"
-            >register</button>
-          </ul>
+          <div className='field'>
+            <label className='label'>Password</label>
+            <p className='control has-icons-left'>
+              <input
+                className='input is-small'
+                name="password"
+                type='password'
+                autoComplete='password'
+                onChange={ (e) => this.formHandleChange(e, 'password') }
+                required='yes'
+                value={this.state.Password}
+              />
+              <span className="icon is-small is-left">
+                <i className="fas fa-key"></i>
+              </span>
+            </p>
+          </div>
+
+          <div className="field is-grouped">
+            <div className="control">
+              <button id='BtnSignOnSubmit' className="button is-link is-small">Submit</button>
+            </div>
+            <div className="control">
+              <button id='BtnSignOnSwap' className="button is-light is-small">SignIn</button>
+            </div>
+          </div>
         </form>
       </div>
     )
