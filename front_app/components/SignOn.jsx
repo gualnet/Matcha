@@ -69,27 +69,39 @@ export default class SignOnForm extends Component {
       })
   }
 
+  swapToSignIn = (event) => {
+    event.preventDefault()
+    // turn login form from side to face
+    const sigininElem = document.getElementById('signinForm_back')
+    console.log('-->', sigininElem.id)
+    sigininElem.id = `${sigininElem.id.replace('_back', '')}`
+
+    // turn register form from face to side
+    const registerElem = document.getElementById('signonForm')
+    // console.log('-->', registerElem.id)
+    registerElem.id = `${registerElem.id}_back`
+  }
+
   render () {
-    const userContext = this.props.userContext
+    // const userContext = this.props.userContext
     return (
-      <div className='signonWrapper'>
+      <div className='' id='signonWrapper'>
         <form
           className='box'
-          id='signonForm'
+          id='signonForm_back'
           method="post"
           onSubmit={ (e) => this.submitForm(e) }
         >
 
-          <p>Sign on User id: {userContext.uid}</p>
-          <p>sign in token: {userContext.token}</p>
           <div className='field'>
-            <p className='control'>
-              <label className='label'>Login</label>
+            <p className='control has-text-centered'>
+              {/* <label className='label'>Login</label> */}
               <input
                 className='input is-small'
                 name='login'
                 type='text'
                 autoComplete='login'
+                placeholder='login'
                 onChange={ (e) => this.formHandleChange(e, 'login') }
                 required='yes'
                 value={this.state.Login}
@@ -98,13 +110,14 @@ export default class SignOnForm extends Component {
           </div>
 
           <div className='field'>
-            <p className='control'>
-              <label className='label'>First Name</label>
+            <p className='control has-text-centered'>
+              {/* <label className='label'>First Name</label> */}
               <input
                 className='input is-small'
                 name="firstName"
                 type='text'
                 autoComplete='first name'
+                placeholder='name'
                 onChange={ (e) => this.formHandleChange(e, 'firstName') }
                 required='yes'
                 value={this.state.FirstName}
@@ -113,13 +126,14 @@ export default class SignOnForm extends Component {
           </div>
 
           <div className='field'>
-            <p className='control'>
-              <label className='label'>Last Name</label>
+            <p className='control has-text-centered'>
+              {/* <label className='label'>Last Name</label> */}
               <input
                 className='input is-small'
                 name="lastName"
                 type='text'
                 autoComplete='last name'
+                placeholder='name'
                 onChange={ (e) => this.formHandleChange(e, 'lastName') }
                 required='yes'
                 value={this.state.LastName}
@@ -127,13 +141,14 @@ export default class SignOnForm extends Component {
             </p>
           </div>
 
-          <div className='field'>
-            <label className='label'>Mail</label>
-            <p className='control has-icons-left'>
+          <div className='field has-text-centered'>
+            {/* <label className='label'>Mail</label> */}
+            <p className='control has-icons-left has-text-centered'>
               <input
                 className='input is-small'
                 name="mail"
                 type='email'
+                placeholder='email'
                 autoComplete='mail'
                 onChange={ (e) => this.formHandleChange(e, 'mail') }
                 required='yes'
@@ -145,13 +160,14 @@ export default class SignOnForm extends Component {
             </p>
           </div>
 
-          <div className='field'>
-            <label className='label'>Password</label>
-            <p className='control has-icons-left'>
+          <div className='field has-text-centered'>
+            {/* <label className='label'>Password</label> */}
+            <p className='control has-icons-left has-text-centered'>
               <input
                 className='input is-small'
                 name="password"
                 type='password'
+                placeholder='password'
                 autoComplete='password'
                 onChange={ (e) => this.formHandleChange(e, 'password') }
                 required='yes'
@@ -163,13 +179,10 @@ export default class SignOnForm extends Component {
             </p>
           </div>
 
-          <div className="field is-grouped">
-            <div className="control">
-              <button id='BtnSignOnSubmit' className="button is-link is-small">Submit</button>
-            </div>
-            <div className="control">
-              <button id='BtnSignOnSwap' className="button is-light is-small">SignIn</button>
-            </div>
+          <div className='has-text-centered' id='sigonBtnSubmit'>
+            <button
+              className='button is-small is-black is-outlined'
+              id='BtnSignInSubmit'>Submit</button>
           </div>
         </form>
       </div>

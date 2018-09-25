@@ -5,31 +5,29 @@ import React from 'react'
 // components
 import SinginForm from '../components/SignIn.jsx'
 import SingonForm from '../components/SignOn.jsx'
-import SingoutForm from '../components/SignOut.jsx'
 
+// context
 import { UserContext } from '../contexts/UserContext'
+
+// css
+import { css } from '../assets/scss/pages/Home.scss'
 /* eslint-enable no-unused-vars */
 
 const Home = () => {
   return (
-    <div className='homeWrapper'>
-      <section className="section">
-        <div className="container">
-          <h1 className="title">Home Page</h1>
-        </div>
-      </section>
+    <section className='section' id='homeWrapper'>
+      {/* <h1 className='title'>Home Page</h1> */}
       <UserContext.Consumer>
         {(context) => {
           return (
             <div>
               <SingonForm userContext={context} />
               <SinginForm userContext={context} />
-              <SingoutForm userContext={context} />
             </div>
           )
         }}
       </UserContext.Consumer>
-    </div>
+    </section>
   )
 }
 

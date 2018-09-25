@@ -8,6 +8,9 @@ export default class SignInForm extends Component {
   constructor () {
     super()
     this.state = {
+      // real local state
+      visibility: 'is-invisible',
+
       // compte enregistrer pour les tests
       Login: 'jonny',
       Password: 'Passle01'
@@ -35,14 +38,10 @@ export default class SignInForm extends Component {
     }
   }
 
-  submitForm = (e) => {
-    e.preventDefault()
+  submitForm = (event) => {
+    event.preventDefault()
     // * ================================
     const valTab = this.state
-    // this.props.userContext.uid = 'machin'
-    // this.setState({ uid: 'machin' })
-    // console.log('... ', this.props.userContext)
-    // this.props.userContext.setState({ uid: 'machin', token: 'plus' })
 
     axios({
       method: 'post',
@@ -67,11 +66,24 @@ export default class SignInForm extends Component {
       })
   }
 
+  swapToSignOn = (event) => {
+    event.preventDefault()
+    // turn login form from face to side
+    const sigininElem = document.getElementById('signinForm')
+    console.log('-->', sigininElem.id)
+    sigininElem.id = `${sigininElem.id}_back`
+
+    // turn register form from side to face
+    const registerElem = document.getElementById('signonForm_back')
+    console.log('-->', registerElem.id)
+    registerElem.id = `${registerElem.id.replace('_back', '')}`
+    console.log('-->', registerElem.id)
+  }
+
   render () {
-    const userContext = this.props.userContext
-    console.log('render', this.userContext)
+    // const userContext = this.props.userContext
     return (
-      <div className='signinWrapper'>
+      <div className='' id='signinWrapper'>
         <form
           className='box'
           id='signinForm'
@@ -79,16 +91,15 @@ export default class SignInForm extends Component {
           onSubmit={ (e) => this.submitForm(e) }
         >
 
-          <p>sign in user id: {userContext.uid}</p>
-          <p>sign in token: {userContext.token}</p>
           <div className='field'>
-            <p className='control'>
-              <label className='label'>Login / mail</label>
+            <p className='control has-text-centered'>
+              {/* <label className='label has-text-white'>Login / mail</label> */}
               <input
                 className='input is-small'
                 name='Login'
                 type='text'
                 autoComplete='login'
+                placeholder='login'
                 onChange={ (e) => this.formHandleChange(e, 'login') }
                 required='yes'
                 value={this.state.Login}
@@ -96,14 +107,16 @@ export default class SignInForm extends Component {
             </p>
           </div>
 
-          <div className='field'>
-            <label className='label'>Password</label>
-            <p className='control has-icons-left'>
+          <div className='field has-text-centered'>
+            {/* <label className='label has-text-white'>Password</label> */}
+            <p className='control has-icons-left has-text-centered'>
+              {/* <p className='control has-text-centered has-icons-left'> */}
               <input
                 className='input is-small'
                 name="password"
                 type='password'
                 autoComplete='password'
+                placeholder='password'
                 onChange={ (e) => this.formHandleChange(e, 'password') }
                 required='yes'
                 value={this.state.Password}
@@ -114,14 +127,12 @@ export default class SignInForm extends Component {
             </p>
           </div>
 
-          <div className="field is-grouped">
-            <div className="control">
-              <button id='BtnSignInSubmit' className="button is-link is-small">Submit</button>
-            </div>
-            <div className="control">
-              <button id='BtnSignInSwap' className="button is-light is-small">Register</button>
-            </div>
+          <div className='has-text-centered' id='boxBtnFormSubmit'>
+            <button
+              className='button is-small is-black is-outlined'
+              id='BtnSignInSubmit'>Submit</button>
           </div>
+
         </form>
       </div>
     )

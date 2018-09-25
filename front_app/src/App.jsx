@@ -1,11 +1,15 @@
 
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
-import { BrowserRouter } from 'react-router-dom'
+import { BrowserRouter, Route } from 'react-router-dom'
 
 // Components
 import AppRouter from './AppRouter.jsx'
 import NavBar from '../components/NavBar.jsx'
+import Profile from '../pages/Profile.jsx'
+
+// context
+import { UserContext } from '../contexts/UserContext'
 
 // import { css } from '../css/App.scss'
 /* eslint-enable no-unused-vars */
@@ -15,7 +19,9 @@ export default class App extends Component {
     return (
       <BrowserRouter>
         <div className='appWrapper'>
-          <NavBar />
+          <UserContext.Consumer>
+            {(context) => <NavBar userContext={context} />}
+          </UserContext.Consumer>
           <AppRouter />
         </div>
       </BrowserRouter>

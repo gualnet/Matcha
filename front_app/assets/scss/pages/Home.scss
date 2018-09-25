@@ -1,8 +1,13 @@
 @import '../components/SignIn.scss';
 @import '../components/SignOn.scss';
 
-.homeWrapper {
+body {
+	background-image: url('../../backgounds/matchacouple-accueil_blured.jpg');
+	background-size: cover;
+}
+
+#homeWrapper {
+	// border: solid green;
 	margin: 0 0 0 0;
-	width: 100vw; height: 10vh;
-	border: solid green;
+	width: 100vw; height: 100vh;
 }

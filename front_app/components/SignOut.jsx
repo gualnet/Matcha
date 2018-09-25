@@ -1,18 +1,12 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+
 import css from '../assets/scss/components/SignOut.scss'
 /* eslint-enable no-unused-vars */
 import axios from 'axios'
 
 export default class SignOut extends Component {
-  constructor () {
-    super()
-    this.state = {
-      uid: '',
-      token: ''
-    }
-  }
-
   submitForm = (e) => {
     e.preventDefault()
     // * ================================
@@ -34,30 +28,28 @@ export default class SignOut extends Component {
             token: 'none'
           })
         }
-        // this.setState({ redirect: response.data.docInfo.redirectTo })
+        // !~ redirect on /home
       })
       .catch((error) => {
         console.log('response err: ', error)
       })
   }
 
+  logoutIsVisible = () => {
+    return (this.props.userContext.uid > 0 ? 'is-visible' : 'is-invisible')
+  }
+
   render () {
-    const userContext = this.props.userContext
     return (
-      <div id='signoutWrapper'>
-        <form
-          id='signout'
-          method="post"
-          onSubmit={ (e) => this.submitForm(e) }
-        >
-          <p>sign out user id: {userContext.uid}</p>
-          <p>sign in token: {userContext.token}</p>
-          <button
-            type="submit"
-            value="submit"
-          >logout</button>
-        </form>
-      </div>
+      <li
+        className={`navbar-item ${this.logoutIsVisible()}`}
+        id='btnSignOut'
+        onClick={ (e) => this.submitForm(e) }
+      >
+        <Link to='/'>
+          Logout
+        </Link>
+      </li>
     )
   }
 }

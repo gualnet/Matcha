@@ -1,13 +1,41 @@
-.signinWrapper {
-	// background-color: red;
+@import '../palette.scss';
+
+#signinWrapper {
 	margin: 0 0 0 0;
 	padding: 0 0 0 0;
-	// width: 15vw; height: 20vh;
-
+	
 	#signinForm {
+		background-color: rgba(0, 0, 0, 0.1);
+		border: solid 1px rgba(120, 120, 120, 0.5);
 		position: absolute;
-		margin: 5vh 0 0 20vw;
+		margin: 0 0 0 32vw;
 		padding: 0 0 0 0;
-		// width: 15vw; height: 20vh;
+		width: 20vw; height: 20vh;
+		transition: transform 2s;
+		transition-delay: 1.7s;
+		transform: rotateY(0deg);
 	}
+
+	#signinForm_back {
+		background-color: rgba(0, 0, 0, 0.1);
+		border: solid 1px rgba(120, 120, 120, 0.5);
+		position: absolute;
+		margin: 0 0 0 32vw;
+		padding: 0 0 0 0;
+		width: 20vw; height: 20vh;
+		transition: transform 2s;
+		transform: rotateY(90deg);
+	}
+}
+
+#signinForm input, #signinForm_back input {
+	max-width: 60%;
+}
+
+#signinForm span, #signinForm_back span {
+	margin-left: 20%;
+}
+
+#siginBtnSubmit {
+	// margin: 40px 0 0 0;
 }
