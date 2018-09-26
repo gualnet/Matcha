@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
-import css from '../assets/scss/components/SignIn.scss'
+
 /* eslint-enable no-unused-vars */
 import axios from 'axios'
 
@@ -12,8 +12,8 @@ export default class SignInForm extends Component {
       visibility: 'is-invisible',
 
       // compte enregistrer pour les tests
-      Login: 'jonny',
-      Password: 'Passle01'
+      Login: '',
+      Password: ''
     }
     // this.userContext = this.props.userContext
     console.log('constructor', this.userContext)
@@ -60,80 +60,74 @@ export default class SignInForm extends Component {
           })
         }
         // this.setState({ redirect: response.data.docInfo.redirectTo })
+        window.location.replace('/profile')
       })
       .catch((error) => {
         console.log('response err: ', error)
       })
   }
 
-  swapToSignOn = (event) => {
-    event.preventDefault()
-    // turn login form from face to side
-    const sigininElem = document.getElementById('signinForm')
-    console.log('-->', sigininElem.id)
-    sigininElem.id = `${sigininElem.id}_back`
-
-    // turn register form from side to face
-    const registerElem = document.getElementById('signonForm_back')
-    console.log('-->', registerElem.id)
-    registerElem.id = `${registerElem.id.replace('_back', '')}`
-    console.log('-->', registerElem.id)
-  }
-
   render () {
-    // const userContext = this.props.userContext
     return (
-      <div className='' id='signinWrapper'>
-        <form
-          className='box'
-          id='signinForm'
-          method="post"
-          onSubmit={ (e) => this.submitForm(e) }
-        >
+      <div className='columns is-centered' id='signinColumns'>
+        <div className='column is-half'>
+          <form className='box' id='signinWrapper'>
+            <div className='field is-horizontal' id='signinField1'>
+              <div className='field-label'>
+                <label className='label has-text-white-ter'>Login</label>
+              </div>
+              <div className='field-body'>
+                <div className='control has-icons-left'>
+                  <input
+                    className='input'
+                    name='Login'
+                    type='text'
+                    autoComplete='login'
+                    placeholder='login - jonny'
+                    onChange={(e) => this.formHandleChange(e, 'login')}
+                    required='yes'
+                    // value={this.state.Login}
+                  />
+                  <span className="icon is-small is-left">
+                    <i className="fas fa-user"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
 
-          <div className='field'>
-            <p className='control has-text-centered'>
-              {/* <label className='label has-text-white'>Login / mail</label> */}
-              <input
-                className='input is-small'
-                name='Login'
-                type='text'
-                autoComplete='login'
-                placeholder='login'
-                onChange={ (e) => this.formHandleChange(e, 'login') }
-                required='yes'
-                value={this.state.Login}
-              />
-            </p>
-          </div>
-
-          <div className='field has-text-centered'>
-            {/* <label className='label has-text-white'>Password</label> */}
-            <p className='control has-icons-left has-text-centered'>
-              {/* <p className='control has-text-centered has-icons-left'> */}
-              <input
-                className='input is-small'
-                name="password"
-                type='password'
-                autoComplete='password'
-                placeholder='password'
-                onChange={ (e) => this.formHandleChange(e, 'password') }
-                required='yes'
-                value={this.state.Password}
-              />
-              <span className="icon is-small is-left">
-                <i className="fas fa-key"></i>
-              </span>
-            </p>
-          </div>
-
-          <div className='has-text-centered' id='boxBtnFormSubmit'>
-            <button
-              className='button is-small is-black is-outlined'
-              id='BtnSignInSubmit'>Submit</button>
-          </div>
-
-        </form>
+            <div className='field is-horizontal' id='signinField2'>
+              <div className='field-label'>
+                <label className='label has-text-white-ter'>Password</label>
+              </div>
+              <div className='field-body'>
+                <div className='control  has-icons-left'>
+                  <input
+                    className='input'
+                    name='Password'
+                    type='password'
+                    autoComplete='password'
+                    placeholder='Password - Passle01'
+                    onChange={(e) => this.formHandleChange(e, 'password')}
+                    required='yes'
+                    value={this.state.Password}
+                  />
+                  <span className="icon is-small is-left">
+                    <i className="fas fa-key"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className='field is-grouped is-grouped-centered'>
+              <div className='control'>
+                <button
+                  id='signinSubmitBtn'
+                  className='button is-small is-dark is-outlined'
+                  onClick={this.submitForm}
+                >Submit</button>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
     )
   }

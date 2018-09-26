@@ -1,0 +1,41 @@
+@import '../palette.scss';
+
+#profileWrapper {
+	// border: solid green;
+	margin: 0 0 0 0;
+	width: 100vw; height: 100vh;
+	// background-color: #D8DBE2;
+	// // // background-color: rgba(175, 175, 175, 0.9);
+	background-color: rgba(211, 211, 211, 0.9);
+
+	#profileBody {
+		margin-top: 5vh;
+		// border: solid 1px red;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+// dev
+.columns {
+	border: solid 1px red;
+}
+.column {
+	border: solid 1px green;
+}
+.container {
+	border: solid 1px rgb(243, 82, 230);
+}
+.section {
+	border: solid 1px rgb(0, 0, 255);
+}

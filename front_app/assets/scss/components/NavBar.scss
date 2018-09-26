@@ -4,6 +4,19 @@
 .navbar {
 	background-color: rgba(0, 0, 0, 0.1);
 	border-bottom: solid 1px rgba(255, 255, 255, 0.5);
-	color: red;
-	
+	// border: solid 1px rgba(120, 120, 120, 0.5);
+
+	.navbar-item:hover{
+		// padding: 0 0 0 0;
+		// background-color: rgba(0, 0, 0, 0.2);
+	}
+
+	a {
+		color: $color5-75;
+
+	}
+	a:hover {
+		color: $color1-75;
+		// background-color: rgba(0, 0, 0, 0.2);
+	}
 }

@@ -2,15 +2,17 @@
 // IMPORTS
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const devMode = process.env.NODE_ENV !== 'production'
 
 module.exports = {
   mode: 'development',
+  // mode: 'production',
   entry: path.join(__dirname, '/src/index.jsx'),
   output: {
     path: path.join(__dirname, '/dist'),
-    filename: 'app_main.js'
+    filename: 'app_main.js',
+    publicPath: '/'
   },
   module: {
     rules: [
@@ -78,7 +80,13 @@ module.exports = {
   ],
   devServer: {
     contentBase: path.join(__dirname, '/dist'),
+    historyApiFallback: true,
+    port: 8881,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authorization'
+    }
     // compress: true,
-    port: 8881
   }
 }

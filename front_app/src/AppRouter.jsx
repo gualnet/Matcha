@@ -2,6 +2,9 @@
 import React, { Component } from 'react'
 import { Route, Switch } from 'react-router-dom'
 
+// context
+import { UserContext } from '../contexts/UserContext'
+
 // Page includes
 import Home from '../pages/Home.jsx'
 import Profile from '../pages/Profile.jsx'
@@ -11,13 +14,31 @@ import NotFound from '../pages/404.jsx'
 
 const AppRouter = () => {
   return (
-    <Switch>
-      <Route exact path='/' component={ Home } />
-      <Route exact path='/home' component={ Home } />
-      {/* <Route exact path='/profile' component={ Profile } /> */}
-      <Route exact path='/Message' component={ Message } />
-      <Route component={ NotFound } />
-    </Switch>
+    <UserContext.Consumer>
+      {(context) => {
+        return (
+          <Switch>
+            <Route exact path='/'
+              render={(props) => <Home { ...props } userContext={context} />}
+            />
+
+            <Route exact path='/home'
+              render={(props) => <Home { ...props } userContext={context} />}
+            />
+
+            <Route exact path='/profile'
+              render={(props) => <Profile userContext={context} />}
+            />
+
+            <Route exact path='/Message'
+              render={(props) => <Message userContext={context} />}
+            />
+
+            <Route component={ NotFound } />
+          </Switch>
+        )
+      }}
+    </UserContext.Consumer>
   )
 }
 

@@ -11,7 +11,7 @@ import Profile from '../pages/Profile.jsx'
 // context
 import { UserContext } from '../contexts/UserContext'
 
-// import { css } from '../css/App.scss'
+// import { css } from 'main.css'
 /* eslint-enable no-unused-vars */
 
 export default class App extends Component {

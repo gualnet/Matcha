@@ -8,7 +8,7 @@ export class UserProvider extends Component {
   constructor () {
     super()
     const storageContent = JSON.parse(window.localStorage.getItem('userContext'))
-    console.log('storageContent: ', storageContent)
+    // console.log('storageContent: ', storageContent)
     if (!storageContent) {
       // default empty state/store
       this.state = {
