@@ -7,14 +7,52 @@ import ProfileUserInfoPanel from '../components/ProfileUserInfoPanel.jsx'
 
 // css
 import { css } from '../assets/scss/pages/Profile.scss'
+import Axios from 'axios'
 /* eslint-enable no-unused-vars */
 
 // const Profile = () => {
 class Profile extends Component {
+  constructor () {
+    super()
+    this.state = {
+      userState: {}
+    }
+  }
+  // !dev
+  print (...msg) {
+    console.log('\nProfile component : ' + msg)
+  }
+  // dev
+
+  populateUserState () {
+    // console.log('populateUserState: ', this.props.userContext)
+    Axios({
+      method: 'GET',
+      url: `http://localhost:8880/api/user/profil/${this.props.userContext.uid}/${this.props.userContext.token}`,
+      data: { ...this.userContext }
+    }).then((axiosRsp) => {
+      console.log('axiosRsp: ', axiosRsp)
+      if (axiosRsp.data.success) {
+        this.setState({
+          userState: { ...axiosRsp.data.userData }
+        })
+      }
+    }).catch((error) => {
+      console.log('Profile error: ', error)
+      window.location.assign('/')
+    })
+  }
+
+  componentWillMount () {
+    // console.log('Profile component will mount')
+    this.populateUserState()
+  }
+
   render () {
+    console.log('profile component render', this.state)
+    console.log('profile component render', this.props)
     return (
       <div className='section' id='profileWrapper'>
-
         <div className='columns is-centered'>
           <div className='column is-one-third is-offset-1'>
             <div className='bd-notification is-primary'>
@@ -34,7 +72,7 @@ class Profile extends Component {
         <div className='container' id='profileBody'>
           <div className='columns'>
             <div className='column is-4'>
-              <ProfileUserInfoPanel userContext={this.props.userContext} />
+              <ProfileUserInfoPanel userContext={this.props.userContext} userState={this.state.userState}/>
             </div>
 
             <div className='column is-4 is-offset-3'>

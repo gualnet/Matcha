@@ -2,10 +2,10 @@
 import UsersMdl from '../models/UsersMdl'
 import bcrypt from 'bcrypt'
 import tokenUtil from '../utils/token_util'
-import serverConf from '../utils/server';
+import serverConf from '../utils/server'
 
 const profilInputVerif = (params) => {
-  console.log('VERIF PARAMS: ', params)
+  // console.log('VERIF PARAMS: ', params)
   Object.entries(params).forEach(([key, val]) => {
     if (val.length === 0) {
       delete params[key]
@@ -51,7 +51,7 @@ const profilInputVerif = (params) => {
     }
   }
   if (params.Orientation) {
-    if (params.Orientation < 1 || params.Orientation > 3) {
+    if (params.Orientation < 1 || params.Orientation > 5) {
       retTab.verifOrientation = false
     }
   }
@@ -87,7 +87,7 @@ const profilInputVerif = (params) => {
       retTab.verifReported = false
     }
   }
-  console.log('AFTER PARAMS: ', params)
+  // console.log('AFTER PARAMS: ', params)
   return (retTab)
 }
 
@@ -103,7 +103,7 @@ exports.UsersCtrl = {
     for (let elem in retTab) {
       // console.log(`retTab.elem={${retTab[elem]}}`)
       if (!retTab[elem]) {
-        return (res.status(400).type('json').json({ error: {
+        return (res.status(401).type('json').json({ error: {
           login: retTab.verifLogin,
           mail: retTab.verifMail
         } }))
@@ -131,7 +131,7 @@ exports.UsersCtrl = {
         error[params.Mail] = 'used'
       }
       console.log('TEST ERRROR: ', error)
-      return (res.status(400).type('json').json({ error }))
+      return (res.status(401).type('json').json({ error }))
     } else {
       // Creation du nouvel utilisateur
       userMdl.createNewUser(params)
@@ -151,6 +151,11 @@ exports.UsersCtrl = {
     }
   },
 
+  /**
+   * * func login
+   * Handle login request..
+   * return : object { uid, token }
+  **/
   login: async (req, res) => {
     console.log('UsersCtrl func login')
     const userMdl = new UsersMdl()
@@ -229,7 +234,7 @@ exports.UsersCtrl = {
     console.log('0')
     if (!req.query.ul || !req.query.ua) {
       console.log('ERREUR: ', req.query.ul, '|', req.query.ua)
-      res.status(400).type('json').json({
+      res.status(403).type('json').json({
         'error': 'undefined required parameter'
       })
       return
@@ -238,7 +243,7 @@ exports.UsersCtrl = {
     console.log(`END response: `, response)
     console.log('---------------------')
     if (response.affectedRows !== 1) {
-      res.status(400).type('json').json({
+      res.status(401).type('json').json({
         // 'error': `Number of affected row incorrect = [${response.affectedRows}]`
         'error': `Wrong activation token`
       })
@@ -275,30 +280,39 @@ exports.UsersCtrl = {
 
   profilGetUser: (req, res) => {
     console.log('get user profile')
+    // console.log('req: ', req)
+    // console.log('req.headers: ', req.headers)
     console.log('req.params: ', req.params)
+    // console.log('req.body: ', req.body)
     // Todo -------------------------------------
     // Todo 1: verifier si l'id de l'user qui fait la demande
     // Todo 1: est le meme que celui du profile cons
     // Todo -------------------------------------
-    const profilId = req.params.id
+
     const userMdl = new UsersMdl()
     userMdl.find({
       where: {
-        UserId: profilId
+        UserId: req.params.uid,
+        UserToken: req.params.token
       }
     })
       .then((response) => {
         if (Object.keys(response).length !== 0) {
           response = response[0]
-          console.log('Response: ', response)
-          delete response.UserToken
+          console.log('Response Raw: ', response)
+          // * delete data to send for owner display
           delete response.Password
-          delete response.Mail
-          delete response.GeolocAuth
-          delete response.BlockedUsers
           delete response.Reported
-          response.LastName = String(response.LastName).slice(0, 1).concat('***').toUpperCase()
-          res.status(201).type('json').json({ ...response })
+          delete response.UserToken
+          // delete response.Mail
+          // delete response.GeolocAuth
+          // delete response.BlockedUsers
+          // response.LastName = String(response.LastName).slice(0, 1).concat('***').toUpperCase()
+          console.log('Response After: ', response)
+          res.status(201).type('json').json({
+            success: 'ok',
+            userData: { ...response }
+          })
         } else {
           console.log('no user found')
           res.status(204).type('json').json({
@@ -308,7 +322,7 @@ exports.UsersCtrl = {
       })
   },
 
-  profilUpdateUser: (req, res) => {
+  profilUpdateUser: async (req, res) => {
     console.log('update user profil')
     // Todo -------------------------------------
     // Todo 1: verifier si l'id de l'user qui fait la demande
@@ -319,41 +333,100 @@ exports.UsersCtrl = {
     // console.log('req.headers: ', req.headers)
     // console.log('req.params: ', req.params)
     // console.log('req.body: ', req.body)
-    if (req.params.id && req.headers.token) {
-      // console.log('req.params.id: ', req.params.id)
-      // console.log('req.body: ', req.body)
-      // console.log('req.headers.token: ', req.headers.token)
+    // console.log('-------------------------------')
+    // ! voir pour arranger ca
+    const { UserId, UserToken, Login, FirstName,
+      LastName, Age, Gender, Orientation, Bio,
+      Intersest, GeolocAuth } = { ...req.body }
+    const fields = {
+      UserId: UserId,
+      UserToken: UserToken,
+      Login: Login,
+      FirstName: FirstName,
+      LastName: LastName,
+      Age: Age,
+      Gender: Gender,
+      Orientation: Orientation,
+      Bio: Bio,
+      Intersest: Intersest,
+      GeolocAuth: GeolocAuth
+    }
+    // !
 
-      // * Verif user input
-      const verifTab = profilInputVerif(req.body)
-      if (Object.entries(verifTab).length !== 0) {
-        return (res.status(400).type('json').json({
-          error: { ...verifTab }
-        }))
+    // console.log('TEST: ', fields)
+    // * Verif user input
+    const verifTab = profilInputVerif(fields)
+    if (Object.entries(verifTab).length !== 0) {
+      console.log('BOOOM: ', verifTab)
+      return (res.status(204).type('json').json({
+        error: { ...verifTab }
+      }))
+    }
+
+    if (fields.UserId && fields.UserToken) {
+      // console.log('req.body: ', req.body)
+
+      const userMdl = new UsersMdl()
+      try {
+        var getUserResp = await userMdl.getUser({
+          UserId: fields.UserId,
+          UserToken: fields.UserToken
+        })
+        console.log('getUser response: ', getUserResp)
+        if (Object.entries(getUserResp).length < 1) {
+          res.status(401).type('json').json({
+            errorMsg: 'Unauthorized'
+          }).end()
+          return
+        }
+      } catch (error) {
+        res.status(401).type('json').json({
+          errorMsg: 'Unauthorized'
+        }).end()
+        throw error
       }
 
+      // const getUserResp0 = getUserResp[0]
+      // creat new token with updated value before registration
+
+      fields.UserToken = ''
+      console.log('-----------', fields)
+      fields.UserToken = tokenUtil.genUserToken(fields)
       // * go for request
-      const userMdl = new UsersMdl()
-      userMdl.update({
-        set: req.body,
-        where: {
-          UserId: req.params.id,
-          UserToken: req.headers.token
-        }
-      }).then((response) => {
-        console.log('TEST THEN RESPONSE: ', response)
-        res.status(200).type('json').json({ success: 'ok' })
-      }).catch((error) => {
-        console.error('\nERROR profilUpdateUser: ', error.code)
-        res.status(400).type('json').json({
+      try {
+        let response = await userMdl.update({
+          set: fields,
+          where: {
+            UserId: fields.UserId
+          }
+        })
+        console.log('Update RESPONSE: ', response)
+      } catch (error) {
+        // console.error('\n update ERROR profilUpdateUser: ', error)
+        console.error('\n update ERROR profilUpdateUser: ', error.code)
+        res.status(401).type('json').json({
           errorMsg: 'Bad request'
         }).end()
+        throw error
+      }
+
+      const response = await userMdl.getUser({
+        UserId: fields.UserId
       })
+      if (response) {
+        return (res.status(201).type('json').json({
+          'success': 'profilUpdateUser',
+          'userState': {
+            uid: response.UserId,
+            token: response.UserToken
+          }
+        }))
+      }
     } else {
-      // if invalid parameter or invalid token
-      res.status(400).type('json').json({
-        errorMsg: 'authorization or parameter missing'
-      })
+      return (res.status(401).type('json').json({
+        error: 'Unauthorized',
+        errorMsg: 'Unauthorized'
+      }).end())
     }
   }
 }

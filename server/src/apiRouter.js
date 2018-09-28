@@ -12,8 +12,9 @@ exports.router = () => {
   apiRouter.route('/user/activation').get(UsersCtrl.accountActivation)
   apiRouter.route('/user/resetpass').post(UsersCtrl.resetAccountPassword)
 
-  apiRouter.route('/profil/:id').put(UsersCtrl.profilUpdateUser)
-  apiRouter.route('/profil/:id').get(UsersCtrl.profilGetUser)
+  apiRouter.route('/user/profil/:uid/:token')
+    .put(UsersCtrl.profilUpdateUser)
+    .get(UsersCtrl.profilGetUser)
 
   return apiRouter
 }

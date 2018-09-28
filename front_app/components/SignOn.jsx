@@ -191,7 +191,10 @@ export default class SignOnForm extends Component {
 
             <div className='field is-grouped is-grouped-centered'>
               <div className='control'>
-                <button id='signonSubmitBtn' className='button is-small is-dark is-outlined'>Submit</button>
+                <button id='signonSubmitBtn'
+                  className='button is-small is-dark is-outlined'
+                  onClick={this.submitForm}
+                >Submit</button>
               </div>
             </div>
           </form>

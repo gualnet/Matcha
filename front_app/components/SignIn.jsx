@@ -2,7 +2,7 @@
 import React, { Component } from 'react'
 
 /* eslint-enable no-unused-vars */
-import axios from 'axios'
+import Axios from 'axios'
 
 export default class SignInForm extends Component {
   constructor () {
@@ -43,7 +43,7 @@ export default class SignInForm extends Component {
     // * ================================
     const valTab = this.state
 
-    axios({
+    Axios({
       method: 'post',
       url: 'http://localhost:8880/api/user/login/',
       data: valTab
@@ -54,6 +54,7 @@ export default class SignInForm extends Component {
           window.alert('login success')
           const newUid = response.data.userState.uid
           const newToken = response.data.userState.token
+          console.log('newUid & newToken: ', newUid, newToken)
           this.props.userContext.setState({
             uid: newUid,
             token: newToken

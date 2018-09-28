@@ -88,7 +88,11 @@ export default class UsersMdl extends Models {
     return (response)
   }
 
-  async getUser (params, andOr = '') {
+  /**
+   * * func getUser
+   * @param params: {column: value, ...}
+  **/
+  async getUser (params, andOr = 'AND') {
     var wrapper = {}
     Object.entries(params).forEach(
       ([key, val]) => {

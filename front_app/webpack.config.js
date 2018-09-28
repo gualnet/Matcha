@@ -81,12 +81,12 @@ module.exports = {
   devServer: {
     contentBase: path.join(__dirname, '/dist'),
     historyApiFallback: true,
-    port: 8881,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authorization'
-    }
+    port: 8881
+    // headers: {
+    //   'Access-Control-Allow-Origin': '*',
+    //   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    //   'Access-Control-Allow-Headers': 'X-Requested-With, content-type, Authorization'
+    // }
     // compress: true,
   }
 }
