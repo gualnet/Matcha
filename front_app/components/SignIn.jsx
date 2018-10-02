@@ -11,12 +11,11 @@ export default class SignInForm extends Component {
       // real local state
       visibility: 'is-invisible',
 
-      // compte enregistrer pour les tests
       Login: '',
       Password: ''
     }
     // this.userContext = this.props.userContext
-    console.log('constructor', this.userContext)
+    // console.log('constructor', this.userContext)
   }
 
   // * arrow func (auto bind this)

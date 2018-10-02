@@ -23,10 +23,14 @@ export default class Models {
    * @param values: {where: {column: value, ...}}
   **/
   async find (values, andOr = 'AND') {
-    if (Object.values(values.where).length === 0) {
-      console.error('ERROR in models > find(): ', values)
-      return new Error('ERROR empty values', 'Models.js > find')
+    try {
+      if (Object.values(values.where).length === 0) {
+        return new Error('Error in Model.js - find(): empty values')
+      }
+    } catch (error) {
+      console.error('Error in Model.js - find(): ', error)
     }
+
     let reqSql = ` SELECT * FROM ${this.tableName} WHERE `
     const objectLen = Object.values(values.where).length
     let i = 0

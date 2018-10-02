@@ -2,6 +2,7 @@
 // IMPORTS
 /* eslint-disable no-unused-vars */
 import React from 'react'
+import '@babel/polyfill'
 import App from './App.jsx'
 import DefaultCss from '../assets/scss/pages/Default.scss'
 

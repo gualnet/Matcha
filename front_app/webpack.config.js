@@ -8,7 +8,7 @@ const devMode = process.env.NODE_ENV !== 'production'
 module.exports = {
   mode: 'development',
   // mode: 'production',
-  entry: path.join(__dirname, '/src/index.jsx'),
+  entry: ['@babel/polyfill' ,path.join(__dirname, '/src/index.jsx')],
   output: {
     path: path.join(__dirname, '/dist'),
     filename: 'app_main.js',

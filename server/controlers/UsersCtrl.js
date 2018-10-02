@@ -11,83 +11,88 @@ const profilInputVerif = (params) => {
       delete params[key]
     }
   })
-  const regexMail = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
+  const regexMail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
   // regexPassword for mini 8chars 1alpha 1num
   const regexPassword = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
-  let retTab = {}
-  if (params.Login) {
-    if (params.Login === '' || params.Login.length < 2 || params.Login.length > 25) {
-      retTab.verifLogin = false
+  var retTab = {}
+  try {
+    if (params.Login) {
+      if (params.Login === '' || params.Login.length < 2 || params.Login.length > 25) {
+        retTab.verifLogin = false
+      }
     }
-  }
-  if (params.Mail) {
-    if (params.Mail === '' || !regexMail.test(params.Mail) || params.Mail.length > 100) {
-      retTab.verifMail = false
+    if (params.Mail) {
+      if (params.Mail === '' || !regexMail.test(params.Mail) || params.Mail.length > 100) {
+        retTab.verifMail = false
+      }
     }
-  }
-  if (params.Password) {
-    if (params.Password === '' || !regexPassword.test(params.Password) || params.Password.length > 100) {
-      retTab.verifPassword = false
+    if (params.Password) {
+      if (params.Password === '' || !regexPassword.test(params.Password) || params.Password.length > 100) {
+        retTab.verifPassword = false
+      }
     }
-  }
-  if (params.FirstName) {
-    if (params.FirstName.length < 2 || params.FirstName.length > 60) {
-      retTab.verifFirstName = false
+    if (params.FirstName) {
+      if (params.FirstName.length < 2 || params.FirstName.length > 60) {
+        retTab.verifFirstName = false
+      }
     }
-  }
-  if (params.LastName) {
-    if (params.LastName.length < 2 || params.LastName.length > 60) {
-      retTab.verifLastName = false
+    if (params.LastName) {
+      if (params.LastName.length < 2 || params.LastName.length > 60) {
+        retTab.verifLastName = false
+      }
     }
-  }
-  if (params.Age) {
-    if (params.Age < 0 || params.Age > 111) {
-      retTab.verifAge = false
+    if (params.Age) {
+      if (params.Age < 0 || params.Age > 111) {
+        retTab.verifAge = false
+      }
     }
-  }
-  if (params.Gender) {
-    if (params.Gender < 1 || params.Gender > 3) {
-      retTab.verifGender = false
+    if (params.Gender) {
+      if (params.Gender < 1 || params.Gender > 3) {
+        retTab.verifGender = false
+      }
     }
-  }
-  if (params.Orientation) {
-    if (params.Orientation < 1 || params.Orientation > 5) {
-      retTab.verifOrientation = false
+    if (params.Orientation) {
+      if (params.Orientation < 1 || params.Orientation > 5) {
+        retTab.verifOrientation = false
+      }
     }
-  }
-  if (params.Bio) {
-    if (params.Bio.length < 1 || params.Bio.length > 500) {
-      retTab.verifBio = false
+    if (params.Bio) {
+      if (params.Bio.length < 1 || params.Bio.length > 500) {
+        retTab.verifBio = false
+      }
     }
-  }
-  if (params.Interest) {
-    if (params.Interest.length < 1 || params.Interest.length > 500) {
-      retTab.verifInterest = false
+    if (params.Interest) {
+      if (params.Interest.length < 1 || params.Interest.length > 500) {
+        retTab.verifInterest = false
+      }
     }
-  }
-  if (params.Popularity) {
-    if (params.Popularity < -500 || params.Popularity > 500) {
-      // ? si depassement de bornes set aux bornes
-      // ? ou rejet de la modif
-      retTab.verifPopularity = false
+    if (params.Popularity) {
+      if (params.Popularity < -500 || params.Popularity > 500) {
+        // ? si depassement de bornes set aux bornes
+        // ? ou rejet de la modif
+        retTab.verifPopularity = false
+      }
     }
-  }
-  if (params.GeolocAuth) {
-    if (params.GeolocAuth !== 'true' && params.GeolocAuth !== 'false') {
-      retTab.verifGeolocAuth = false
+    if (params.GeolocAuth) {
+      if (params.GeolocAuth !== 1 && params.GeolocAuth !== 0) {
+        retTab.verifGeolocAuth = false
+      }
     }
-  }
-  if (params.BlockedUsers) {
-    if (params.BlockedUsers.length > 1000) {
-      retTab.verifBlockedUsers = false
+    if (params.BlockedUsers) {
+      if (params.BlockedUsers.length > 1000) {
+        retTab.verifBlockedUsers = false
+      }
     }
-  }
-  if (params.Reported) {
-    if (params.Reported !== 'true' && params.Reported !== 'false') {
-      retTab.verifReported = false
+    if (params.Reported) {
+      if (params.Reported !== 'true' && params.Reported !== 'false') {
+        retTab.verifReported = false
+      }
     }
+  } catch (error) {
+    const fileName = __filename.replace(`${__dirname}/`, '')
+    console.error(`Error in ${fileName} - profilInputVerif: `, error)
+    return false
   }
-  // console.log('AFTER PARAMS: ', params)
   return (retTab)
 }
 
@@ -213,10 +218,10 @@ exports.UsersCtrl = {
         UserToken: 'disconnected'
       },
       where: {
-        UserId: uid,
-        UserToken: token
+        UserId: uid
+        // UserToken: token
       }
-    })
+    }, 'OR')
     console.log('userLogout: ', response)
     if (response.affectedRows === 0) {
       return (res.status(401).type('json').json({
@@ -331,16 +336,15 @@ exports.UsersCtrl = {
     // Todo 2: implementer le chargement des images
     // Todo -------------------------------------
     // console.log('req.headers: ', req.headers)
-    // console.log('req.params: ', req.params)
-    // console.log('req.body: ', req.body)
+    console.log('req.params: ', req.params)
+    console.log('req.body: ', req.body)
     // console.log('-------------------------------')
     // ! voir pour arranger ca
-    const { UserId, UserToken, Login, FirstName,
+    const { UserId, Login, FirstName,
       LastName, Age, Gender, Orientation, Bio,
-      Intersest, GeolocAuth } = { ...req.body }
+      Intersest, GeolocAuth } = { ...req.body.userData }
     const fields = {
       UserId: UserId,
-      UserToken: UserToken,
       Login: Login,
       FirstName: FirstName,
       LastName: LastName,
@@ -351,9 +355,8 @@ exports.UsersCtrl = {
       Intersest: Intersest,
       GeolocAuth: GeolocAuth
     }
-    // !
 
-    // console.log('TEST: ', fields)
+    console.log('TEST: ', fields)
     // * Verif user input
     const verifTab = profilInputVerif(fields)
     if (Object.entries(verifTab).length !== 0) {
@@ -363,70 +366,35 @@ exports.UsersCtrl = {
       }))
     }
 
-    if (fields.UserId && fields.UserToken) {
-      // console.log('req.body: ', req.body)
-
-      const userMdl = new UsersMdl()
-      try {
-        var getUserResp = await userMdl.getUser({
-          UserId: fields.UserId,
-          UserToken: fields.UserToken
-        })
-        console.log('getUser response: ', getUserResp)
-        if (Object.entries(getUserResp).length < 1) {
-          res.status(401).type('json').json({
-            errorMsg: 'Unauthorized'
-          }).end()
-          return
-        }
-      } catch (error) {
-        res.status(401).type('json').json({
-          errorMsg: 'Unauthorized'
-        }).end()
-        throw error
+    const userMdl = new UsersMdl()
+    const sqlRsp = await userMdl.update({
+      set: {
+        ...fields
+      },
+      where: {
+        UserToken: req.body.token
       }
-
-      // const getUserResp0 = getUserResp[0]
-      // creat new token with updated value before registration
-
-      fields.UserToken = ''
-      console.log('-----------', fields)
-      fields.UserToken = tokenUtil.genUserToken(fields)
-      // * go for request
-      try {
-        let response = await userMdl.update({
-          set: fields,
-          where: {
-            UserId: fields.UserId
-          }
-        })
-        console.log('Update RESPONSE: ', response)
-      } catch (error) {
-        // console.error('\n update ERROR profilUpdateUser: ', error)
-        console.error('\n update ERROR profilUpdateUser: ', error.code)
-        res.status(401).type('json').json({
-          errorMsg: 'Bad request'
-        }).end()
-        throw error
-      }
-
-      const response = await userMdl.getUser({
-        UserId: fields.UserId
-      })
-      if (response) {
+    })
+    try {
+      if (sqlRsp.affectedRows > 0) {
+        console.log('update result: ', sqlRsp)
         return (res.status(201).type('json').json({
-          'success': 'profilUpdateUser',
-          'userState': {
-            uid: response.UserId,
-            token: response.UserToken
+          success: 'profilUpdateUser',
+          userState: {
+            ...fields
           }
         }))
+      } else {
+        console.error('Error profileUpdateUser [01]: ', sqlRsp)
+        return (res.status(500).type('json').json({
+          error: 'Internal Server Error'
+        }))
       }
-    } else {
-      return (res.status(401).type('json').json({
-        error: 'Unauthorized',
-        errorMsg: 'Unauthorized'
-      }).end())
+    } catch (error) {
+      console.error('Error profileUpdateUser [02]: ', error)
+      return (res.status(500).type('json').json({
+        error: 'Internal Server Error'
+      }))
     }
   }
 }

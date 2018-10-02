@@ -4,10 +4,10 @@ import React, { Component } from 'react'
 
 // component
 import ProfileUserInfoPanel from '../components/ProfileUserInfoPanel.jsx'
+import ProfilePicManager from '../components/ProfilePicManager.jsx'
 
 // css
 import { css } from '../assets/scss/pages/Profile.scss'
-import Axios from 'axios'
 /* eslint-enable no-unused-vars */
 
 // const Profile = () => {
@@ -24,23 +24,25 @@ class Profile extends Component {
   }
   // dev
 
-  populateUserState () {
+  async populateUserState () {
+    // console.log('populateUserState: ')
     // console.log('populateUserState: ', this.props.userContext)
-    Axios({
-      method: 'GET',
-      url: `http://localhost:8880/api/user/profil/${this.props.userContext.uid}/${this.props.userContext.token}`,
-      data: { ...this.userContext }
-    }).then((axiosRsp) => {
-      console.log('axiosRsp: ', axiosRsp)
-      if (axiosRsp.data.success) {
+    try {
+      let response = await window.fetch(`http://localhost:8880/api/user/profil/${this.props.userContext.uid}/${this.props.userContext.token}`)
+      if (response.ok) {
+        let responseData = await response.json()
+        // console.log('Server Response: ', responseData)
         this.setState({
-          userState: { ...axiosRsp.data.userData }
+          userState: { ...responseData.userData }
         })
+      } else {
+        console.log('Server Response Error: ',
+          response.status, ' - ', response.statusText)
       }
-    }).catch((error) => {
-      console.log('Profile error: ', error)
-      window.location.assign('/')
-    })
+    } catch (error) {
+      console.log('Error fetch request: ', error)
+    }
+    // console.log('populateUserState: END')
   }
 
   componentWillMount () {
@@ -49,8 +51,8 @@ class Profile extends Component {
   }
 
   render () {
-    console.log('profile component render', this.state)
-    console.log('profile component render', this.props)
+    // console.log('profile component render', this.state)
+    // console.log('profile component render', this.props)
     return (
       <div className='section' id='profileWrapper'>
         <div className='columns is-centered'>
@@ -76,7 +78,7 @@ class Profile extends Component {
             </div>
 
             <div className='column is-4 is-offset-3'>
-              // component pour la gestion des photos
+              <ProfilePicManager userContext={this.props.userContext}/>
             </div>
           </div>
         </div>

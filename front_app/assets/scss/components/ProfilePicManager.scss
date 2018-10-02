@@ -1,0 +1,47 @@
+#ProfilePicManagerSection {
+
+	#col1-1 {
+		padding: 0 0 0 0;
+	}
+
+	#col2-1, #col2-2{
+		padding: 0 0 0 0;
+	}
+
+	#picTop-1-1, #picTop-2-1, #picTop-1-2, #picTop-2-2 {
+		// border: 1px solid red;
+		z-index: 2;
+	}
+
+	#picBottom-1-1, #picBottom-2-1, #picBottom-1-2, #picBottom-2-2 {
+		display: none;
+		position: absolute;
+		z-index: 1;
+		left: -20%;
+	}
+
+	canvas {
+		border: solid red;
+		height: 200px;
+	}
+}
+
+
+
+
+// #ProfilePicManagerSection {
+
+// 	// dev
+// 	.columns {
+// 		border: solid 1px red;
+// 	}
+// 	.column {
+// 		border: solid 1px green;
+// 	}
+// 	.container {
+// 		border: solid 1px rgb(243, 82, 230);
+// 	}
+// 	.section {
+// 		border: solid 1px rgb(0, 0, 255);
+// 	}
+// }

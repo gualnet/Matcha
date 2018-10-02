@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "strict": true,
+    "outDir": "ts_outdir",
+    "target": "es6"
+    
+  },
+
+  "include": [
+    "*"
+  ]
+}

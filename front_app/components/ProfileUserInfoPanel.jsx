@@ -4,17 +4,13 @@ import React, { Component } from 'react'
 // css
 import { css } from '../assets/scss/components/ProfileUserInfoPanel.scss'
 /* eslint-enable no-unused-vars */
-import Axios from 'axios'
 
 export default class ProfileUserInfoPanel extends Component {
   constructor () {
     super()
     this.state = {
       component: {
-        pendingModification: false,
-        checkAttrGender: [false, false, false],
-        checkAttrOrientation: [false, false, false, false, false],
-        checkAttrGeoloc: [false, false]
+        pendingModification: false
       },
       userData: {
       }
@@ -25,75 +21,148 @@ export default class ProfileUserInfoPanel extends Component {
     console.log('\nInfo Panel: ' + msg)
   }
 
-  genderSelector (event) {
-    // console.log('gender selector1: ', event.target.value)
-    let value = -1
-    let check = [false, false, false]
-    if (event.target.value === 'male') {
-      value = 1
-    } else if (event.target.value === 'female') {
-      value = 2
-    } else if (event.target.value === 'genderqueer') {
-      value = 3
+  getGenderName () {
+    switch (this.state.userData.Gender) {
+      case 0:
+        return 'Male'
+      case 1:
+        return 'Female'
+      case 2:
+        return 'Genderqueer'
+      default:
+        return 'Unknown'
     }
-    if (value > 3 || value < 1) {
-      return false
-    }
-
-    check[value - 1] = true
-    let newState = this.state
-    newState.component.pendingModification = true
-    newState.component.checkAttrGender = check
-    newState.userData.Gender = value
-    this.setState({ ...newState })
   }
 
-  orientationSelector (event) {
-    // console.log('orientation selector1: ', event.target.value)
+  setGender (event) {
+    // console.log('SET GENDER: ', event.target.value)
     let value = -1
-    if (event.target.value === 'Heterosex') {
-      value = 1
-    } else if (event.target.value === 'Bisex') {
-      value = 2
-    } else if (event.target.value === 'Homosex') {
-      value = 3
-    } else if (event.target.value === 'Pansex') {
-      value = 4
-    } else if (event.target.value === 'Asex') {
-      value = 5
+    switch (event.target.value) {
+      case 'Queergender':
+        value = 2
+        break
+      case 'Male':
+        value = 0
+        break
+      case 'Female':
+        value = 1
+        break
+      default:
+        document.getElementById('selectGender').setAttribute('class', 'select is-small is-danger')
+        return
     }
-    if (value > 5 || value < 1) {
-      return false
+    if (value !== -1) {
+      document.getElementById('selectGender').setAttribute('class', 'select is-small is-success')
     }
-
-    /*
-    ** je recupere le tableau d'etat de mes boutons radio
-    ** je le reset
-    ** et repasse le bouton selectionne a true
-    */
-    let checked = [false, false, false, false, false]
-    checked[value - 1] = true
-    let newState = this.state
-    newState.component.pendingModification = true
-    newState.component.checkAttrOrientation = checked
-    newState.userData.Orientation = value
-    this.setState({ ...newState })
+    console.log(value)
+    this.setState({
+      ...this.state,
+      component: {
+        pendingModification: true
+      },
+      userData: {
+        ...this.state.userData,
+        Gender: value
+      }
+    })
   }
 
-  geolocAuthSelector (event) {
-    console.log('geoloc selector1: ', this.state)
-    let value = true
-    let checked = [true, false]
-    if (event.target.value === 'false') {
-      value = false
-      checked = [false, true]
+  getOrientationName () {
+    switch (this.state.userData.Orientation) {
+      case 0:
+        return 'Heterosex'
+      case 1:
+        return 'Bisex'
+      case 2:
+        return 'Homosex'
+      case 3:
+        return 'Pansex'
+      case 4:
+        return 'Asex'
+      default:
+        return 'Unknown'
     }
+  }
 
-    let newState = this.state
-    newState.component.pendingModification = true
-    newState.component.checkAttrGeoloc = checked
-    newState.userData.GeolocAuth = value
-    this.setState({ ...newState })
+  setOrientation (event) {
+    // console.log('SET ORIENTATION: ', event.target.value)
+    let value = -1
+    switch (event.target.value) {
+      case 'Heterosex':
+        value = 0
+        break
+      case 'Bisex':
+        value = 1
+        break
+      case 'Homosex':
+        value = 2
+        break
+      case 'Pansex':
+        value = 3
+        break
+      case 'Asex':
+        value = 4
+        break
+      default:
+        document.getElementById('selectOrientation').setAttribute('class', 'select is-small is-danger')
+        return
+    }
+    if (value !== -1) {
+      document.getElementById('selectOrientation').setAttribute('class', 'select is-small is-success')
+    }
+    console.log(value)
+    this.setState({
+      ...this.state,
+      component: {
+        pendingModification: true
+      },
+      userData: {
+        ...this.state.userData,
+        Orientation: value
+      }
+    })
+  }
+
+  getGeolocAuthName () {
+    // console.log('GeolocAuth status: ', this.state.userData.GeolocAuth)
+    switch (this.state.userData.GeolocAuth) {
+      case 1:
+        return '✅'
+      case 0:
+        return '❌'
+      default:
+        return 'Unknown'
+    }
+  }
+
+  setGeolocAuth (event) {
+    // console.log('SET GEALOCAUTH: ', event.target.value)
+    let value = -1
+    switch (event.target.value) {
+      case '✅':
+        value = 1
+        break
+      case '❌':
+        value = 0
+        break
+      default:
+        document.getElementById('selectGeolocAuth').setAttribute('class', 'select is-small is-danger')
+        return
+    }
+    if (value !== -1) {
+      document.getElementById('selectGeolocAuth').setAttribute('class', 'select is-small is-success')
+    }
+    console.log('Setting value:', value)
+    this.setState({
+      ...this.state,
+      component: {
+        pendingModification: true
+      },
+      userData: {
+        ...this.state.userData,
+        GeolocAuth: value
+      }
+    })
   }
 
   handleModifs (event, fieldName) {
@@ -104,13 +173,23 @@ export default class ProfileUserInfoPanel extends Component {
     if (fieldName === 'Age') {
       value = Number(value)
       console.log('value: ', value)
-      let ageInput = document.getElementById('ageInput')
+      const ageInput = document.getElementById('ageInput')
       if (Number.isNaN(value) || value < 15 || value > 111) {
         ageInput.setAttribute('class', `input is-small is-danger`)
       } else {
-        let newAttr = ageInput.getAttribute('class').replace(' is-danger', '')
+        const newAttr = ageInput.getAttribute('class').replace(' is-danger', '')
         console.log('newAttr: ', newAttr)
         ageInput.setAttribute('class', `${newAttr}`)
+      }
+    }
+    if (fieldName === 'Mail') {
+      const regexMail = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+      let mailInput = document.getElementById('mailInput')
+      if (!regexMail.test(value)) {
+        mailInput.setAttribute('class', `input is-small is-danger`)
+      } else {
+        const newAttr = mailInput.getAttribute('class').replace(' is-danger', ' is-success')
+        mailInput.setAttribute('class', newAttr)
       }
     }
 
@@ -122,37 +201,43 @@ export default class ProfileUserInfoPanel extends Component {
     this.setState({ ...newState })
   }
 
-  updateRequest (event) {
+  async updateRequest (event) {
     event.preventDefault()
     if (!this.state.component.pendingModification) {
-      console.log('No modification has been detected')
+      // console.log('No modification has been detected')
       return
     }
-    console.log('MOOOOOOODIFFFFFFFFF')
-    let dataToSend = { ...this.state }
+    let dataToSend = {
+      ...this.state,
+      token: this.props.userContext.token
+    }
     delete dataToSend.checkAttrGender
     delete dataToSend.checkAttrOrientation
     delete dataToSend.checkAttrGeoloc
     delete dataToSend.pendingModification
     // console.log('dataToSend: ', dataToSend)
-    Axios({
-      method: 'PUT',
-      url: `http://localhost:8880/api/user/profil/${this.props.userContext.uid}/${this.props.userContext.token}`,
-      data: dataToSend
-    }).then((response) => {
-      console.log('Response', response)
-      if (response.data.success) {
-        window.alert('success: ', response.data.success)
-        this.setState({ ...response.data.userState })
-        this.props.userContext.setState({
-          token: response.data.userState.token
-        })
-      } else if (response.data.error) {
-        window.alert('success: ', response.data.success)
+
+    try {
+      let response = await window.fetch(`http://localhost:8880/api/user/profil`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dataToSend)
+      })
+
+      if (response.ok) {
+        console.log('response: ', response)
+        let responseData = await response.json()
+        console.log('responseData: ', responseData)
+        window.location.reload()
+      } else {
+        console.log('Server Response Error: ',
+          response.status, ' - ', response.statusText)
       }
-    }).catch((error) => {
-      console.error('Error: Axios request failed', error)
-    })
+    } catch (error) {
+      console.log('Error fetch request: ', error)
+    }
   }
 
   // watch la maj de props (props.userState)
@@ -164,55 +249,10 @@ export default class ProfileUserInfoPanel extends Component {
         userData: { ...this.props.userState }
       })
     }
-    if (this.state.component !== prevState.component) {
-      console.log('this.state.component !== prevState.component')
-      console.log(this.state.component)
-      console.log(prevState.component)
-      // this.setRadioButton()
-    }
-  }
-
-  // to set the radio buttons before render
-  setRadioButton () {
-    console.log('Info Panel setRadioButton-->', this.state)
-    // console.log('Info Panel this.props-->', this.props)
-    // console.log('this.props.userState-->', this.props.userState)
-    const userData = this.state.userData
-    // if (Object.entries(this.userData).lenght === 0) {
-    //   return
-    // }
-
-    let checkGender = this.state.component.checkAttrGender
-    if (userData.Gender > 0) {
-      console.log('::userData.Gender::', userData.Gender)
-      checkGender[userData.Gender - 1] = true
-    }
-
-    let checkOrientation = this.state.component.checkAttrOrientation
-    if (userData.Orientation > 0) {
-      console.log('::userData.Orientation::', userData.Orientation)
-      checkOrientation[userData.Orientation - 1] = true
-    }
-
-    var checkGeoloc = this.state.component.checkAttrGeoloc
-    if (userData.GeolocAuth === true) {
-      console.log('::userData.GeolocAuth::', userData.GeolocAuth)
-      checkGeoloc = [false, true]
-    } else {
-      checkGeoloc = [true, false]
-    }
-    this.setState({
-      component: {
-        pendingModification: this.state.component.pendingModification,
-        checkAttrGender: checkGender,
-        checkAttrOrientation: checkOrientation,
-        checkAttrGeoloc: checkGeoloc
-      }
-    })
   }
 
   render () {
-    console.log('Infon Panel RENDER-->', this.state)
+    // console.log('Infon Panel RENDER-->', this.state)
     // console.log('RENDER-->', this.props)
     // const userData = this.state.userData
     // const component = this.state.component
@@ -244,65 +284,41 @@ export default class ProfileUserInfoPanel extends Component {
         <label className='label'>Mail</label>
         a faire validation cahngement de mail
         <div className='panel-block'>
-          <input className='input is-small'
+          <input disabled className='input is-small'
+            id='mailInput'
             defaultValue={this.state.userData.Mail}
-            onChange={(e) => this.handleModifs(e, 'Mail')}
+            // onChange={(e) => this.handleModifs(e, 'Mail')}
           />
         </div>
         <label className='label'>Gender</label>
-        <div className='panel-block'>
-          <label className='radio'>
-            <input type='radio' name='gender' value='male'
-              onChange={(event) => this.genderSelector(event)}
-              checked={this.state.component.checkAttrGender[0]}
-            /> Male
-          </label>
-          <label className='radio'>
-            <input type='radio' name='gender' value='female'
-              onChange={(event) => this.genderSelector(event)}
-              checked={this.state.component.checkAttrGender[1]}
-            /> Female
-          </label>
-          <label className='radio'>
-            <input type='radio' name='gender' value='genderqueer'
-              onChange={(event) => this.genderSelector(event)}
-              checked={this.state.component.checkAttrGender[2]}
-            /> Genderqueer
-          </label>
+        <div className='panel-block'
+          onChange={(e) => { this.setGender(e) }}
+        >
+          <div className="select is-small" id='selectGender'>
+            <select>
+              <option>{this.getGenderName()}</option>
+              <option>Queergender</option>
+              <option>Male</option>
+              <option>Female</option>
+            </select>
+          </div>
         </div>
         <label className='label'>Orientation</label>
-        <div className='panel-block'>
-          <label className='radio'>
-            <input type='radio' name='orientation'
-              value='Heterosex'
-              onChange={(event) => this.orientationSelector(event)}
-              checked={this.state.component.checkAttrOrientation[0]} /> Heterosex
-          </label>
-          <label className='radio'>
-            <input type='radio' name='orientation'
-              value='Bisex'
-              onChange={(event) => this.orientationSelector(event)}
-              checked={this.state.component.checkAttrOrientation[1]} /> Bisex
-          </label>
-          <label className='radio'>
-            <input type='radio' name='orientation'
-              value='Homosex'
-              onChange={(event) => this.orientationSelector(event)}
-              checked={this.state.component.checkAttrOrientation[2]} /> Homosex
-          </label>
-          <label className='radio'>
-            <input type='radio' name='orientation'
-              value='Pansex'
-              onChange={(event) => this.orientationSelector(event)}
-              checked={this.state.component.checkAttrOrientation[3]} /> Pansex
-          </label>
-          <label className='radio'>
-            <input type='radio' name='orientation'
-              value='Asex'
-              onChange={(event) => this.orientationSelector(event)}
-              checked={this.state.component.checkAttrOrientation[4]} /> Asex
-          </label>
+        <div className='panel-block'
+          onChange={(e) => { this.setOrientation(e) }}
+        >
+          <div className="select is-small" id='selectOrientation'>
+            <select>
+              <option>{this.getOrientationName()}</option>
+              <option>Heterosex</option>
+              <option>Bisex</option>
+              <option>Homosex</option>
+              <option>Pansex</option>
+              <option>Asex</option>
+            </select>
+          </div>
         </div>
+
         <label className='label'>Bio</label>
         <div className='panel-block'>
 
@@ -313,17 +329,16 @@ export default class ProfileUserInfoPanel extends Component {
 
         </div>
         <label className='label'>GeolocAuth</label>
-        <div className='panel-block'>
-          <label className='radio'>
-            <input type='radio' name='geolocAuth' value='true'
-              onChange={(event) => this.geolocAuthSelector(event)}
-              checked={this.state.component.checkAttrGeoloc[0]} /> 👍
-          </label>
-          <label className='radio'>
-            <input type='radio' name='geolocAuth' value='false'
-              onChange={(event) => this.geolocAuthSelector(event)}
-              checked={this.state.component.checkAttrGeoloc[1]} /> 🖕
-          </label>
+        <div className='panel-block'
+          onChange={(e) => { this.setGeolocAuth(e) }}
+        >
+          <div className="select is-small" id='selectGeolocAuth'>
+            <select>
+              <option>{this.getGeolocAuthName()}</option>
+              <option>✅</option>
+              <option>❌</option>
+            </select>
+          </div>
         </div>
         <div className='panel-block'>
           <button
