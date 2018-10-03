@@ -9,10 +9,15 @@ const BodyParser = require('body-parser')
 const server = Express()
 
 // Static serv..
-server.use('/static', Express.static('public'))
+server.use('/public', Express.static('./UsersStorage'))
 // Body Parser config
-server.use(BodyParser.urlencoded({ extended: true }))
-server.use(BodyParser.json())
+server.use(BodyParser.json({
+  limit: '2mb'
+}))
+server.use(BodyParser.urlencoded({
+  limit: '2mb',
+  extended: true
+}))
 
 // CORS auth
 server.use((req, res, next) => {

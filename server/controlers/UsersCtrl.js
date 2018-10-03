@@ -1,8 +1,12 @@
-
+// IMPORT
 import UsersMdl from '../models/UsersMdl'
 import bcrypt from 'bcrypt'
 import tokenUtil from '../utils/token_util'
 import serverConf from '../utils/server'
+
+// CONST
+const FILENAME = __filename.replace(`${__dirname}/`, '')
+//
 
 const profilInputVerif = (params) => {
   // console.log('VERIF PARAMS: ', params)
@@ -89,8 +93,7 @@ const profilInputVerif = (params) => {
       }
     }
   } catch (error) {
-    const fileName = __filename.replace(`${__dirname}/`, '')
-    console.error(`Error in ${fileName} - profilInputVerif: `, error)
+    console.error(`Error in ${FILENAME} - profilInputVerif: `, error)
     return false
   }
   return (retTab)

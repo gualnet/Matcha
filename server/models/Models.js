@@ -14,7 +14,7 @@ export default class Models {
   constructor (tableName) {
     this.tableName = tableName
     if (serverConf.debugMsg) {
-      console.log('Constructor class Models')
+      console.log('Constructor class Models with table: ', tableName)
     }
   }
 
@@ -25,7 +25,7 @@ export default class Models {
   async find (values, andOr = 'AND') {
     try {
       if (Object.values(values.where).length === 0) {
-        return new Error('Error in Model.js - find(): empty values')
+        return (new Error('Error in Model.js - find(): empty values'))
       }
     } catch (error) {
       console.error('Error in Model.js - find(): ', error)
@@ -54,14 +54,18 @@ export default class Models {
 
   /**
    * * func insert
-   * @param values: {values: {column: value, ...}}
+   * @param values: {where: {column: value, ...}}
   **/
   async insert (values) {
     console.log('INSERT Object: ', values)
 
-    if (Object.values(values.where).length === 0) {
-      console.error('ERROR in models > insert(): ', values)
-      return new Error('ERROR empty values', 'Models.js > insert')
+    try {
+      if (Object.values(values.where).length === 0) {
+        console.error('ERROR in models > insert(): ', values)
+        return (new Error('ERROR empty values', 'Models.js > insert'))
+      }
+    } catch (error) {
+      console.error('Error in Model.js - find(): ', error)
     }
 
     let reqSql = ` INSERT INTO ${this.tableName} (`

@@ -7,8 +7,7 @@
     "build": "npx babel src -d lib/src && npx babel --watch config -d lib/config && npx babel --watch controlers -d lib/controlers && npx --watch babel models -d lib/models",
     "lint": "npx nodemon --exec npx eslint .",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx nodemon --exec npx babel-node src/index.js",
-    "dev": "npx nodemon --exec npx babel-node src/index.js"
+    "start": "npx nodemon --exec npx babel-node src/index.js"
   },
   "repository": {
     "type": "git",
@@ -40,13 +39,11 @@
     "@babel/preset-env": "^7.0.0",
     "@babel/runtime": "^7.0.0",
     "@types/express": "^4.16.0",
-    "@types/node": "^10.11.3",
     "eslint": "^5.6.0",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-node": "^7.0.1",
     "eslint-plugin-promise": "^4.0.1",
-    "eslint-plugin-standard": "^4.0.0",
-    "typescript": "^3.1.1"
+    "eslint-plugin-standard": "^4.0.0"
   }
 }

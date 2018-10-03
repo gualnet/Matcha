@@ -1,6 +1,7 @@
 // Imports
-import { UsersCtrl } from '../controlers/UsersCtrl'
 import { verifCreds } from '../middleware/verifCreds'
+import { UsersCtrl } from '../controlers/UsersCtrl'
+import { PicturesCtrl } from '../controlers/PicturesCtrl'
 const Express = require('express')
 
 // Routes
@@ -15,12 +16,14 @@ exports.router = () => {
 
   apiRouter.route('/user/profil/:uid/:token')
     .get(UsersCtrl.profilGetUser)
-  apiRouter.route('/user/profil')
-    .put(verifCreds, UsersCtrl.profilUpdateUser)
 
-
-  apiRouter.route('/picture/add')
-    .put(verifCreds, UsersCtrl.profilUpdateUser)
+  const picCtrl = new PicturesCtrl()
+  apiRouter.route('/picture')
+    .post(verifCreds, picCtrl.addNewPicture)
+    .put(verifCreds, picCtrl.setMainPicture)
+    .delete(verifCreds, picCtrl.removePicture)
+  apiRouter.route('/picture/userpics')
+    .post(verifCreds, picCtrl.getAllPicture)
 
   return apiRouter
 }

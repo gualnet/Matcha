@@ -56,3 +56,4 @@ dkms.conf
 node_modules
 script*
 FakeUserData
+UsersStorage
