@@ -1,3 +1,5 @@
+$NO_PIC_BG: 'https://images.unsplash.com/photo-1537037124419-bdc2fa27f648?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=e8f0934c701f8f1a35b3229d1001a0e8&auto=format&fit=crop&w=1350&q=80';
+
 #ProfilePicManagerSection {
 
 	#col1-1 {
@@ -10,20 +12,21 @@
 
 	#figureTopMain {
 		overflow: scroll;
-		min-width: 400px;
+		// min-width: 400px;
 		// min-height: 250px;
-		max-width: 450px;
-		max-height: 300px;
-		// overflow: hidden;
+		// max-width: 450px;
+		// max-height: 300px;
 	}
-	
-	
-	
 
 	#picTopMain {
-		height: 100%;
-		width: 100%;
+		// height: 100%;
+		// width: 100%;
+		min-width: 400px;
+		min-height: 250px;
 		bottom: 0;
+		background-image: url($NO_PIC_BG);
+		background-size: cover;
+		transition: 2s;
 	}
 
 	#picTop-1-1,
@@ -31,20 +34,13 @@
 	#picTop-1-2,
 	#picTop-2-2 {
 		height: 130px;
-		// width: 200px;
 		width: 100%;
+		// width: 200px;
 		z-index: 2;
-		background-color: rgba(0, 0, 0, 0.5);
-	}
-
-	#picBottom-1-1,
-	#picBottom-2-1,
-	#picBottom-1-2,
-	#picBottom-2-2 {
-		// display: none;
-		position: absolute;
-		z-index: 1;
-		// left: -20%;
+		background-image: url($NO_PIC_BG);
+		background-size: cover;
+		transition: 2s;
+		// background-color: rgba(255, 0, 0, 0.5);
 	}
 
 }
@@ -72,13 +68,6 @@
 			background-color: rgba(255, 0, 0, 0.75);
 		}
 	}
-
-	// #figureTop-1-1:hover {
-	// 	.delete {
-	// 		display: initial;
-	// 	}
-	// }
-	
 
 	}
 

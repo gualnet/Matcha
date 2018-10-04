@@ -71,7 +71,7 @@ export class PicturesCtrl {
       }
     } catch (error) {
       console.error(`Error[01] in ${FILENAME} - addNewPicture: `, error)
-      return (res.status('500').type('json').json({
+      return (res.status('400').type('json').json({
         error: 'error'
       }))
     }
@@ -84,7 +84,7 @@ export class PicturesCtrl {
       if (!fs.existsSync(newPicPath)) {
         if ((fd = fs.openSync(newPicPath, 'w', )) < 0) {
           console.error(`Error[02] in ${FILENAME} - addNewPicture: impossible de creer le ficher`)
-          return (res.status('500').type('json').json({
+          return (res.status('400').type('json').json({
             error: 'error'
           }))
         } else {
@@ -116,14 +116,33 @@ export class PicturesCtrl {
         PicOwner: rspUserData.UserId
       }
     })
-    console.log('sqlRep: ',)
+    console.log('sqlRep: ', sqlRep)
+    if (sqlRep.affectedRows === 1) {
+      return (res.status('201').type('json').json({
+        success: true,
+        msg: 'Picture created successfully',
+        result: {
+          newPicAddr: servDir
+        }
+      }))
+    }
   }
 
   async removePicture (req, res) {
     console.log('removePicture', req.body)
+    if (req.body.rmPic === undefined) {
+      return (res.status('400').type('json').json({
+        success: false,
+        msg: 'No picture deleted for... some obscure reason',
+        result: {}
+      }))
+    }
+    // remove la photo
+    const picPath = req.body.rmPic.replace('/public/', './UsersStorage/')
+    fs.unlinkSync(picPath) // unlink return undefined so it's always ok :)
+
     // remove le chemin de la photo en base
     const picturesMdl = new Models('Pictures')
-
     const sqlRep = await picturesMdl.delete({
       where: {
         PicOwner: req.body.AUTH_USER.UserId,
