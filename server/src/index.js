@@ -22,15 +22,14 @@ server.use(BodyParser.urlencoded({
 // CORS auth
 server.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
-  res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, OPTIONS')
+  res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS')
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
   next()
 })
 
 // Routes
 server.get('/', (req, res) => {
-  console.log('BOOOM000')
-  res.setHeader('Content-Type')
+  res.setHeader('Content-Type', 'application/json')
   // res.setHeader('Content-Type', 'text/html')
   res.status(200).send('<h1> Welcome </h1>')
 })

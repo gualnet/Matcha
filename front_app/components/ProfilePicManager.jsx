@@ -23,6 +23,56 @@ export default class ProfilePicManager extends Component {
     }
   }
 
+  /* eslint-disable */
+  async deletePic (event) {
+    console.log('deletePic: ', event.target.id)
+    // console.log('deletePic: ', event.target.parentElement)
+    // console.log('deletePic: ', event.target.parentElement.childNodes[1].src)
+    const rmSrc = event.target.parentElement.childNodes[1].src
+    if (rmSrc === NO_PIC_ADDR) {
+      return
+    }
+    if (rmSrc === this.state.mainPicAddr) {
+      this.setState({
+        ...this.state,
+        mainPicAddr: ''
+      })
+    } else {
+      let newArr = this.state.otherPicsAddr
+      for (let i = 0; i < 5; i++) {
+        if (rmSrc === this.state.otherPicsAddr[i]) {
+          newArr[i] = ''
+          this.setState({
+            ...this.state,
+            otherPicsAddr: newArr
+          })
+          break
+        }
+      }
+    }
+
+    const imgName = rmSrc.replace('http://localhost:8880', '')
+    let dataToSend = {
+      token: this.props.userContext.token,
+      rmPic: imgName
+    }
+    const fetchRep = await window.fetch('http://localhost:8880/api/picture',
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dataToSend)
+      })
+    if (fetchRep.ok) {
+      this.getUserPics()
+    }
+    
+    // for (let i = 0; i < this.state.)
+    // const imgName = rmSrc.replace('http://localhost:8880/public/', '')
+    console.log('deletePic: ', imgName)
+  }
+
   initBottomPicsPosition () {
     let elemsPicBottom = []
     elemsPicBottom[0] = document.getElementById('picBottom-1-1')
@@ -42,12 +92,9 @@ export default class ProfilePicManager extends Component {
     for (let i = 0; i < 4; i++) {
       elemsPicBottom[i].style.top = `-${elemsPicTop[0].offsetHeight}px`
       // elemsPicBottom[i].style.top = `-${PicTopheight}px`
-      elemsPicBottom[i].setAttribute('src', this.state.mainPicAddr)
+      elemsPicBottom[i].setAttribute('src', NO_PIC_ADDR)
     }
 
-    // } catch (error) {
-    //   console.error('Erreur initBottomPicsPosition: ', error)
-    // }
   }
 
   handleTopPicClick (event, key) {
@@ -84,13 +131,16 @@ export default class ProfilePicManager extends Component {
         rawData: e.target.result,
         token: this.props.userContext.token
       }
-      window.fetch(`http://localhost:8880/api/picture`, {
+      const fetchRep = window.fetch(`http://localhost:8880/api/picture`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(dataToSend)
       })
+      if (fetchRep.ok) {
+        this.getUserPics()
+      }
     }
     reader.readAsDataURL(file)
   }
@@ -116,26 +166,28 @@ export default class ProfilePicManager extends Component {
     }
 
     // extract all pics address into picsAddrArr
-    const mainPicNum = Number((rspData.result.mainPicNum < 0 || 
+    const mainPicNum = Number((rspData.result.mainPicNum < 0 ||
     rspData.result.mainPicNum > 4) ? 0 : rspData.result.mainPicNum)
     let picsAddrArr = []
+    let mainPicAddr = NO_PIC_ADDR
+    let j = 0
     for (let i = 0; i < 5; i++) {
-      // console.log('[mainPicNum:', mainPicNum, ']-[i:', i, ']', i !== mainPicNum)
       if (i !== mainPicNum && rspData.result.picsAddr[i] !== undefined) {
-        // console.log('pic[',i,']--->', rspData.result.picsAddr[i])
-        picsAddrArr[i] = GVARS.backendURL.concat('/',
-          rspData.result.picsAddr[i]).replace('./UsersStorage', 'public')
+        picsAddrArr[j] = GVARS.backendURL.concat(rspData.result.picsAddr[i])
+        j++
+      } else if (i === mainPicNum && rspData.result.picsAddr[i] !== undefined) {
+        mainPicAddr = GVARS.backendURL.concat(rspData.result.picsAddr[i])
       } else {
-        // console.log('No pic[',i,']--->')
-        picsAddrArr[i] = NO_PIC_ADDR
+        // picsAddrArr[j] = NO_PIC_ADDR
+        picsAddrArr[j] = undefined
+        j++
       }
     }
 
     if (rspData.success) {
       this.setState({
         otherPicsAddr: picsAddrArr,
-        mainPicAddr: GVARS.backendURL.concat('/',
-          rspData.result.picsAddr[mainPicNum]).replace('./UsersStorage', 'public')
+        mainPicAddr: mainPicAddr
       })
     }
     // console.log('END getUserPics.. ', this.state)
@@ -150,7 +202,7 @@ export default class ProfilePicManager extends Component {
   }
 
   render () {
-    console.log('ProfilePicManager RENDER: ')
+    console.log('ProfilePicManager RENDER: ', this.state)
     return (
       <div className='section' id='ProfilePicManagerSection'>
         <div className='columns'>
@@ -158,7 +210,7 @@ export default class ProfilePicManager extends Component {
           <div className='column' id='col1-1'>
             <figure className='image is-256x256' id='figureTopMain'>
 
-              <button className="delete is-small"
+              <button className="delete is-small" id='deleteMain'
                 onClick={(e) => this.deletePic(e)}
               ></button>
               <img className='image' id='picTopMain'
@@ -176,7 +228,7 @@ export default class ProfilePicManager extends Component {
               <button className="delete is-small"
                 onClick={(e) => this.deletePic(e)}
               ></button>
-              <img className='image' id='picTop-1-1' 
+              <img className='image' id='picTop-1-1'
                 onClick={(e) => this.handleTopPicClick(e, 0)}
                 src={this.state.otherPicsAddr[0]} >
               </img>
@@ -187,12 +239,12 @@ export default class ProfilePicManager extends Component {
               <img className='image' id='picBottom-1-1' ></img>
 
             </figure>
-            <figure className='image is-256x256'  id='figureTop-1-2'>
+            <figure className='image is-256x256' id='figureTop-1-2'>
 
               <button className="delete is-small"
                 onClick={(e) => this.deletePic(e)}
               ></button>
-              <img className='image' id='picTop-1-2' 
+              <img className='image' id='picTop-1-2'
                 onClick={(e) => this.handleTopPicClick(e, 1)}
                 src={this.state.otherPicsAddr[1]} >
               </img>
@@ -212,7 +264,7 @@ export default class ProfilePicManager extends Component {
               <button className="delete is-small"
                 onClick={(e) => this.deletePic(e)}
               ></button>
-              <img className='image' id='picTop-2-1' 
+              <img className='image' id='picTop-2-1'
                 onClick={(e) => this.handleTopPicClick(e, 2)}
                 src={this.state.otherPicsAddr[2]} >
               </img>
@@ -227,7 +279,7 @@ export default class ProfilePicManager extends Component {
               <button className="delete is-small"
                 onClick={(e) => this.deletePic(e)}
               ></button>
-              <img className='image' id='picTop-2-2' 
+              <img className='image' id='picTop-2-2'
                 onClick={(e) => this.handleTopPicClick(e, 3)}
                 src={this.state.otherPicsAddr[3]} >
               </img>

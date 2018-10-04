@@ -9,10 +9,6 @@ const NBR_MAX_PIC = 5
 //
 
 export class PicturesCtrl {
-  constructor () {
-    this.usersMdl = new Models('Users')
-    this.picturesMdl = new Models('Pictures')
-  }
   setMainPicture () {
     console.log('setMainPicture')
   }
@@ -27,18 +23,22 @@ export class PicturesCtrl {
         PicOwner: req.body.AUTH_USER.UserId
       }
     })
-    console.log('sql return:', result)
+    console.log('Sql Return:', result)
     let picsAddr = []
     let mainPicNum = -1
-    Object.entries(result).forEach(([key, val]) => {
-      console.log('--> ', key, ' - ', val)
-      picsAddr.push(val.PicPath)
-      if (val.IsMain != 0) {
-        mainPicNum = key
-      }
-      console.log('picsAddr: ', picsAddr)
-      
-    });
+    
+    if (result.length !== 0) {
+      console.log('result.length:', result.length)
+      Object.entries(result).forEach(([key, val]) => {
+        console.log('--> ', key, ' - ', val)
+        picsAddr.push(val.PicPath)
+        if (val.IsMain != 0) {
+          mainPicNum = key
+        }
+        console.log('picsAddr: ', picsAddr)
+      });
+    }
+    
     let dataToSend = {
       picsAddr: picsAddr
     }
@@ -63,11 +63,11 @@ export class PicturesCtrl {
       }
     })
     rspUserData = rspUserData[0]
-    const userDir = `./UsersStorage/User_${rspUserData.UserId}_${rspUserData.Login}`
+    const registerDir = `./UsersStorage/User_${rspUserData.UserId}_${rspUserData.Login}`
     try {
 
-      if (!fs.existsSync(userDir)) {
-        fs.mkdirSync(userDir, '0772')
+      if (!fs.existsSync(registerDir)) {
+        fs.mkdirSync(registerDir, '0772')
       }
     } catch (error) {
       console.error(`Error[01] in ${FILENAME} - addNewPicture: `, error)
@@ -80,7 +80,7 @@ export class PicturesCtrl {
     let fd = -1
     let newPicPath = null
     for (let i = 0; i < NBR_MAX_PIC; i++) {
-      newPicPath = `${userDir}/${picName}${i}.jpg`
+      newPicPath = `${registerDir}/${picName}${i}.jpg`
       if (!fs.existsSync(newPicPath)) {
         if ((fd = fs.openSync(newPicPath, 'w', )) < 0) {
           console.error(`Error[02] in ${FILENAME} - addNewPicture: impossible de creer le ficher`)
@@ -108,18 +108,46 @@ export class PicturesCtrl {
     
     const PicturesMdl = new Models('Pictures')
     // entrer le chemin en base
+    // const servDir = `/public/User_${rspUserData.UserId}_${rspUserData.Login}`
+    const servDir = newPicPath.replace('./UsersStorage/', '/public/')
     const sqlRep = await PicturesMdl.insert({
       where: {
-        PicPath: newPicPath,
+        PicPath: servDir,
         PicOwner: rspUserData.UserId
       }
     })
     console.log('sqlRep: ',)
   }
 
-  removePicture () {
-    console.log('removePicture')
+  async removePicture (req, res) {
+    console.log('removePicture', req.body)
     // remove le chemin de la photo en base
+    const picturesMdl = new Models('Pictures')
+
+    const sqlRep = await picturesMdl.delete({
+      where: {
+        PicOwner: req.body.AUTH_USER.UserId,
+        PicPath: req.body.rmPic
+        // PicPath: '/public/User_143_jonny/profilePic_01.jpg'
+      }
+    })
+    console.log('removePicture sqlRep: ', sqlRep)
+    console.log('removePicture sqlRep: ', sqlRep.affectedRows)
+    if (sqlRep.affectedRows === 1) {
+      return (res.status('200').type('json').json({
+        success: true,
+        msg: 'Picture deleted successfully',
+        result: {}
+      }))
+    } else {
+      return (res.status('400').type('json').json({
+        success: false,
+        msg: 'No picture deleted for... some obscure reason',
+        result: {}
+      }))
+    }
+    
+
     // remove de la photo dans le dossier utilisateur
   }
 }

@@ -363,7 +363,7 @@ exports.UsersCtrl = {
     // * Verif user input
     const verifTab = profilInputVerif(fields)
     if (Object.entries(verifTab).length !== 0) {
-      console.log('BOOOM: ', verifTab)
+      console.log('UserCtrl > profilInputVerif[00]: ', verifTab)
       return (res.status(204).type('json').json({
         error: { ...verifTab }
       }))
