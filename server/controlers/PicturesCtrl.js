@@ -9,13 +9,39 @@ const NBR_MAX_PIC = 5
 //
 
 export class PicturesCtrl {
-  setMainPicture () {
-    console.log('setMainPicture')
+  async setMainPicture (req, res) {
+    console.log('setMainPicture', req.body)
+    const userMdl = new Models('Pictures')
+
+    // reset all pic MainFlag to 0
+    let sqlRep = await userMdl.update({
+      set: {
+        IsMain: 0
+      },
+      where: {
+        PicOwner: req.body.AUTH_USER.UserId
+      }
+    })
+    // set main pic flag
+    sqlRep = await userMdl.update({
+      set: {
+        IsMain: 1
+      },
+      where: {
+        PicPath: req.body.mainPicName
+      }
+    })
+    return (res.status('200').type('json').json({
+      success: true,
+      msg: '',
+      result: {}
+    }))
+    // console.log('sqlRep: ', sqlRep)
   }
 
-  /* eslint-disable */
   async getAllPicture (req, res) {
-    console.log('getAllPicture', req.body)
+    console.log('getAllPicture')
+    // console.log('getAllPicture', req.body)
 
     const picturesMdl = new Models('Pictures')
     const result = await picturesMdl.find({
@@ -26,22 +52,19 @@ export class PicturesCtrl {
     console.log('Sql Return:', result)
     let picsAddr = []
     let mainPicNum = -1
-    
+
     if (result.length !== 0) {
-      console.log('result.length:', result.length)
+      // console.log('result.length:', result.length)
       Object.entries(result).forEach(([key, val]) => {
-        console.log('--> ', key, ' - ', val)
+        // console.log('--> ', key, ' - ', val)
         picsAddr.push(val.PicPath)
-        if (val.IsMain != 0) {
+        if (val.IsMain !== 0) {
           mainPicNum = key
         }
-        console.log('picsAddr: ', picsAddr)
-      });
+        // console.log('picsAddr: ', picsAddr)
+      })
     }
-    
-    let dataToSend = {
-      picsAddr: picsAddr
-    }
+
     return (res.status('200').type('json').json({
       success: true,
       msg: '',
@@ -65,7 +88,6 @@ export class PicturesCtrl {
     rspUserData = rspUserData[0]
     const registerDir = `./UsersStorage/User_${rspUserData.UserId}_${rspUserData.Login}`
     try {
-
       if (!fs.existsSync(registerDir)) {
         fs.mkdirSync(registerDir, '0772')
       }
@@ -82,7 +104,7 @@ export class PicturesCtrl {
     for (let i = 0; i < NBR_MAX_PIC; i++) {
       newPicPath = `${registerDir}/${picName}${i}.jpg`
       if (!fs.existsSync(newPicPath)) {
-        if ((fd = fs.openSync(newPicPath, 'w', )) < 0) {
+        if ((fd = fs.openSync(newPicPath, 'w')) < 0) {
           console.error(`Error[02] in ${FILENAME} - addNewPicture: impossible de creer le ficher`)
           return (res.status('400').type('json').json({
             error: 'error'
@@ -102,10 +124,11 @@ export class PicturesCtrl {
     // console.log('FD: ', fd)
     console.log('newPicPath: ', newPicPath)
 
+    /* eslint-disable-next-line */
     const picBuf = new Buffer.from(req.body.rawData.replace('data:image/jpeg;base64,', ''), 'base64')
-    fs.writeSync(fd, picBuf)    
+    fs.writeSync(fd, picBuf)
     fs.closeSync(fd)
-    
+
     const PicturesMdl = new Models('Pictures')
     // entrer le chemin en base
     // const servDir = `/public/User_${rspUserData.UserId}_${rspUserData.Login}`
@@ -165,8 +188,5 @@ export class PicturesCtrl {
         result: {}
       }))
     }
-    
-
-    // remove de la photo dans le dossier utilisateur
   }
 }

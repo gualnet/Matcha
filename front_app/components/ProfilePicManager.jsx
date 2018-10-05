@@ -25,7 +25,9 @@ export default class ProfilePicManager extends Component {
     console.log('deletePic: ', event.target.id)
     // console.log('deletePic: ', event.target.parentElement)
     // console.log('deletePic: ', event.target.parentElement.childNodes[1].src)
-    const rmSrc = event.target.parentElement.childNodes[1].style.backgroundColor
+    let rmSrc = event.target.parentElement.childNodes[1].style.backgroundImage
+    rmSrc = rmSrc.replace('url("http://localhost:8880', '').replace('")', '')
+    console.log('source to rm: ', rmSrc)
     if (rmSrc === NO_PIC_BG) {
       console.log('deletePic: NO ACTION')
       return
@@ -70,25 +72,38 @@ export default class ProfilePicManager extends Component {
   handleTopPicClick (event, key) {
     console.log('handleTopPicClick', event.target)
     console.log('handleTopPicClick', event.target.id)
-    const elem = document.getElementById(event.target.id)
+    const otherElem = document.getElementById(event.target.id)
     const mainElem = document.getElementById('picTopMain')
-    const oldMainImgUrl = mainElem.style.backgroundImage
-    // console.log(oldMainImgUrl, clickedImgUrl)
-    mainElem.style.backgroundImage = elem.style.backgroundImage
-    elem.style.backgroundImage = oldMainImgUrl
-    return
 
+    const oldMainImgUrl = mainElem.style.backgroundImage.replace('url("', '').replace('")', '')
+    const newMainImgUrl = otherElem.style.backgroundImage.replace('url("', '').replace('")', '')
 
+    console.log(oldMainImgUrl)
+    mainElem.style.backgroundImage = 'url("'.concat(newMainImgUrl, '")')
+    otherElem.style.backgroundImage = 'url("'.concat(oldMainImgUrl, '")')
 
-    // old
-    const selectedPic = event.target.src
+    // changement dans le state
     let newOtherPicsAddr = this.state.otherPicsAddr
     newOtherPicsAddr[key] = this.state.mainPicAddr
-
     this.setState({
       otherPicsAddr: newOtherPicsAddr,
-      mainPicAddr: selectedPic
+      mainPicAddr: newMainImgUrl
     })
+
+    //changement en base
+    let dataToSend = {
+      token: this.props.userContext.token,
+      mainPicName: newMainImgUrl.replace('http://localhost:8880', '')
+    }
+
+    window.fetch('http://localhost:8880/api/picture', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(dataToSend)
+    })
+
   }
 
   async uploadNewPicture (event) {
@@ -124,6 +139,7 @@ export default class ProfilePicManager extends Component {
           this.setState({
             otherPicsAddr: newOtherPicsAddr
           })
+          this.getUserPics()
         }
       })
     }
@@ -185,13 +201,16 @@ export default class ProfilePicManager extends Component {
     // for the others
     let otherPicElem = []
     otherPicElem[0] = document.getElementById('picTop-1-1')
-    otherPicElem[1] = document.getElementById('picTop-1-2')
-    otherPicElem[2] = document.getElementById('picTop-2-1')
+    otherPicElem[1] = document.getElementById('picTop-2-1')
+    otherPicElem[2] = document.getElementById('picTop-1-2')
     otherPicElem[3] = document.getElementById('picTop-2-2')
     console.log('otherPicElem: ' , otherPicElem)
     for (let i = 0; i < otherPicElem.length; i++) {
       if (this.state.otherPicsAddr[i] !== undefined) {
         otherPicElem[i].style.backgroundImage = `url(${this.state.otherPicsAddr[i]})`
+      }
+      if (this.state.otherPicsAddr[i] === undefined) {
+        otherPicElem[i].style.backgroundImage = `url(${NO_PIC_BG})`
       }
     }
     // console.log('END displayUserPics')
@@ -244,7 +263,7 @@ export default class ProfilePicManager extends Component {
                 onClick={(e) => this.deletePic(e)}>
               </button>
               <img className='image' id='picTop-1-2'
-                onClick={(e) => this.handleTopPicClick(e, 1)}>
+                onClick={(e) => this.handleTopPicClick(e, 2)}>
               </img>
             </figure>
 
@@ -257,7 +276,7 @@ export default class ProfilePicManager extends Component {
                 onClick={(e) => this.deletePic(e)}>
               </button>
               <img className='image' id='picTop-2-1'
-                onClick={(e) => this.handleTopPicClick(e, 2)}>
+                onClick={(e) => this.handleTopPicClick(e, 1)}>
               </img>
             </figure>
 
