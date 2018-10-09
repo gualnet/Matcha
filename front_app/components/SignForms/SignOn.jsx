@@ -1,7 +1,9 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
-// import css from '../assets/scss/components/SignOn.scss'
+
+// CSS
+import './SignOn.scss'
 /* eslint-enable no-unused-vars */
 import axios from 'axios'
 

@@ -1,11 +1,12 @@
 
 /* eslint-disable no-unused-vars */
+
 // IMPORT
 import React, { Component } from 'react'
+import GVARS from '../../utils/globalVars'
 
-import GVARS from '../utils/globalVars'
 // css
-import { css } from '../assets/scss/components/ProfilePicManager.scss'
+import './ProfilePicManager.scss'
 
 /* eslint-enable no-unused-vars */
 
@@ -23,8 +24,6 @@ export default class ProfilePicManager extends Component {
 
   async deletePic (event) {
     console.log('deletePic: ', event.target.id)
-    // console.log('deletePic: ', event.target.parentElement)
-    // console.log('deletePic: ', event.target.parentElement.childNodes[1].src)
     let rmSrc = event.target.parentElement.childNodes[1].style.backgroundImage
     rmSrc = rmSrc.replace('url("http://localhost:8880', '').replace('")', '')
     console.log('source to rm: ', rmSrc)
@@ -54,7 +53,7 @@ export default class ProfilePicManager extends Component {
       token: this.props.userContext.token,
       rmPic: imgName
     }
-    const fetchRep = await window.fetch('http://localhost:8880/api/picture',
+    const fetchRep = await window.fetch('/api/picture',
       {
         method: 'DELETE',
         headers: {
@@ -68,17 +67,13 @@ export default class ProfilePicManager extends Component {
     console.log('deletePic: ', imgName)
   }
 
-  /* eslint-disable */
   handleTopPicClick (event, key) {
-    console.log('handleTopPicClick', event.target)
     console.log('handleTopPicClick', event.target.id)
     const otherElem = document.getElementById(event.target.id)
     const mainElem = document.getElementById('picTopMain')
-
     const oldMainImgUrl = mainElem.style.backgroundImage.replace('url("', '').replace('")', '')
     const newMainImgUrl = otherElem.style.backgroundImage.replace('url("', '').replace('")', '')
 
-    console.log(oldMainImgUrl)
     mainElem.style.backgroundImage = 'url("'.concat(newMainImgUrl, '")')
     otherElem.style.backgroundImage = 'url("'.concat(oldMainImgUrl, '")')
 
@@ -90,37 +85,38 @@ export default class ProfilePicManager extends Component {
       mainPicAddr: newMainImgUrl
     })
 
-    //changement en base
+    // changement en base
     let dataToSend = {
       token: this.props.userContext.token,
       mainPicName: newMainImgUrl.replace('http://localhost:8880', '')
     }
 
-    window.fetch('http://localhost:8880/api/picture', {
+    window.fetch('/api/picture', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(dataToSend)
+    }).then((response) => {
+      if (response.ok) {
+        console.log('New main picture set')
+      }
     })
-
   }
 
   async uploadNewPicture (event) {
-    console.log('CALL uploadNewPicture.. ', event)
+    // console.log('CALL uploadNewPicture.. ', event)
 
     const files = document.getElementById('input-uplPic').files
     const file = files[0]
-    console.log('CALL uploadNewPicture.. ', event)
     /* eslint-disable-next-line */
     const reader = new FileReader()
-    console.log('CALL uploadNewPicture.. ', event)
     reader.onload = (e) => {
       let dataToSend = {
         rawData: e.target.result,
         token: this.props.userContext.token
       }
-      window.fetch(`http://localhost:8880/api/picture`, {
+      window.fetch(`/api/picture`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -128,11 +124,9 @@ export default class ProfilePicManager extends Component {
         body: JSON.stringify(dataToSend)
       }).then((response) => {
         if (response.ok) {
-          console.log('fetchRep 1: ', response)
           return (response.json())
         }
       }).then((respData) => {
-        console.log('repData 1: ', respData)
         if (respData.success) {
           let newOtherPicsAddr = this.state.otherPicsAddr
           newOtherPicsAddr.push(respData.newPicAddr)
@@ -147,12 +141,12 @@ export default class ProfilePicManager extends Component {
   }
 
   async getUserPics () {
-    console.log('CALL getUserPics.. ')
+    // console.log('CALL getUserPics.. ')
 
     const dataToSend = {
       token: this.props.userContext.token
     }
-    const fetchRsp = await window.fetch(`http://localhost:8880/api/picture/userpics`,
+    const fetchRsp = await window.fetch(`/api/picture/userpics`,
       {
         method: 'POST',
         headers: {
@@ -163,7 +157,6 @@ export default class ProfilePicManager extends Component {
     )
     if (fetchRsp.ok) {
       var rspData = await fetchRsp.json()
-      console.log('Server Response: ', rspData)
     }
 
     // extract all pics address into picsAddrArr
@@ -194,7 +187,7 @@ export default class ProfilePicManager extends Component {
   }
 
   displayUserPics () {
-    console.log('CALL displayUserPics: ')
+    // console.log('CALL displayUserPics: ')
     // for the main
     const mainPicElem = document.getElementById('picTopMain')
     mainPicElem.style.backgroundImage = `url('${this.state.mainPicAddr}')`
@@ -204,7 +197,7 @@ export default class ProfilePicManager extends Component {
     otherPicElem[1] = document.getElementById('picTop-2-1')
     otherPicElem[2] = document.getElementById('picTop-1-2')
     otherPicElem[3] = document.getElementById('picTop-2-2')
-    console.log('otherPicElem: ' , otherPicElem)
+    // console.log('otherPicElem: ', otherPicElem)
     for (let i = 0; i < otherPicElem.length; i++) {
       if (this.state.otherPicsAddr[i] !== undefined) {
         otherPicElem[i].style.backgroundImage = `url(${this.state.otherPicsAddr[i]})`
@@ -220,15 +213,12 @@ export default class ProfilePicManager extends Component {
     this.getUserPics()
   }
 
-  componentDidMount () {
-    // this.displayUserPics()
-  }
   componentDidUpdate () {
     this.displayUserPics()
   }
 
   render () {
-    console.log('ProfilePicManager RENDER: ', this.state)
+    // console.log('ProfilePicManager RENDER: ', this.state)
     return (
       <div className='section' id='ProfilePicManagerSection'>
         <div className='columns'>

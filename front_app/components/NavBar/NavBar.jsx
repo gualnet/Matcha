@@ -2,14 +2,14 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
-// components
-import SingoutForm from '../components/SignOut.jsx'
+// COMPONENT
+import SingoutForm from '../SignForms/SignOut.jsx'
 
-// context
-import { UserContext } from '../contexts/UserContext'
+// CONTEXT
+import { UserContext } from '../../contexts/UserContext'
 
-// css
-import { css } from '../assets/scss/components/NavBar.scss'
+// CSS
+import './NavBar.scss'
 /* eslint-enable no-unused-vars */
 
 export default class NavBar extends Component {

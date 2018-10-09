@@ -1,8 +1,10 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
-
-/* eslint-enable no-unused-vars */
 import Axios from 'axios'
+
+// CSS
+import './SignIn.scss'
+/* eslint-enable no-unused-vars */
 
 export default class SignInForm extends Component {
   constructor () {
@@ -60,7 +62,7 @@ export default class SignInForm extends Component {
           })
         }
         // this.setState({ redirect: response.data.docInfo.redirectTo })
-        window.location.replace('/profile')
+        // window.location.replace('/profile')
       })
       .catch((error) => {
         console.log('response err: ', error)

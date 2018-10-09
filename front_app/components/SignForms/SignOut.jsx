@@ -2,7 +2,8 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 
-import css from '../assets/scss/components/SignOut.scss'
+// CSS
+import './SignOut.scss'
 /* eslint-enable no-unused-vars */
 import axios from 'axios'
 

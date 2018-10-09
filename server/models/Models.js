@@ -19,6 +19,21 @@ export default class Models {
   }
 
   /**
+   * * func findAll
+   * @param none
+  **/
+  async findAll () {
+    let reqSql = `SELECT * FROM ${this.tableName};`
+    console.log(`FIND TEST ${reqSql}`)
+
+    try {
+      const response = await pool.query(reqSql)
+      return (response)
+    } catch (error) {
+      throw error
+    }
+  }
+  /**
    * * func find
    * @param values: {where: {column: value, ...}}
   **/

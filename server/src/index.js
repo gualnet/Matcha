@@ -31,7 +31,7 @@ server.use((req, res, next) => {
 server.get('/', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
   // res.setHeader('Content-Type', 'text/html')
-  res.status(200).send('<h1> Welcome </h1>')
+  res.status(200).send('Welcome sur l\'api Matcha')
 })
 
 server.use('/api/', apiRouter())

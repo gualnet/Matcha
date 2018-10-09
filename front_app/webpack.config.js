@@ -81,7 +81,10 @@ module.exports = {
   devServer: {
     contentBase: path.join(__dirname, '/dist'),
     historyApiFallback: true,
-    port: 8881
+    port: 8881,
+    proxy: {
+      '/api': 'http://localhost:8880'
+    }
     // headers: {
     //   'Access-Control-Allow-Origin': '*',
     //   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',

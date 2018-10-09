@@ -5,8 +5,8 @@ import { BrowserRouter, Route } from 'react-router-dom'
 
 // Components
 import AppRouter from './AppRouter.jsx'
-import NavBar from '../components/NavBar.jsx'
-import Profile from '../pages/Profile.jsx'
+import NavBar from '../components/NavBar/NavBar.jsx'
+// import Profile from '../pages/Profile.jsx'
 
 // context
 import { UserContext } from '../contexts/UserContext'

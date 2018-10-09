@@ -7,25 +7,28 @@ const handleExpiredToken = (res, decoded) => {
   console.log('handleExpiredToken: ', decoded)
   // ! regen a new token or [ask for reconnexion]
   return (res.status(401).type('json').json({
-    error: 'Token expired'
+    success: false,
+    msg: 'Token expired',
+    result: {}
   }).end())
-
 }
 
-export const verifCreds = async (req, res, next) => {
-  console.log('verif creds: ')
-  // console.log('req.headers: ', req.headers)
-  // console.log('req.params: ', req.params)
-  // console.log('req.body: ', req.body)
-
+/**
+   * * func credsInBody
+   * @param userId: le user id
+   * @returns true if creds are ok, else false
+  **/
+async function credsInBody (req, res) {
   try {
     /* eslint-disable-next-line */
     Object.entries(req.body.token).length
   } catch (error) {
     console.log('Error verifCreds : No token found.')
-    return (res.status(401).type('json').json({
-      error: 'Unauthentified user !'
-    }).end())
+    return (res.status('401').type('json').json({
+      success: false,
+      msg: 'Unauthentified user !',
+      result: {}
+    }))
   }
   if (Object.entries(req.body.token).length > 0) {
     const userMdl = new UsersMdl()
@@ -44,14 +47,70 @@ export const verifCreds = async (req, res, next) => {
       return (handleExpiredToken(res, error))
     }
   } else {
-    return (res.status(401).type('json').json({
-      error: 'Unauthentified user !'
-    }).end())
+    return (res.status('401').type('json').json({
+      success: false,
+      msg: 'Unauthentified user !',
+      result: {}
+    }))
   }
   req.body = {
     ...req.body,
     AUTH_USER: { ...sqlRsp[0] }
   }
-  next()
+}
+
+async function credsInParams (req, res) {
+  // console.log('credsInParams req.params: ', req.params)
+
+  if (Object.entries(req.params.token).length > 0) {
+    const userMdl = new UsersMdl()
+    var sqlRsp = await userMdl.find({
+      where: {
+        UserId: req.params.uid,
+        UserToken: req.params.token
+      }
+    }, 'AND')
+    // console.log('---> ', sqlRsp)
+    // console.log('+---> ', sqlRsp[0].UserToken)
+    if (sqlRsp.length === 0) {
+      return (res.status('401').type('json').json({
+        success: false,
+        msg: 'Unauthentified user !',
+        result: {}
+      }))
+    }
+    try {
+      jwt.verify(sqlRsp[0].UserToken, serverConf.jwtSignSecret)
+      // console.log('DECODE: ', decode)
+    } catch (error) {
+      return (handleExpiredToken(res, error))
+    }
+  } else {
+    return (res.status('401').type('json').json({
+      success: false,
+      msg: 'Unauthentified user !',
+      result: {}
+    }))
+  }
+  // console.log('LAAAAAAAAAAAAAAA', req.params)
+  req.params = {
+    AUTH_USER: { ...sqlRsp[0] }
+  }
+  // console.log('LAAAAAAAAAAAAAAA', req.params)
+}
+
+export const verifCreds = async (req, res, next) => {
+  console.log('verif creds: ')
+  // console.log('req.headers: ', req.headers)
+  // console.log('req.params: ', req.params)
+  // console.log('req.body: ', req.body)
+
+  if (req.body.token !== undefined) {
+    await credsInBody(req)
+  } else if (req.params.uid !== undefined && req.params.token !== undefined) {
+    await credsInParams(req)
+  }
+
   console.log('END VERIF CREDS\n\n\n')
+  next()
 }

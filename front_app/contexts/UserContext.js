@@ -8,9 +8,7 @@ export class UserProvider extends Component {
   constructor () {
     super()
     const storageContent = JSON.parse(window.localStorage.getItem('userContext'))
-    // console.log('storageContent: ', storageContent)
     if (!storageContent) {
-      // default empty state/store
       this.state = {
         uid: -1,
         token: ''
@@ -21,11 +19,39 @@ export class UserProvider extends Component {
   }
 
   UserProviderSetState = (newData) => {
+    // console.log('%c UserContext Before setState: ', 'color: ;', { ...this.state })
     this.setState({ ...newData })
   }
 
-  stateToString = () => {
-    console.log('UserContext: ', this.state)
+  /**
+   * * func getUserInfos:
+   * This function get the user data from the db
+   * and set the userContext with the new data
+   *
+   * @return : void
+  **/
+  async getUserInfos () {
+    console.log('CALL getUserInfos ')
+    // console.log('this.uid: ', this.uid)
+    if (this.uid === -1 || this.token === '') {
+      return
+    }
+
+    const fetchRsp = await window.fetch(`/api/user/profil/${this.uid}/${this.token}`)
+    // console.log('UserContext fetchRsp: ', fetchRsp)
+    if (fetchRsp.ok) {
+      const responseData = await fetchRsp.json()
+      console.log('fetchRsp.body: ', responseData)
+      const curUid = this.uid
+      const curToken = this.token
+      this.setState({
+        userData: {
+          uid: curUid,
+          token: curToken,
+          ...responseData.result
+        }
+      })
+    }
   }
 
   componentDidUpdate () {
@@ -33,10 +59,12 @@ export class UserProvider extends Component {
   }
 
   render () {
+    // console.log('%c UserContextProvider RENDER: ', 'color: ;', { ...this })
     return (
       <UserContext.Provider value={{
         ...this.state,
         stateToString: this.stateToString,
+        getUserInfos: this.getUserInfos,
         setState: this.UserProviderSetState
       }}>
         { this.props.children }

@@ -1,8 +1,12 @@
 /* eslint-disable no-unused-vars */
+// IMPORT
 import React, { Component } from 'react'
 
-// css
-import { css } from '../assets/scss/components/ProfileUserInfoPanel.scss'
+import orientationNumToString from '../../utils/orientationNumToString'
+import genderNumToString from '../../utils/genderNumToString'
+
+// CSS
+import './ProfileUserInfoPanel.scss'
 /* eslint-enable no-unused-vars */
 
 export default class ProfileUserInfoPanel extends Component {
@@ -12,26 +16,12 @@ export default class ProfileUserInfoPanel extends Component {
       component: {
         pendingModification: false
       },
-      userData: {
-      }
+      userData: {}
     }
   }
 
   print (...msg) {
     console.log('\nInfo Panel: ' + msg)
-  }
-
-  getGenderName () {
-    switch (this.state.userData.Gender) {
-      case 0:
-        return 'Male'
-      case 1:
-        return 'Female'
-      case 2:
-        return 'Genderqueer'
-      default:
-        return 'Unknown'
-    }
   }
 
   setGender (event) {
@@ -65,23 +55,6 @@ export default class ProfileUserInfoPanel extends Component {
         Gender: value
       }
     })
-  }
-
-  getOrientationName () {
-    switch (this.state.userData.Orientation) {
-      case 0:
-        return 'Heterosex'
-      case 1:
-        return 'Bisex'
-      case 2:
-        return 'Homosex'
-      case 3:
-        return 'Pansex'
-      case 4:
-        return 'Asex'
-      default:
-        return 'Unknown'
-    }
   }
 
   setOrientation (event) {
@@ -218,7 +191,7 @@ export default class ProfileUserInfoPanel extends Component {
     // console.log('dataToSend: ', dataToSend)
 
     try {
-      let response = await window.fetch(`http://localhost:8880/api/user/profil`, {
+      let response = await window.fetch(`/api/user/profil`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -258,9 +231,7 @@ export default class ProfileUserInfoPanel extends Component {
     // const component = this.state.component
     return (
       <div className='panel'>
-        <p className='panel-heading'>
-          {this.state.userData.Login} - {`${this.state.userData.Popularity} pts`}
-        </p>
+
         <label className='label'>FirstName: </label>
         <div className='panel-block'>
           <input className='input is-small'
@@ -296,7 +267,7 @@ export default class ProfileUserInfoPanel extends Component {
         >
           <div className="select is-small" id='selectGender'>
             <select>
-              <option>{this.getGenderName()}</option>
+              <option>{genderNumToString(this.state.userData.Gender)}</option>
               <option>Queergender</option>
               <option>Male</option>
               <option>Female</option>
@@ -309,7 +280,7 @@ export default class ProfileUserInfoPanel extends Component {
         >
           <div className="select is-small" id='selectOrientation'>
             <select>
-              <option>{this.getOrientationName()}</option>
+              <option>{orientationNumToString(this.state.userData.Orientation)}</option>
               <option>Heterosex</option>
               <option>Bisex</option>
               <option>Homosex</option>

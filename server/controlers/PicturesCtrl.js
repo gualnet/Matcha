@@ -82,7 +82,7 @@ export class PicturesCtrl {
     const userMdl = new UsersMdl()
     let rspUserData = await userMdl.find({
       where: {
-        UserToken: req.body.token
+        UserToken: req.body.AUTH_USER.UserToken
       }
     })
     rspUserData = rspUserData[0]

@@ -317,24 +317,25 @@ exports.UsersCtrl = {
           // delete response.BlockedUsers
           // response.LastName = String(response.LastName).slice(0, 1).concat('***').toUpperCase()
           console.log('Response After: ', response)
-          res.status(201).type('json').json({
-            success: 'ok',
-            userData: { ...response }
-          })
+          return (res.status('201').type('json').json({
+            success: true,
+            msg: '',
+            result: { ...response }
+          }))
         } else {
           console.log('no user found')
-          res.status(204).type('json').json({
-            error: 'No user found'
-          })
+          return (res.status('204').type('json').json({
+            success: false,
+            msg: 'No user found',
+            result: { ...response }
+          }))
         }
       })
   },
 
+  /* eslint-disable */
   profilUpdateUser: async (req, res) => {
     console.log('update user profil')
-    // Todo -------------------------------------
-    // Todo 1: verifier si l'id de l'user qui fait la demande
-    // Todo 1: est le meme que celui du profile consulté
     // Todo -------------------------------------
     // Todo 2: implementer le chargement des images
     // Todo -------------------------------------
@@ -401,3 +402,9 @@ exports.UsersCtrl = {
     }
   }
 }
+
+// return (res.status('200').type('json').json({
+//   success: true,
+//   msg: 'Test en cours',
+//   result: {}
+// }))

@@ -3,14 +3,14 @@
 import React from 'react'
 
 // components
-import SinginForm from '../components/SignIn.jsx'
-import SingonForm from '../components/SignOn.jsx'
+import SinginForm from '../components/SignForms/SignIn.jsx'
+import SingonForm from '../components/SignForms/SignOn.jsx'
 
 // context
 import { UserContext } from '../contexts/UserContext'
 
 // css
-import { css } from '../assets/scss/pages/Home.scss'
+import './Home.scss'
 /* eslint-enable no-unused-vars */
 
 // const Home = () => {

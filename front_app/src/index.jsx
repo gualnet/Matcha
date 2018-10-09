@@ -4,11 +4,12 @@
 import React from 'react'
 import '@babel/polyfill'
 import App from './App.jsx'
-import DefaultCss from '../assets/scss/pages/Default.scss'
 
 // test context
 import { UserProvider, UserContext } from '../contexts/UserContext'
 
+// CSS
+import '../assets/scss/pages/Default.scss'
 /* eslint-enable no-unused-vars */
 import ReactDom from 'react-dom'
 

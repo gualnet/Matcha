@@ -2,6 +2,7 @@
 import { verifCreds } from '../middleware/verifCreds'
 import { UsersCtrl } from '../controlers/UsersCtrl'
 import { PicturesCtrl } from '../controlers/PicturesCtrl'
+import { TagsCtrl } from '../controlers/TagsCtrl'
 const Express = require('express')
 
 // Routes
@@ -16,6 +17,8 @@ exports.router = () => {
 
   apiRouter.route('/user/profil/:uid/:token')
     .get(UsersCtrl.profilGetUser)
+  apiRouter.route('/user/profil')
+    .put(verifCreds, UsersCtrl.profilUpdateUser)
 
   const picCtrl = new PicturesCtrl()
   apiRouter.route('/picture')
@@ -24,6 +27,12 @@ exports.router = () => {
     .delete(verifCreds, picCtrl.removePicture)
   apiRouter.route('/picture/userpics')
     .post(verifCreds, picCtrl.getAllPicture)
+
+  const tagsCtrl = new TagsCtrl()
+  apiRouter.route('/tags/:uid/:token')
+    .get(verifCreds, tagsCtrl.getAllTags)
+  apiRouter.route('/tags')
+    .post(verifCreds, tagsCtrl.insertTags)
 
   return apiRouter
 }
