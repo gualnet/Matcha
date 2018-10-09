@@ -15,7 +15,7 @@ import './Profile.scss'
 
 class Profile extends Component {
   componentWillMount () {
-    console.log('%c Profile component will mount', 'color: red;', this)
+    // console.log('%c Profile component will mount', 'color: ;', this)
     this.props.userContext.getUserInfos()
   }
 

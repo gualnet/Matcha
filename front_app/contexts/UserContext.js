@@ -20,6 +20,7 @@ export class UserProvider extends Component {
 
   UserProviderSetState = (newData) => {
     // console.log('%c UserContext Before setState: ', 'color: ;', { ...this.state })
+    console.log('%c UserContext Before setState: ', 'color: ;', { newData })
     this.setState({ ...newData })
   }
 
@@ -59,7 +60,7 @@ export class UserProvider extends Component {
   }
 
   render () {
-    // console.log('%c UserContextProvider RENDER: ', 'color: ;', { ...this })
+    console.log('%c UserContextProvider RENDER: ', 'color: blue;', { ...this })
     return (
       <UserContext.Provider value={{
         ...this.state,

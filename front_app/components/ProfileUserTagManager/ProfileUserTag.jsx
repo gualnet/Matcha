@@ -14,29 +14,35 @@ class ProfileUserTag extends Component {
     numInterests: -1
   }
 
+  /**
+   * Construct tags label
+   * @param tags 
+   * @returns Array contains the jsx code of all the tags
+   */
   createCheckbox (tags = []) {
     console.log('CALL createCheckbox')
-    // console.log('CALL createCheckbox', this)
-    let UsrInterest = this.props.userContext.userData.Intersest
-    UsrInterest = UsrInterest.split(',')
-    console.log('UsrInterest: ', {UsrInterest})
+
+    const UsrInterest = this.props.userContext.userData.Intersest.split(',')
     let checkboxArr = []
 
     for (let index in tags) {
       checkboxArr.push(
-        <div className='control'>
-          <div className='tags has-addons'>
+        <div className='control' key={`${index}`}>
+          <div className='tags has-addons' key={`${index}`}>
+
             <span
-              // className='tag'
-              className={
-                (UsrInterest.includes(index) ? 'tag is-primary' : 'tag')
-              }
+              className={(UsrInterest.includes(index) ? 'tag is-primary' : 'tag')}
               key={`${index}`}
               id='sportTagElem'
               onClick={(e) => this.handleTagClick(e, index)}>
-              {`  ${tags[index]}`}
+              {` ${tags[index]}`}
             </span>
-            {(UsrInterest.includes(index) ? <span class="tag is-delete"></span> : '')}
+
+            {(UsrInterest.includes(index) ? 
+              <span 
+                className="tag is-delete"
+                onClick={(e) => this.unselectTag(e, index)}>
+              </span> : '')}
           </div>
         </div>
         
@@ -71,12 +77,42 @@ class ProfileUserTag extends Component {
     })
   }
 
+  async unselectTag (event, index) {
+    index = Number(index)
+    console.log('%c Unselect tag ', 'color: red', {event, index})
+    const oldIntersest = this.props.userContext.userData.Intersest
+    console.log('oldIntersest: ', {oldIntersest})
+
+    // const newIntersest = Array(oldIntersest).splice(1, (oldIntersest.indexOf(index)))
+    let newIntersest = []
+    oldIntersest.split(',').map((val, id) => {newIntersest[id] = Number(val)})
+    // console.log('newIntersest: ', {newIntersest}, newIntersest.indexOf(index))
+    newIntersest.splice(newIntersest.indexOf(index), 1)
+    newIntersest = String(newIntersest)
+    console.log('newIntersest: ', {newIntersest})
+    this.props.userContext.setState({
+      userData: {
+        ...this.props.userContext.userData,
+        Intersest: newIntersest
+      }
+    })
+
+    let newUserData = this.props.userContext.userData
+    newUserData.Intersest = newIntersest
+    let dataToSend = {
+      uid: this.props.userContext.uid,
+      token: this.props.userContext.token,
+      userData: { ...newUserData }
+    }
+    await this.sendData(dataToSend)
+  }
+
   async handleTagClick (event, index) {
     console.log('handleClick props ', this.props)
     console.log('handleClick key: ', index)
 
     const oldIntersest = this.props.userContext.userData.Intersest
-    if (oldIntersest.split(',').length > 5) {
+    if (oldIntersest.split(',').length >= 5) {
       console.log('Trop d\'interets selectionne')
       return (false)
     }
@@ -84,9 +120,9 @@ class ProfileUserTag extends Component {
     console.log('oldIntersest: ', oldIntersest, 'len:', oldIntersest.length)
 
     if (oldIntersest.length !== 0) {
-      newIntersest = oldIntersest.concat(`${index},`)
+      newIntersest = oldIntersest.concat(`,${index}`)
     } else {
-      newIntersest = `${index},`
+      newIntersest = `${index}`
     }
     console.log('newIntersest: ', {newIntersest})
     this.props.userContext.setState({
@@ -95,10 +131,7 @@ class ProfileUserTag extends Component {
         Intersest: newIntersest
       }
     })
-    // this.setNumberOfInterests(newIntersest)
 
-
-    // TEST de l'envoi 
     let newUserData = this.props.userContext.userData
     newUserData.Intersest = newIntersest
     let dataToSend = {
@@ -106,6 +139,27 @@ class ProfileUserTag extends Component {
       token: this.props.userContext.token,
       userData: { ...newUserData }
     }
+
+    await this.sendData(dataToSend)
+  }
+
+  /**
+   * @returns: (int) the number of interest in the userData.Interest array
+  **/
+  getNumberOfInterests () {
+    const interest = this.props.userContext.userData.Intersest
+    // console.log('interest-->', interest)
+    if (interest === '' || interest === undefined) {
+      // console.log('Num to 0..')
+      return (0)
+    } else {
+      const splitted = interest.split(',')
+      // console.log('splitted', splitted)
+      return (splitted.length)
+    }
+  }
+
+  async sendData (dataToSend) {
     try {
       let response = await window.fetch(`/api/user/profil`, {
         method: 'PUT',
@@ -116,10 +170,9 @@ class ProfileUserTag extends Component {
       })
 
       if (response.ok) {
-        console.log('response: ', response)
+        // console.log('response: ', response)
         let responseData = await response.json()
         console.log('responseData: ', responseData)
-        // window.location.reload()
       } else {
         console.log('Server Response Error: ',
           response.status, ' - ', response.statusText)
@@ -129,21 +182,9 @@ class ProfileUserTag extends Component {
     }
   }
 
-//   /**
-//    * @returns: (int) the number of interest in the userData.Interest array
-//   **/
-//  setNumberOfInterests (interest) {
-//   const num = interest.split(',').length - 1
-//   this.setState({
-//     numInterests: num
-//   })
-// }
-
   componentWillMount () {
     this.getAllTags()
   }
-
-
 
   render () {
     console.log('%c ProfileUserTag RENDER: ', 'color: orange;', { ...this.props }, { ...this.state })
@@ -158,8 +199,8 @@ class ProfileUserTag extends Component {
             <h5 className='title is-5'
               id='titleSport'
               onClick={(e) => this.handleTitleClick(e)}>
-              <i className='fas fa-plus is-tiny is-left' id='sportIconPlus'> SPORT {`${this.props.userContext.userData.Intersest.split(',').length - 1}`}/5 </i>
-              <i className='fas fa-minus is-tiny is-left' id='sportIconMinus'> SPORT {`${this.props.userContext.userData.Intersest.split(',').length - 1}`}/5 </i>
+              <i className='fas fa-plus is-tiny is-left' id='sportIconPlus'> SPORT {this.getNumberOfInterests()}/5 </i>
+              <i className='fas fa-minus is-tiny is-left' id='sportIconMinus'> SPORT {this.getNumberOfInterests()}/5 </i>
             </h5>
           </div>
             <div className='tags' id='sportTags'>
