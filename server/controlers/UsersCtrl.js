@@ -9,9 +9,9 @@ const FILENAME = __filename.replace(`${__dirname}/`, '')
 //
 
 const profilInputVerif = (params) => {
-  // console.log('VERIF PARAMS: ', params)
+  console.log('VERIF PARAMS: ', params)
   Object.entries(params).forEach(([key, val]) => {
-    if (val.length === 0) {
+    if (val === undefined || val.length === 0) {
       delete params[key]
     }
   })
@@ -90,6 +90,26 @@ const profilInputVerif = (params) => {
     if (params.Reported) {
       if (params.Reported !== 'true' && params.Reported !== 'false') {
         retTab.verifReported = false
+      }
+    }
+    if (params.Height) {
+      if (params.Height < 1.30 && params.Height > 2.20) {
+        retTab.verifHeight = false
+      }
+    }
+    if (params.Weight) {
+      if (params.Weight < 20 && params.Weight > 120) {
+        retTab.verifWeight = false
+      }
+    }
+    if (params.EyeColor) {
+      if (params.EyeColor < 0 && params.EyeColor > 3) {
+        retTab.verifEyeColor = false
+      }
+    }
+    if (params.HairColor) {
+      if (params.HairColor < 0 && params.HairColor > 5) {
+        retTab.verifHairColor = false
       }
     }
   } catch (error) {
@@ -346,7 +366,7 @@ exports.UsersCtrl = {
     // ! voir pour arranger ca
     const { UserId, Login, FirstName,
       LastName, Age, Gender, Orientation, Bio,
-      Intersest, GeolocAuth } = { ...req.body.userData }
+      Intersest, GeolocAuth, Height, Weight, EyeColor, HairColor } = { ...req.body.userData }
     const fields = {
       UserId: UserId,
       Login: Login,
@@ -357,7 +377,11 @@ exports.UsersCtrl = {
       Orientation: Orientation,
       Bio: Bio,
       Intersest: Intersest,
-      GeolocAuth: GeolocAuth
+      GeolocAuth: GeolocAuth,
+      Height: Height,
+      Weight: Weight,
+      EyeColor: EyeColor,
+      HairColor: HairColor
     }
 
     console.log('TEST: ', fields)

@@ -23,7 +23,7 @@ export default class SignOut extends Component {
       .then((response) => {
         console.log('response ok: ', response)
         if (response.data.success === 'logout') {
-          window.alert('logout success')
+          // window.alert('logout success')
           this.props.userContext.setState({
             uid: -1,
             token: 'none'

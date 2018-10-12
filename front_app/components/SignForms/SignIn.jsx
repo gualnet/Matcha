@@ -22,7 +22,7 @@ export default class SignInForm extends Component {
 
   // * arrow func (auto bind this)
   formHandleChange = (event, descriptor) => {
-    console.log('DESCRIPTOR: ', descriptor)
+    // console.log('DESCRIPTOR: ', descriptor)
     // console.log('EVENT: ', event)
     if (!event.target) {
       return (false)
@@ -52,7 +52,7 @@ export default class SignInForm extends Component {
       .then((response) => {
         console.log('response ok: ', response)
         if (response.data.success === 'login') {
-          window.alert('login success')
+          // window.alert('login success')
           const newUid = response.data.userState.uid
           const newToken = response.data.userState.token
           console.log('newUid & newToken: ', newUid, newToken)

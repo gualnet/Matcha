@@ -3,8 +3,9 @@
 #profileWrapper {
 	// border: solid green;
 	margin: 0 0 0 0;
+	padding: 0 0 0 0;
 	width: 100vw; height: 100vh;
-	// // // background-color: rgba(175, 175, 175, 0.9);
+	animation: fadein 2s;
 	// background-color: rgba(255, 255, 255, 0.9);
 	background-color: rgba(255, 255, 255, 1);
 
@@ -12,7 +13,11 @@
 		margin-top: 5vh;
 		// border: solid 1px red;
 	}
-	animation: fadein 2s;
+
+	.column {
+	}
+
+
 }
 
 @keyframes fadein {

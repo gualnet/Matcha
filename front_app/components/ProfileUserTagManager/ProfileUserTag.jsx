@@ -5,8 +5,6 @@ import React, { Component } from 'react'
 import './ProfileUserTag.scss'
 /* eslint-enable no-unused-vars */
 
-/* eslint-disable */
-
 class ProfileUserTag extends Component {
   state = {
     sportTags: [],
@@ -16,7 +14,7 @@ class ProfileUserTag extends Component {
 
   /**
    * Construct tags label
-   * @param tags 
+   * @param tags
    * @returns Array contains the jsx code of all the tags
    */
   createCheckbox (tags = []) {
@@ -38,14 +36,12 @@ class ProfileUserTag extends Component {
               {` ${tags[index]}`}
             </span>
 
-            {(UsrInterest.includes(index) ? 
-              <span 
-                className="tag is-delete"
-                onClick={(e) => this.unselectTag(e, index)}>
-              </span> : '')}
+            {
+              (UsrInterest.includes(index)
+                ? <span className="tag is-delete" onClick={(e) => this.unselectTag(e, index)}></span> : '')
+            }
           </div>
         </div>
-        
       )
     }
     return (checkboxArr)
@@ -79,17 +75,17 @@ class ProfileUserTag extends Component {
 
   async unselectTag (event, index) {
     index = Number(index)
-    console.log('%c Unselect tag ', 'color: red', {event, index})
+    console.log('%c Unselect tag ', 'color: red', { event, index })
     const oldIntersest = this.props.userContext.userData.Intersest
-    console.log('oldIntersest: ', {oldIntersest})
+    console.log('oldIntersest: ', { oldIntersest })
 
     // const newIntersest = Array(oldIntersest).splice(1, (oldIntersest.indexOf(index)))
     let newIntersest = []
-    oldIntersest.split(',').map((val, id) => {newIntersest[id] = Number(val)})
+    oldIntersest.split(',').map((val, id) => { newIntersest[id] = Number(val) })
     // console.log('newIntersest: ', {newIntersest}, newIntersest.indexOf(index))
     newIntersest.splice(newIntersest.indexOf(index), 1)
     newIntersest = String(newIntersest)
-    console.log('newIntersest: ', {newIntersest})
+    console.log('newIntersest: ', { newIntersest })
     this.props.userContext.setState({
       userData: {
         ...this.props.userContext.userData,
@@ -124,7 +120,7 @@ class ProfileUserTag extends Component {
     } else {
       newIntersest = `${index}`
     }
-    console.log('newIntersest: ', {newIntersest})
+    console.log('newIntersest: ', { newIntersest })
     this.props.userContext.setState({
       userData: {
         ...this.props.userContext.userData,
@@ -188,12 +184,12 @@ class ProfileUserTag extends Component {
 
   render () {
     console.log('%c ProfileUserTag RENDER: ', 'color: orange;', { ...this.props }, { ...this.state })
-    return(
+    return (
       <div className='container' id='userTargWrapper'>
         <h4 className='title is-4'>TAGS</h4>
         {/* <div className='section' id='userTargWrapper'> */}
 
-          <div className='container'>
+        <div className='container'>
           <div className='column'>
 
             <h5 className='title is-5'
@@ -203,13 +199,12 @@ class ProfileUserTag extends Component {
               <i className='fas fa-minus is-tiny is-left' id='sportIconMinus'> SPORT {this.getNumberOfInterests()}/5 </i>
             </h5>
           </div>
-            <div className='tags' id='sportTags'>
-              {this.createCheckbox(this.state.sportTags)}
-            </div>
+          <div className='tags' id='sportTags'>
+            {this.createCheckbox(this.state.sportTags)}
           </div>
+        </div>
 
       </div>
-      
     )
   }
 
@@ -217,7 +212,7 @@ class ProfileUserTag extends Component {
     console.log('handleTitleClick:', event.target)
     // console.log('handleTitleClick:', event.target)
     // console.log('handleTitleClick:', event.target.parentNode.parentNode)
-    
+
     const sportTagsElem = document.getElementById('sportTags')
     const sportIconPlus = document.getElementById('sportIconPlus')
     const sportIconMinus = document.getElementById('sportIconMinus')
@@ -228,22 +223,19 @@ class ProfileUserTag extends Component {
 
       sportIconPlus.style.opacity = '0'
       sportIconMinus.style.opacity = '100'
-      
+
       // sportIconPlus.style.display = 'none'
       // sportIconMinus.style.display = 'initial'
     } else if (sportTagsElem.style.height === '50vh') {
       sportTagsElem.style.height = '0vh'
-      
+
       sportIconPlus.style.opacity = '100'
       sportIconMinus.style.opacity = '0'
 
       // sportIconPlus.style.display = 'initial'
       // sportIconMinus.style.display = 'none'
-      
     }
-    
   }
-
 }
 
 export default ProfileUserTag

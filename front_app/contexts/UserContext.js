@@ -20,7 +20,7 @@ export class UserProvider extends Component {
 
   UserProviderSetState = (newData) => {
     // console.log('%c UserContext Before setState: ', 'color: ;', { ...this.state })
-    console.log('%c UserContext Before setState: ', 'color: ;', { newData })
+    // console.log('%c UserContext Before setState: ', 'color: ;', { newData })
     this.setState({ ...newData })
   }
 
@@ -32,7 +32,7 @@ export class UserProvider extends Component {
    * @return : void
   **/
   async getUserInfos () {
-    console.log('CALL getUserInfos ')
+    // console.log('CALL getUserInfos ')
     // console.log('this.uid: ', this.uid)
     if (this.uid === -1 || this.token === '') {
       return
@@ -42,7 +42,7 @@ export class UserProvider extends Component {
     // console.log('UserContext fetchRsp: ', fetchRsp)
     if (fetchRsp.ok) {
       const responseData = await fetchRsp.json()
-      console.log('fetchRsp.body: ', responseData)
+      // console.log('fetchRsp.body: ', responseData)
       const curUid = this.uid
       const curToken = this.token
       this.setState({
@@ -60,7 +60,7 @@ export class UserProvider extends Component {
   }
 
   render () {
-    console.log('%c UserContextProvider RENDER: ', 'color: blue;', { ...this })
+    // console.log('%c UserContextProvider RENDER: ', 'color: ;', { ...this })
     return (
       <UserContext.Provider value={{
         ...this.state,
