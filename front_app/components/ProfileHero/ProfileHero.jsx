@@ -57,6 +57,13 @@ const profileHero = (props) => {
                   }}>
                 Photo</a>
               </li>
+              <li>
+                <a
+                  onClick={(e) => {
+                    props.handleActiveCompChange(e, 'Geoloc')
+                  }}>
+                Geoloc</a>
+              </li>
             </ul>
           </div>
         </nav>

@@ -13,8 +13,9 @@ import { UserContext } from '../contexts/UserContext'
 import './Home.scss'
 /* eslint-enable no-unused-vars */
 
-// const Home = () => {
+/* eslint-disable */
 class Home extends React.Component {
+
   render () {
     // console.log('this:', this)
     // console.log('this.props:', this.props)

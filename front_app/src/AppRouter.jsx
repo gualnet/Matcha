@@ -4,6 +4,7 @@ import { Route, Switch } from 'react-router-dom'
 
 // context
 import { UserContext } from '../contexts/UserContext'
+import { GeolocProvider, GeolocContext } from '../contexts/GeolocContext'
 
 // Page includes
 import Home from '../pages/Home.jsx'
@@ -15,23 +16,23 @@ import NotFound from '../pages/404.jsx'
 const AppRouter = () => {
   return (
     <UserContext.Consumer>
-      {(context) => {
+      {(userContextProp) => {
         return (
           <Switch>
             <Route exact path='/'
-              render={(props) => <Home { ...props } userContext={context} />}
+              render={(props) => <Home { ...props } userContext={userContextProp} />}
             />
 
             <Route exact path='/home'
-              render={(props) => <Home { ...props } userContext={context} />}
+              render={(props) => <Home { ...props } userContext={userContextProp} />}
             />
 
             <Route exact path='/profile'
-              render={(props) => <Profile userContext={context} />}
+              render={(props) => <Profile userContext={userContextProp} />}
             />
 
             <Route exact path='/Message'
-              render={(props) => <Message userContext={context} />}
+              render={(props) => <Message userContext={userContextProp} />}
             />
 
             <Route component={ NotFound } />

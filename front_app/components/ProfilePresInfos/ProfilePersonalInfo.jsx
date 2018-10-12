@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { Component } from 'react'
-import { UserContext } from '../../contexts/UserContext'
+import React from 'react'
 import genderNumToString from '../../utils/genderNumToString'
 import orientationNumToString from '../../utils/orientationNumToString'
 

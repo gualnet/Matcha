@@ -11,6 +11,8 @@ import NavBar from '../components/NavBar/NavBar.jsx'
 // context
 import { UserContext } from '../contexts/UserContext'
 
+import ProfileGeolocManager from '../components/ProfileGeolocManager/ProfileGeolocManager.jsx'
+
 // import { css } from 'main.css'
 /* eslint-enable no-unused-vars */
 

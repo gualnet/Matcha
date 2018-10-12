@@ -14,10 +14,10 @@ import '../assets/scss/pages/Default.scss'
 import ReactDom from 'react-dom'
 
 ReactDom.render(
-  <UserProvider>
+  <UserProvider><GeolocProvider>
     <UserContext.Consumer>
       { (value) => <App { ...value } /> }
     </UserContext.Consumer>
-  </UserProvider>,
+  </GeolocProvider></UserProvider>,
   document.getElementById('root')
 )

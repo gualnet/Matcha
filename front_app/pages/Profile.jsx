@@ -1,14 +1,16 @@
 
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
+import { GeolocProvider, GeolocContext } from '../contexts/GeolocContext'
 
 // COMPONENT
 import ProfileUserInfoPanel from '../components/ProfileUserInfoPanel/ProfileUserInfoPanel.jsx'
 import ProfilePicManager from '../components/ProfilePicManager/ProfilePicManager.jsx'
-import ProfileHero from '../components/ProfilePresInfos/ProfileHero.jsx'
+import ProfileHero from '../components/ProfileHero/ProfileHero.jsx'
 import ProfilePersonalInfo from '../components/ProfilePresInfos/ProfilePersonalInfo.jsx'
 import ProfileUserTag from '../components/ProfileUserTagManager/ProfileUserTag.jsx'
 import ProfileDescriptionManager from '../components/ProfileDescriptionManager/ProfileDescriptionManager.jsx'
+import ProfileGeolocManager from '../components/ProfileGeolocManager/ProfileGeolocManager.jsx'
 
 // CSS
 import './Profile.scss'
@@ -16,7 +18,8 @@ import './Profile.scss'
 
 class Profile extends Component {
   state = {
-    ActiveComponent: 'Description'
+    ActiveComponent: 'Geoloc'
+    // ActiveComponent: 'InfoPerso'
   }
 
   handleActiveCompChange = (event, value) => {
@@ -31,7 +34,7 @@ class Profile extends Component {
   }
 
   render () {
-    // console.log('%c profile component render', 'color: ;', this)
+    console.log('%c profile component render', 'color: ;', this)
     if (this.props.userContext.uid === -1) {
       return (
         // window.alert('not allowed')
@@ -76,6 +79,16 @@ class Profile extends Component {
               <ProfilePicManager
                 userContext={this.props.userContext}>
               </ProfilePicManager>
+            }
+
+            {
+              this.state.ActiveComponent === 'Geoloc' &&
+              // <GeolocProvider>
+                <GeolocContext.Consumer>
+                  {(geolocContextProp) => <ProfileGeolocManager geolocContext={geolocContextProp}/>
+                  }
+                </GeolocContext.Consumer>
+            }
             }
           </div>
 
