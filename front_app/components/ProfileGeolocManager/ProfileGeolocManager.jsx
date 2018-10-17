@@ -40,27 +40,8 @@ const ProfileGeolocManager = (props) => {
 
     if (rep.ok) {
       const repData = await rep.json()
-      console.log('repData ==>', repData)
+      console.log('+repData ==>', repData)
       
-    }
-  }
-
-  const reverseGeoloc = async (lon, lat) => {
-    const fetchResp = await window.fetch(`https://api-adresse.data.gouv.fr/reverse/?lon=${lon}&lat=${lat}`,
-    {
-      method: 'POST',
-      headers: {
-        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json'
-        // 'Access-Control-Allow-Origin': 'api-adresse.data.gouv.fr'
-      }
-
-    }
-    )
-    if (fetchResp.ok) {
-      const repData = fetchResp.json()
-      console.log('repData:', {repData})
     }
   }
 
@@ -68,13 +49,11 @@ const ProfileGeolocManager = (props) => {
     <div>
       <button className='button is-primary'
         onClick={locateMe}
-      > Localisez moi </button>
+        > Localisez moi </button>
       <button className='button is-primary'
         onClick={getGeolocDB}
-      > test get data in db </button>
-      <button className='button is-primary'
-        onClick={() => reverseGeoloc(geolocContext.data.longitude, geolocContext.data.latitude)}
-      > test reverse geoloc </button>
+        > test get data in db </button>
+        data :{`${props.geolocContext.data.label}`}
       <p>{`Coordinatesaccuracy: ${geolocContext.data.Coordinatesaccuracy}`}</p>
       <p>{`altitude: ${geolocContext.data.altitude}`}</p>
       <p>{`altitudeAccuracy: ${geolocContext.data.altitudeAccuracy}`}</p>

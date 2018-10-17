@@ -1,4 +1,5 @@
 // IMPORT
+import axios from 'axios'
 import Models from '../models/Models'
 // import UsersMdl from '../models/UsersMdl'
 
@@ -83,5 +84,45 @@ export const GeolocationCtrl = {
         result: {}
       }))
     }
+  },
+
+  async reverseGeoloc (req, res) {
+    console.log('\n\nreverseGeoloc')
+
+    const url = `https://api-adresse.data.gouv.fr/reverse/?lon=${req.body.lon}&lat=${req.body.lat}`
+    try {
+      const response = await axios.get(url)
+      var data = response.data
+      // console.log('response', response)
+      console.log('data', {...data})
+    } catch (error) {
+      console.error(error)
+      return (res.status('204').type('json').json({
+        success: false,
+        msg: 'nok',
+        result: {}
+      }))
+    }
+
+    return (res.status('200').type('json').json({
+      success: true,
+      msg: 'ok',
+      result: { ...data }
+    }))
+
+
+
+
+
+
+
+
+    // const fetchResp = await axios(`https://api-adresse.data.gouv.fr/reverse/?lon=${req.body.lon}&lat=${req.body.lat}`, {
+    //   method: 'POST',
+    // })
+    // if (fetchResp.ok) {
+    //   const repData = fetchResp.json()
+    //   console.log('repData:', {repData})
+    // }
   }
 }

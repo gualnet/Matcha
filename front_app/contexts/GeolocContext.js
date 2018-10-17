@@ -18,7 +18,11 @@ export class GeolocProvider extends Component {
       latitude: 0,
       longitude: 0,
       speed: null,
-      timestamp: 0
+      timestamp: 0,
+      city: '',
+      cityCode: '',
+      street: '',
+      label: 'coucou'
     }
   }
 
@@ -47,6 +51,40 @@ export class GeolocProvider extends Component {
   updateCurrentPos = (accurate = false) => {
     console.log('%c CALL updateCurrentPos: ', 'color: green;')
 
+    const reverseGeoloc = async () => {
+      // console.log('------------------->', props.geolocContext.data.longitude)
+      const dataToSend = {
+        uid: this.uid,
+        token: this.token,
+        lon: this.state.longitude,
+        lat: this.state.latitude
+      }
+      const fetchResp = await window.fetch('api/geoloc/reverse',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(dataToSend)
+      }
+      )
+      if (fetchResp.ok) {
+        const repData = await fetchResp.json()
+        console.log('+repData ==>', repData)
+        console.log('BOOOOM', repData.result.features.length)
+        if (repData.success === true &&
+        repData.result.features.length !== 0) {
+          const reverseProperties = repData.result.features[0].properties
+          this.setState({
+            city: reverseProperties.city,
+            cityCode: reverseProperties.citycode,
+            street: reverseProperties.street,
+            label: reverseProperties.label
+          })
+        }
+      }
+    }
+
     const geolocSuccess = (response) => {
       const coordsData = response.coords
       // console.log('%c updateCurrentPos success: ', 'color: orange;', {response})
@@ -62,6 +100,7 @@ export class GeolocProvider extends Component {
         speed: coordsData.speed,
         timestamp: response.timestamp
       })
+      reverseGeoloc()
     }
 
     const geolocError = (err) => {
