@@ -1,33 +1,40 @@
-
 /* eslint-disable no-unused-vars */
 import React from 'react'
 
-// components
+// COMPONENT
 import SinginForm from '../components/SignForms/SignIn.jsx'
 import SingonForm from '../components/SignForms/SignOn.jsx'
+import MsgPop from '../components/MsgPop/MsgPop.jsx'
 
-// context
+// CONTEXT
 import { UserContext } from '../contexts/UserContext'
 
-// css
+// CSS
 import './Home.scss'
 /* eslint-enable no-unused-vars */
 
-/* eslint-disable */
+// /* eslint-disable */
 class Home extends React.Component {
-
   render () {
-    // console.log('this:', this)
-    // console.log('this.props:', this.props)
-    // console.log('this.props.userContext:', this.props.userContext)
-    // console.log('this.props.userContext.uid:', this.props.userContext.uid)
+    console.log('HOME this:', this)
 
     if (this.props.userContext.uid > 0) {
       // logged case
       return (
         <section className='section' id='homeWrapper'>
+
           <h1 className='title'>Home Page</h1>
           <p>Welcome {this.props.userContext.uid}</p>
+
+          <MsgPop
+            level='info'
+            id='popup test'
+            message='popup test message...'
+          ></MsgPop>
+          <button className='button is-info is-outlined'
+            onClick={() => MsgPop.showPopup({ id: 'popup test' })}
+          > test popup message</button>
+
         </section>
       )
     } else {

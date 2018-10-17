@@ -9,12 +9,13 @@ import axios from 'axios'
 
 export default class SignOut extends Component {
   submitForm = (e) => {
+    console.log('submitForm: ', e)
     e.preventDefault()
     // * ================================
 
     axios({
       method: 'post',
-      url: 'http://localhost:8880/api/user/logout/',
+      url: '/api/user/logout/',
       data: {
         uid: this.props.userContext.uid,
         token: this.props.userContext.token
@@ -23,13 +24,14 @@ export default class SignOut extends Component {
       .then((response) => {
         console.log('response ok: ', response)
         if (response.data.success === 'logout') {
-          // window.alert('logout success')
           this.props.userContext.setState({
             uid: -1,
-            token: 'none'
+            token: 'none',
+            userData: ''
           })
+          window.localStorage.clear()
         }
-        // !~ redirect on /home
+        window.location.assign('/')
       })
       .catch((error) => {
         console.log('response err: ', error)

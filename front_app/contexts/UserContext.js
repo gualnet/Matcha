@@ -42,7 +42,7 @@ export class UserProvider extends Component {
     // console.log('UserContext fetchRsp: ', fetchRsp)
     if (fetchRsp.ok) {
       const responseData = await fetchRsp.json()
-      // console.log('fetchRsp.body: ', responseData)
+      console.log('fetchRsp.body: ', responseData)
       const curUid = this.uid
       const curToken = this.token
       this.setState({
@@ -56,6 +56,7 @@ export class UserProvider extends Component {
   }
 
   componentDidUpdate () {
+    // console.log('%c UserContextProvider componentDidUpdate: ', 'color: green;')
     window.localStorage.setItem('userContext', JSON.stringify(this.state))
   }
 

@@ -3,6 +3,7 @@ import { verifCreds } from '../middleware/verifCreds'
 import { UsersCtrl } from '../controlers/UsersCtrl'
 import { PicturesCtrl } from '../controlers/PicturesCtrl'
 import { TagsCtrl } from '../controlers/TagsCtrl'
+import { GeolocationCtrl } from '../controlers/GeolocationCtrl'
 const Express = require('express')
 
 // Routes
@@ -33,6 +34,13 @@ exports.router = () => {
     .get(verifCreds, tagsCtrl.getAllTags)
   apiRouter.route('/tags')
     .post(verifCreds, tagsCtrl.insertTags)
+
+  apiRouter.route('/geoloc/get')
+    .post(verifCreds, GeolocationCtrl.getGeolocation)
+  apiRouter.route('/geoloc/set')
+    .post(verifCreds, GeolocationCtrl.setGeolocation)
+
+  apiRouter.route('/members')
 
   return apiRouter
 }

@@ -11,6 +11,7 @@ import ProfilePersonalInfo from '../components/ProfilePresInfos/ProfilePersonalI
 import ProfileUserTag from '../components/ProfileUserTagManager/ProfileUserTag.jsx'
 import ProfileDescriptionManager from '../components/ProfileDescriptionManager/ProfileDescriptionManager.jsx'
 import ProfileGeolocManager from '../components/ProfileGeolocManager/ProfileGeolocManager.jsx'
+import LoadingComp from '../components/LoadingComp/LoadingComp.jsx'
 
 // CSS
 import './Profile.scss'
@@ -18,8 +19,8 @@ import './Profile.scss'
 
 class Profile extends Component {
   state = {
-    ActiveComponent: 'Geoloc'
-    // ActiveComponent: 'InfoPerso'
+    // ActiveComponent: 'Geoloc'
+    ActiveComponent: 'InfoPerso'
   }
 
   handleActiveCompChange = (event, value) => {
@@ -29,16 +30,28 @@ class Profile extends Component {
   }
 
   componentWillMount () {
-    // console.log('%c Profile component will mount', 'color: ;', this)
+    // console.log('%c Profile component will mount', 'color: blue;', this)
     this.props.userContext.getUserInfos()
+    // console.log('%c test: ', 'color: cyan', this)
   }
+  // async componentDidMount () {
+  //   console.log('%c Profile component did mount', 'color: blue;', this)
+  //   await this.props.userContext.getUserInfos()
+  //   console.log('%c test: ', 'color: cyan', this)
+  // }
 
+  /* eslint-disable */
   render () {
-    console.log('%c profile component render', 'color: ;', this)
+    console.log('%c profile component render', 'color: blue;', this)
     if (this.props.userContext.uid === -1) {
       return (
-        // window.alert('not allowed')
         window.location.replace('/')
+      )
+    } else if (this.props.userContext.userData === undefined) {
+      // on va rerender a l'update des props
+      return (
+        // TODO revoir le loader...
+        <LoadingComp></LoadingComp>
       )
     }
 
@@ -82,10 +95,11 @@ class Profile extends Component {
             }
 
             {
-              this.state.ActiveComponent === 'Geoloc' &&
-              // <GeolocProvider>
+              (this.state.ActiveComponent === 'Geoloc' &&
+              this.props.userContext.userData.GeolocAuth === 1) &&
                 <GeolocContext.Consumer>
-                  {(geolocContextProp) => <ProfileGeolocManager geolocContext={geolocContextProp}/>
+                  {(geolocContextProp) => <ProfileGeolocManager geolocContext={geolocContextProp}
+                  userContext={this.props.userContext}/>
                   }
                 </GeolocContext.Consumer>
             }

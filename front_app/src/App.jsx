@@ -3,17 +3,14 @@
 import React, { Component } from 'react'
 import { BrowserRouter, Route } from 'react-router-dom'
 
-// Components
+// COMPONENT
 import AppRouter from './AppRouter.jsx'
 import NavBar from '../components/NavBar/NavBar.jsx'
 // import Profile from '../pages/Profile.jsx'
 
-// context
+// CONTEXT
 import { UserContext } from '../contexts/UserContext'
 
-import ProfileGeolocManager from '../components/ProfileGeolocManager/ProfileGeolocManager.jsx'
-
-// import { css } from 'main.css'
 /* eslint-enable no-unused-vars */
 
 export default class App extends Component {

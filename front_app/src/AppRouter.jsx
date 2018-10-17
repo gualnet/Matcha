@@ -2,14 +2,14 @@
 import React, { Component } from 'react'
 import { Route, Switch } from 'react-router-dom'
 
-// context
+// CONTEXT
 import { UserContext } from '../contexts/UserContext'
-import { GeolocProvider, GeolocContext } from '../contexts/GeolocContext'
 
-// Page includes
+// PAGES
 import Home from '../pages/Home.jsx'
 import Profile from '../pages/Profile.jsx'
 import Message from '../pages/Message.jsx'
+import Members from '../pages/Members.jsx'
 import NotFound from '../pages/404.jsx'
 /* eslint-enable no-unused-vars */
 
@@ -33,6 +33,10 @@ const AppRouter = () => {
 
             <Route exact path='/Message'
               render={(props) => <Message userContext={userContextProp} />}
+            />
+
+            <Route exact path='/Members'
+              render = {() => <Members/> }
             />
 
             <Route component={ NotFound } />

@@ -39,6 +39,7 @@ export default class NavBar extends Component {
   }
 
   render () {
+    // console.log('%c NavBar RENDER: ', 'color: ;', this.props)
     const registerBtnIsVisible = () => {
       return (this.props.userContext.uid < 0 ? 'is-visible' : 'is-invisible')
     }

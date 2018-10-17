@@ -4,38 +4,68 @@ import React, { Component } from 'react'
 export const GeolocContext = React.createContext()
 /* eslint-enable no-unused-vars */
 
+/* eslint-disable */
 export class GeolocProvider extends Component {
-  constructor () {
-    super()
+  constructor (props) {
+    super(props)
+    this.uid = props.uid
+    this.token = props.token
     this.state = {
-      Coordinatesaccuracy: 20,
+      Coordinatesaccuracy: 0,
       altitude: null,
       altitudeAccuracy: null,
       heading: null,
-      latitude: 48.8966552,
-      longitude: 2.3183431,
+      latitude: 0,
+      longitude: 0,
       speed: null,
-      timestamp: 1539338854411
+      timestamp: 0
     }
   }
 
+  dataToDb () {
+    // console.log('%c dataToDb:', 'color: cyan', this.uid, this.token)
+    if ((this.state.longitude === 0 && this.state.latitude === 0) ||
+    (this.uid < 0 || this.token == undefined)) {
+      return (false)
+    }
+    const dataToSend = {
+      ...this.state,
+      uid: this.uid,
+      token: this.token
+    }
+    console.log('%c --->', 'color: cyan', { dataToSend })
+    window.fetch('/api/geoloc/set', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(dataToSend)
+    })
+    return (true)
+  }
+
   updateCurrentPos = (accurate = false) => {
-    const geolocSuccess = (coords) => {
-      console.log('success: ', coords)
+    console.log('%c CALL updateCurrentPos: ', 'color: green;')
+
+    const geolocSuccess = (response) => {
+      const coordsData = response.coords
+      // console.log('%c updateCurrentPos success: ', 'color: orange;', {response})
+      console.log('%c updateCurrentPos success: ', 'color: orange;', {coordsData})
+
       this.setState({
-        Coordinatesaccuracy: coords.Coordinatesaccuracy,
-        altitude: coords.altitude,
-        altitudeAccuracy: coords.altitudeAccuracy,
-        heading: coords.heading,
-        latitude: coords.latitude,
-        longitude: coords.longitude,
-        speed: coords.speed,
-        timestamp: coords.timestamp
+        Coordinatesaccuracy: coordsData.accuracy,
+        altitude: coordsData.altitude,
+        altitudeAccuracy: coordsData.altitudeAccuracy,
+        heading: coordsData.heading,
+        latitude: coordsData.latitude,
+        longitude: coordsData.longitude,
+        speed: coordsData.speed,
+        timestamp: response.timestamp
       })
-      return ('success')
     }
 
-    function geolocError (err) {
+    const geolocError = (err) => {
+      console.log('%c updateCurrentPos error: ', 'color: red;', err)
       console.warn(`ERROR(${err.code}): ${err.message}`)
     }
 
@@ -45,11 +75,25 @@ export class GeolocProvider extends Component {
       maximumAge: Infinity
     }
 
+    console.log('%c CALL updateCurrentPos STEP1: ', 'color: green;')
     window.navigator.geolocation.getCurrentPosition(geolocSuccess, geolocError, options)
+    console.log('%c CALL updateCurrentPos END: ', 'color: green;')
+  }
+
+  componentDidMount = () => {
+    console.log('%c GeolocProvider componentDidMount: ', 'color: green;')
+    // this.updateCurrentPos(true)
   }
 
   render () {
-    console.log('%c GeolocContextProvider RENDER: ', 'color: green;', { ...this })
+    console.log('%c GeolocContextProvider RENDER: ', 'color: green;', { ...this 
+    })
+    if (this.dataToDb()) {
+      console.log('%c Geoloc data sent to database', 'color: green')
+    } else {
+      console.log('%c Geoloc data NOT sent to database', 'color: red')
+    }
+    console.log('\n\n\n\n\n')
     return (
       <GeolocContext.Provider
         value={{

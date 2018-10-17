@@ -1,12 +1,13 @@
 
-// IMPORTS
 /* eslint-disable no-unused-vars */
+// IMPORTS
 import React from 'react'
 import '@babel/polyfill'
 import App from './App.jsx'
 
-// test context
+// CONTEXT
 import { UserProvider, UserContext } from '../contexts/UserContext'
+import { GeolocProvider } from '../contexts/GeolocContext'
 
 // CSS
 import '../assets/scss/pages/Default.scss'
@@ -14,10 +15,14 @@ import '../assets/scss/pages/Default.scss'
 import ReactDom from 'react-dom'
 
 ReactDom.render(
-  <UserProvider><GeolocProvider>
+  <UserProvider>
     <UserContext.Consumer>
-      { (value) => <App { ...value } /> }
+      {(userContext) => <GeolocProvider
+        { ...userContext }>
+        <App { ...userContext } />
+      </GeolocProvider>
+      }
     </UserContext.Consumer>
-  </GeolocProvider></UserProvider>,
+  </UserProvider>,
   document.getElementById('root')
 )

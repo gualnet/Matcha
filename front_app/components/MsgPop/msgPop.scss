@@ -1,0 +1,14 @@
+.notification {
+  position: absolute;
+  width: 20vw;
+  right: -30vw;
+  top: 6vh;
+  transition: 1s;
+}
+
+.notification.visible {
+  right: 5px;
+  top: 6vh;
+  border-radius: 20px;
+  transition: 1.5s;
+}

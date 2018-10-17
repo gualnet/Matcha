@@ -63,7 +63,8 @@ export default class Models {
       const response = await pool.query(reqSql)
       return (response)
     } catch (error) {
-      throw error
+      console.error('Error: ', error)
+      return (null)
     }
   }
 
@@ -83,7 +84,7 @@ export default class Models {
       console.error('Error in Model.js - find(): ', error)
     }
 
-    let reqSql = ` INSERT INTO ${this.tableName} (`
+    let reqSql = `INSERT INTO ${this.tableName} (`
     const objectLen = Object.values(values.where).length
     let i = 0
     if (objectLen > 1) {
@@ -107,7 +108,8 @@ export default class Models {
       const response = await pool.query(reqSql)
       return (response)
     } catch (error) {
-      throw error
+      console.error('Error: ', error)
+      return (null)
     }
   }
 
