@@ -43,8 +43,6 @@ export default class SignInForm extends Component {
   checkValues () {
     const regexPassword = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/
     var ret = true
-    console.log('Login:', this.state.Login)
-    console.log('Password:', this.state.Password)
 
     /* eslint-disable-next-line */
     if (this.state.Password == undefined ||
@@ -52,7 +50,7 @@ export default class SignInForm extends Component {
       console.log('Password is empty or not correct')
 
       const passwordElem = document.getElementsByName('Password')
-      console.log('passwordElem: ', passwordElem[0])
+      // console.log('passwordElem: ', passwordElem[0])
       passwordElem[0].style.border = '1px solid red'
       setTimeout(() => { passwordElem[0].style.border = '' }, 2500)
 
@@ -64,7 +62,7 @@ export default class SignInForm extends Component {
       console.log('Login is empty or not correct')
 
       const loginElem = document.getElementsByName('Login')
-      console.log('loginElem: ', loginElem)
+      // console.log('loginElem: ', loginElem)
       loginElem[0].style.border = '1px solid red'
       setTimeout(() => { loginElem[0].style.border = '' }, 2500)
       ret = false

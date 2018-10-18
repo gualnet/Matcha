@@ -1,6 +1,8 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 
+import ManualLocationHandler from './ManualLocationHandler.jsx'
+
 // CSS
 import './ProfileGeolocManager.scss'
 /* eslint-enable no-unused-vars */
@@ -47,25 +49,45 @@ const ProfileGeolocManager = (props) => {
 
   return (
     <div>
-      <button className='button is-primary'
-        onClick={locateMe}
-        > Localisez moi </button>
-      <button className='button is-primary'
-        onClick={getGeolocDB}
-        > test get data in db </button>
-        data :{`${props.geolocContext.data.label}`}
-      <p>{`Coordinatesaccuracy: ${geolocContext.data.Coordinatesaccuracy}`}</p>
-      <p>{`altitude: ${geolocContext.data.altitude}`}</p>
-      <p>{`altitudeAccuracy: ${geolocContext.data.altitudeAccuracy}`}</p>
-      <p>{`heading: ${geolocContext.data.heading}`}</p>
-      <p>{`latitude: ${geolocContext.data.latitude}`}</p>
-      <p>{`longitude: ${geolocContext.data.longitude}`}</p>
-      <p>{`speed: ${geolocContext.data.speed}`}</p>
-      <p>{`timestamp: ${geolocContext.data.timestamp}`}</p>
 
-      <div className='button'
-      onClick={gotoGoogleMap}
-      >Show my position</div>
+      <div className='box container'>
+      <div className='container has-text-left'>
+        <p>{`Coordinatesaccuracy: ${geolocContext.data.Coordinatesaccuracy}`}</p>
+        <p>{`altitude: ${geolocContext.data.altitude}`}</p>
+        <p>{`altitudeAccuracy: ${geolocContext.data.altitudeAccuracy}`}</p>
+        <p>{`heading: ${geolocContext.data.heading}`}</p>
+        <p>{`latitude: ${geolocContext.data.latitude}`}</p>
+        <p>{`longitude: ${geolocContext.data.longitude}`}</p>
+        <p>{`speed: ${geolocContext.data.speed}`}</p>
+        <p>{`timestamp: ${geolocContext.data.timestamp}`}</p>
+      </div>
+      <div className='container has-text-right'>
+        <div>
+          <button className='button is-primary'
+            onClick={locateMe}
+            > Localisez moi </button>
+        </div>
+        <div>
+          <button className='button is-primary'
+            onClick={getGeolocDB}
+            > test get data in db </button>
+        </div>
+
+        <div>
+          <button className='button'
+          onClick={gotoGoogleMap}
+          >Show my position</button>
+        </div>
+      </div>
+      </div>
+
+      <div className='box container has-text-centered'>
+      <h3 className='title is-5'>data :{`${props.geolocContext.data.label}`}</h3>
+      </div>
+
+      <ManualLocationHandler
+        geolocContext={props.geolocContext}
+      ></ManualLocationHandler>
 
     </div>
   )

@@ -109,20 +109,19 @@ export const GeolocationCtrl = {
       msg: 'ok',
       result: { ...data }
     }))
+  },
+
+  manualGeoloc (req, res) {
+    console.log('\n\n manualGeoloc')
 
 
 
-
-
-
-
-
-    // const fetchResp = await axios(`https://api-adresse.data.gouv.fr/reverse/?lon=${req.body.lon}&lat=${req.body.lat}`, {
-    //   method: 'POST',
-    // })
-    // if (fetchResp.ok) {
-    //   const repData = fetchResp.json()
-    //   console.log('repData:', {repData})
-    // }
+    return (res.status('666').type('json').json({
+      success: false,
+      msg: 'nok',
+      result: {}
+    }))
   }
+
 }
+

@@ -39,9 +39,10 @@ exports.router = () => {
     .post(verifCreds, GeolocationCtrl.getGeolocation)
   apiRouter.route('/geoloc/set')
     .post(verifCreds, GeolocationCtrl.setGeolocation)
-  apiRouter.route('/geoloc/reverse')
-    .post(GeolocationCtrl.reverseGeoloc)
-    // .post(verifCreds, GeolocationCtrl.reverseGeoloc)
+  apiRouter.route('/geoloc/rev')
+    .post(verifCreds, GeolocationCtrl.reverseGeoloc)
+  apiRouter.route('/geoloc/man')
+    .post(verifCreds, GeolocationCtrl.manualGeoloc)
 
   apiRouter.route('/members')
 
