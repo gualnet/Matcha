@@ -15,6 +15,7 @@ exports.router = () => {
   apiRouter.route('/user/logout').post(UsersCtrl.logout)
   apiRouter.route('/user/activation').get(UsersCtrl.accountActivation)
   apiRouter.route('/user/resetpass').post(UsersCtrl.resetAccountPassword)
+  apiRouter.route('/user/checklogin').post(UsersCtrl.checkLogin)
 
   apiRouter.route('/user/profil/:uid/:token')
     .get(UsersCtrl.profilGetUser)

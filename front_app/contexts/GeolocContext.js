@@ -37,7 +37,7 @@ export class GeolocProvider extends Component {
       uid: this.uid,
       token: this.token
     }
-    console.log('%c --->', 'color: cyan', { dataToSend })
+    // console.log('%c --->', 'color: cyan', { dataToSend })
     window.fetch('/api/geoloc/set', {
       method: 'POST',
       headers: {
@@ -49,7 +49,7 @@ export class GeolocProvider extends Component {
   }
 
   updateCurrentPos = (accurate = false) => {
-    console.log('%c CALL updateCurrentPos: ', 'color: green;')
+    // console.log('%c CALL updateCurrentPos: ', 'color: green;')
 
     const reverseGeoloc = async () => {
       // console.log('------------------->', props.geolocContext.data.longitude)
@@ -59,7 +59,7 @@ export class GeolocProvider extends Component {
         lon: this.state.longitude,
         lat: this.state.latitude
       }
-      const fetchResp = await window.fetch('api/geoloc/reverse',
+      const fetchResp = await window.fetch('/api/geoloc/rev',
       {
         method: 'POST',
         headers: {
@@ -70,8 +70,7 @@ export class GeolocProvider extends Component {
       )
       if (fetchResp.ok) {
         const repData = await fetchResp.json()
-        console.log('+repData ==>', repData)
-        console.log('BOOOOM', repData.result.features.length)
+        // console.log('repData ==>', repData)
         if (repData.success === true &&
         repData.result.features.length !== 0) {
           const reverseProperties = repData.result.features[0].properties
@@ -88,7 +87,7 @@ export class GeolocProvider extends Component {
     const geolocSuccess = (response) => {
       const coordsData = response.coords
       // console.log('%c updateCurrentPos success: ', 'color: orange;', {response})
-      console.log('%c updateCurrentPos success: ', 'color: orange;', {coordsData})
+      // console.log('%c updateCurrentPos success: ', 'color: orange;', {coordsData})
 
       this.setState({
         Coordinatesaccuracy: coordsData.accuracy,
@@ -104,7 +103,7 @@ export class GeolocProvider extends Component {
     }
 
     const geolocError = (err) => {
-      console.log('%c updateCurrentPos error: ', 'color: red;', err)
+      // console.log('%c updateCurrentPos error: ', 'color: red;', err)
       console.warn(`ERROR(${err.code}): ${err.message}`)
     }
 
@@ -114,30 +113,67 @@ export class GeolocProvider extends Component {
       maximumAge: Infinity
     }
 
-    console.log('%c CALL updateCurrentPos STEP1: ', 'color: green;')
+    // console.log('%c CALL updateCurrentPos STEP1: ', 'color: green;')
     window.navigator.geolocation.getCurrentPosition(geolocSuccess, geolocError, options)
-    console.log('%c CALL updateCurrentPos END: ', 'color: green;')
+    // console.log('%c CALL updateCurrentPos END: ', 'color: green;')
+  }
+
+  updateManualPos = async (city = '') => {
+    console.log('%c updateManualPos')
+    if (city.length < 1) {
+      return (false)
+    }
+
+    const dataToSend = {
+      uid: this.uid,
+      token: this.token,
+      location: city.toLocaleLowerCase()
+    }
+    const fetchRep = await window.fetch('/api/geoloc/man', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(dataToSend)
+    })
+    if (fetchRep.ok) {
+      const repData = await fetchRep.json()
+      console.log('repData', {repData})
+
+      const repCityData = repData.result.features[0]
+      this.setState({
+        city: repCityData.properties.city,
+        cityCode: repCityData.properties.postcode,
+        label: '',
+        street: '',
+        latitude: repCityData.geometry.coordinates[1],
+        longitude: repCityData.geometry.coordinates[0]
+      })
+    } else {
+      console.error('%c ERROR: ', 'color: red;', {fetchRep})
+    }
   }
 
   componentDidMount = () => {
-    console.log('%c GeolocProvider componentDidMount: ', 'color: green;')
+    // console.log('%c GeolocProvider componentDidMount: ', 'color: green;')
     // this.updateCurrentPos(true)
   }
 
   render () {
-    console.log('%c GeolocContextProvider RENDER: ', 'color: green;', { ...this 
-    })
+    // console.log('%c GeolocContextProvider RENDER: ', 'color: green;', { ...this 
+    // })
     if (this.dataToDb()) {
       console.log('%c Geoloc data sent to database', 'color: green')
     } else {
       console.log('%c Geoloc data NOT sent to database', 'color: red')
     }
-    console.log('\n\n\n\n\n')
+    // console.log('\n\n\n\n\n')
     return (
       <GeolocContext.Provider
         value={{
           data: this.state,
-          updateCurrentPos: this.updateCurrentPos
+          updateCurrentPos: this.updateCurrentPos,
+          updateManualPos: this.updateManualPos
         }}>
         { this.props.children }
       </GeolocContext.Provider>

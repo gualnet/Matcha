@@ -23,51 +23,71 @@ const profilInputVerif = (params) => {
     if (params.Login) {
       if (params.Login === '' || params.Login.length < 2 || params.Login.length > 25) {
         retTab.verifLogin = false
+      } else {
+        retTab.verifLogin = true
       }
     }
     if (params.Mail) {
       if (params.Mail === '' || !regexMail.test(params.Mail) || params.Mail.length > 100) {
         retTab.verifMail = false
+      } else {
+        retTab.verifMail = true
       }
     }
     if (params.Password) {
       if (params.Password === '' || !regexPassword.test(params.Password) || params.Password.length > 100) {
         retTab.verifPassword = false
+      } else {
+        retTab.verifPassword = true
       }
     }
     if (params.FirstName) {
       if (params.FirstName.length < 2 || params.FirstName.length > 60) {
         retTab.verifFirstName = false
+      } else {
+        retTab.verifFirstName = true
       }
     }
     if (params.LastName) {
       if (params.LastName.length < 2 || params.LastName.length > 60) {
         retTab.verifLastName = false
+      } else {
+        retTab.verifLastName = true
       }
     }
     if (params.Age) {
       if (params.Age < 0 || params.Age > 111) {
         retTab.verifAge = false
+      } else {
+        retTab.verifAge = true
       }
     }
     if (params.Gender) {
       if (params.Gender < 1 || params.Gender > 3) {
         retTab.verifGender = false
+      } else {
+        retTab.verifGender = true
       }
     }
     if (params.Orientation) {
       if (params.Orientation < 1 || params.Orientation > 5) {
         retTab.verifOrientation = false
+      } else {
+        retTab.verifOrientation = true
       }
     }
     if (params.Bio) {
       if (params.Bio.length < 1 || params.Bio.length > 500) {
         retTab.verifBio = false
+      } else {
+        retTab.verifBio = true
       }
     }
     if (params.Interest) {
       if (params.Interest.length < 1 || params.Interest.length > 500) {
         retTab.verifInterest = false
+      } else {
+        retTab.verifInterest = true
       }
     }
     if (params.Popularity) {
@@ -75,41 +95,57 @@ const profilInputVerif = (params) => {
         // ? si depassement de bornes set aux bornes
         // ? ou rejet de la modif
         retTab.verifPopularity = false
+      } else {
+        retTab.verifPopularity = true
       }
     }
     if (params.GeolocAuth) {
       if (params.GeolocAuth !== 1 && params.GeolocAuth !== 0) {
         retTab.verifGeolocAuth = false
+      } else {
+        retTab.verifGeolocAuth = true
       }
     }
     if (params.BlockedUsers) {
       if (params.BlockedUsers.length > 1000) {
         retTab.verifBlockedUsers = false
+      } else {
+        retTab.verifBlockedUsers = true
       }
     }
     if (params.Reported) {
       if (params.Reported !== 'true' && params.Reported !== 'false') {
         retTab.verifReported = false
+      } else {
+        retTab.verifReported = true
       }
     }
     if (params.Height) {
       if (params.Height < 1.30 && params.Height > 2.20) {
         retTab.verifHeight = false
+      } else {
+        retTab.verifHeight = true
       }
     }
     if (params.Weight) {
       if (params.Weight < 20 && params.Weight > 120) {
         retTab.verifWeight = false
+      } else {
+        retTab.verifWeight = true
       }
     }
     if (params.EyeColor) {
       if (params.EyeColor < 0 && params.EyeColor > 3) {
         retTab.verifEyeColor = false
+      } else {
+        retTab.verifEyeColor = true
       }
     }
     if (params.HairColor) {
       if (params.HairColor < 0 && params.HairColor > 5) {
         retTab.verifHairColor = false
+      } else {
+        retTab.verifHairColor = true
       }
     }
   } catch (error) {
@@ -128,13 +164,17 @@ exports.UsersCtrl = {
     // console.log('req.query: ', req.body.login)
     console.log('PARAMS: ', params)
     const retTab = profilInputVerif(params)
+    console.log('retTab===>', retTab)
     for (let elem in retTab) {
-      // console.log(`retTab.elem={${retTab[elem]}}`)
+      console.log(`retTab.elem={${retTab[elem]}}`)
       if (!retTab[elem]) {
-        return (res.status(401).type('json').json({ error: {
-          login: retTab.verifLogin,
-          mail: retTab.verifMail
-        } }))
+        return (res.status('200').type('json').json({
+          success: false,
+          msg: 'error verif',
+          result: {
+            ...retTab
+          }
+        }))
       }
     }
 
@@ -149,17 +189,26 @@ exports.UsersCtrl = {
     console.log('find response0 ', response)
 
     if (response.length !== 0) {
-      let error = {}
+      let error = {
+        login: false,
+        mail: false
+      }
       if (response[0].Login === params.Login) {
         console.log('On passe ici')
-        error[params.Login] = 'used'
+        error.login = true
       }
       if (response[0].Mail === params.Mail) {
         console.log('On passe la')
-        error[params.Mail] = 'used'
+        error.mail = true
       }
       console.log('TEST ERRROR: ', error)
-      return (res.status(401).type('json').json({ error }))
+      return (res.status('200').type('json').json({
+        success: false,
+        msg: 'used',
+        result: {
+          ...error
+        }
+      }))
     } else {
       // Creation du nouvel utilisateur
       userMdl.createNewUser(params)
@@ -424,11 +473,31 @@ exports.UsersCtrl = {
         error: 'Internal Server Error'
       }))
     }
-  }
-}
+  },
 
-// return (res.status('200').type('json').json({
-//   success: true,
-//   msg: 'Test en cours',
-//   result: {}
-// }))
+  // * no auth required
+  checkLogin: async (req, res) => {
+    console.log('checkLogin: ', req.body)
+    console.log('checkLogin: ', req.body.Login)
+    const userMdl = new UsersMdl()
+
+    const sqlRep = await userMdl.find({
+      where: {
+        Login: req.body.Login
+      }
+    })
+    var goNoGo
+    console.log('sqlRep len', sqlRep.length)
+    if (sqlRep.length < 1) {
+      goNoGo = true
+    } else {
+      goNoGo = false
+    }
+    return (res.status('200').type('json').json({
+      success: true,
+      msg: 'Test en cours',
+      result: {ret: goNoGo}
+    }))
+  }
+
+}

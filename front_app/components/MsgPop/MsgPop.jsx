@@ -4,7 +4,12 @@ import React from 'react'
 import './MsgPop.scss'
 
 /* eslint-disable */
-// props
+// Usage ex:
+// <MsgPop
+//  level='info'
+//  id='popup test'
+//  message='popup test message...'
+// ></MsgPop>
 // level, id,
 class MsgPop extends React.Component {
   constructor (props) {

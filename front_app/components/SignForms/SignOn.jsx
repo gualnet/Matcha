@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
+import MsgPop from '../MsgPop/MsgPop.jsx'
 
 // CSS
 import './SignOn.scss'
@@ -12,11 +13,11 @@ export default class SignOnForm extends Component {
     super()
     this.state = {
       // compte enregistrer pour les tests
-      Login: 'jonny',
-      FirstName: 'john',
-      LastName: 'nom2famille',
-      Mail: 'mail@mail.fr',
-      Password: 'Passle01'
+      Login: 'test00',
+      FirstName: '00',
+      LastName: 'test',
+      Mail: 'test11@mail.fr',
+      Password: 'qwertyuiop00'
     }
     // this.context = this.props.userContext
   }
@@ -51,7 +52,7 @@ export default class SignOnForm extends Component {
 
   submitForm = (e) => {
     e.preventDefault()
-    // * ================================
+
     const valTab = this.state
 
     axios({
@@ -60,15 +61,64 @@ export default class SignOnForm extends Component {
       data: valTab
     })
       .then((response) => {
-        console.log('response ok: ', response)
+        console.log('%c response ok: ', 'color: cyan', response)
         if (response.data.success === 'registration') {
           window.alert('New user registered')
+        } else {
+          // window.alert('Error while register')
+          this.handleSubmitError(response.data)
         }
         // this.setState({ redirect: response.data.docInfo.redirectTo })
       })
       .catch((error) => {
         console.log('response err: ', error)
       })
+  }
+
+  /* eslint-disable */
+  handleSubmitError = (rspData) => {
+    // console.log('handleSubmitError', rspData)
+    const msg = String(rspData.msg)
+    // console.log('msg', msg)
+    // console.log('msg', msg.indexOf('verif'))
+
+    if (msg.indexOf('verif') !== -1) {
+      const {verifLogin, verifMail, verifPassword, verifFirstName, verifLastName} = { ...rspData.result }
+      console.log('----------------------')
+      console.log('test:', {verifLogin, verifMail, verifPassword, verifFirstName, verifLastName})
+      if (!verifLogin) {
+        const elem = document.getElementsByName('login')[0]
+        elem.style.border = '1px solid red'
+        setTimeout(() => { elem.style.border = 'none' }, 5000)
+        MsgPop.showPopup({ id: 'popErrLogin' })
+      }
+      if (!verifPassword) {
+        const elem = document.getElementsByName('password')[0]
+        elem.style.border = '1px solid red'
+        setTimeout(() => { elem.style.border = 'none' }, 5000)
+        MsgPop.showPopup({ id: 'popErrPassword' })
+      }
+      if (!verifMail) {
+        const elem = document.getElementsByName('mail')[0]
+        elem.style.border = '1px solid red'
+        setTimeout(() => { elem.style.border = 'none' }, 5000)
+        MsgPop.showPopup({ id: 'popErrMail' })
+      }
+    }
+    if (msg.indexOf('used') !== -1) {
+      if (rspData.result.login) {
+        const elem = document.getElementsByName('login')[0]
+        elem.style.border = '1px solid red'
+        setTimeout(() => { elem.style.border = 'none' }, 5000)
+        MsgPop.showPopup({ id: 'popUsedLogin' })
+      }
+      if (rspData.result.mail) {
+        const elem = document.getElementsByName('mail')[0]
+        elem.style.border = '1px solid red'
+        setTimeout(() => { elem.style.border = 'none' }, 5000)
+        MsgPop.showPopup({ id: 'popUsedMail' })
+      }
+    }
   }
 
   swapToSignIn = (event) => {
@@ -86,120 +136,148 @@ export default class SignOnForm extends Component {
 
   render () {
     return (
-      <div className='columns is-centered' id='signonColumns'>
-        <div className='column is-half is-centered'>
+      <div className='signOnWrapper'>
+          <MsgPop
+          id='popErrPassword'
+          level='warning'
+          message='Password must be 8 chars and contain 2 num'
+        />
+        <MsgPop
+          id='popErrLogin'
+          level='warning'
+          message='Login must contain between 2 and 25 chars'
+        />
+        <MsgPop
+          id='popErrMail'
+          level='warning'
+          message='Mail not well formated'
+        />
+        <MsgPop
+          id='popUsedLogin'
+          level='warning'
+          message='This login is already used'
+        />
+        <MsgPop
+          id='popUsedMail'
+          level='warning'
+          message='This email is already used'
+        />
 
-          {/* <form className='box' id='signonWrapper'> */}
-          <form className='box' id='signonWrapper_back'>
-            <div className='field is-horizontal' id='signonField1'>
-              <div className='field-label'>
-                <label className='label has-text-white-ter'>Login</label>
-              </div>
-              <div className='field-body'>
-                <div className='control'>
-                  <input
-                    className='input'
-                    name='login'
-                    type='text'
-                    autoComplete='login'
-                    placeholder='login'
-                    onChange={(e) => this.formHandleChange(e, 'login')}
-                    required='yes'
-                    value={this.state.Login}
-                  />
+        <div className='columns is-centered' id='signonColumns'>
+          <div className='column is-half is-centered'>
+
+            {/* <form className='box' id='signonWrapper'> */}
+            <form className='box' id='signonWrapper_back'>
+              <div className='field is-horizontal' id='signonField1'>
+                <div className='field-label'>
+                  <label className='label has-text-white-ter'>Login</label>
+                </div>
+                <div className='field-body'>
+                  <div className='control'>
+                    <input
+                      className='input'
+                      name='login'
+                      type='text'
+                      autoComplete='login'
+                      placeholder='login'
+                      onChange={(e) => this.formHandleChange(e, 'login')}
+                      required='yes'
+                      value={this.state.Login}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className='field is-horizontal' id='signonField2'>
-              <div className='field-label'>
-                <label className='label has-text-white-ter'>Name</label>
-              </div>
-              <div className='field-body'>
-                <div className='control'>
-                  <input
-                    className='input'
-                    name='firstName'
-                    type='text'
-                    autoComplete='first name'
-                    placeholder='name'
-                    onChange={(e) => this.formHandleChange(e, 'firstName')}
-                    required='yes'
-                    value={this.state.FirstName}
-                  />
+              <div className='field is-horizontal' id='signonField2'>
+                <div className='field-label'>
+                  <label className='label has-text-white-ter'>Name</label>
+                </div>
+                <div className='field-body'>
+                  <div className='control'>
+                    <input
+                      className='input'
+                      name='firstName'
+                      type='text'
+                      autoComplete='first name'
+                      placeholder='name'
+                      onChange={(e) => this.formHandleChange(e, 'firstName')}
+                      required='yes'
+                      value={this.state.FirstName}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className='field is-horizontal' id='signonField3'>
-              <div className='field-label'>
-                <label className='label has-text-white-ter'>Surname</label>
-              </div>
-              <div className='field-body'>
-                <div className='control'>
-                  <input
-                    className='input'
-                    name='lastName'
-                    type='text'
-                    autoComplete='last name'
-                    placeholder='surname'
-                    onChange={(e) => this.formHandleChange(e, 'lastName')}
-                    required='yes'
-                    value={this.state.LastName}
-                  />
+              <div className='field is-horizontal' id='signonField3'>
+                <div className='field-label'>
+                  <label className='label has-text-white-ter'>Surname</label>
+                </div>
+                <div className='field-body'>
+                  <div className='control'>
+                    <input
+                      className='input'
+                      name='lastName'
+                      type='text'
+                      autoComplete='last name'
+                      placeholder='surname'
+                      onChange={(e) => this.formHandleChange(e, 'lastName')}
+                      required='yes'
+                      value={this.state.LastName}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className='field is-horizontal' id='signonField4'>
-              <div className='field-label'>
-                <label className='label has-text-white-ter'>Mail</label>
-              </div>
-              <div className='field-body'>
-                <div className='control'>
-                  <input
-                    className='input'
-                    name="mail"
-                    type='email'
-                    placeholder='email'
-                    autoComplete='mail'
-                    onChange={(e) => this.formHandleChange(e, 'mail')}
-                    required='yes'
-                    value={this.state.Mail}
-                  />
+              <div className='field is-horizontal' id='signonField4'>
+                <div className='field-label'>
+                  <label className='label has-text-white-ter'>Mail</label>
+                </div>
+                <div className='field-body'>
+                  <div className='control'>
+                    <input
+                      className='input'
+                      name="mail"
+                      type='email'
+                      placeholder='email'
+                      autoComplete='mail'
+                      onChange={(e) => this.formHandleChange(e, 'mail')}
+                      required='yes'
+                      value={this.state.Mail}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className='field is-horizontal' id='signonField5'>
-              <div className='field-label'>
-                <label className='label has-text-white-ter'>Password</label>
-              </div>
-              <div className='field-body'>
-                <div className='control'>
-                  <input
-                    className='input'
-                    name="password"
-                    type='password'
-                    placeholder='password'
-                    autoComplete='password'
-                    onChange={(e) => this.formHandleChange(e, 'password')}
-                    required='yes'
-                    value={this.state.Password}
-                  />
+              <div className='field is-horizontal' id='signonField5'>
+                <div className='field-label'>
+                  <label className='label has-text-white-ter'>Password</label>
+                </div>
+                <div className='field-body'>
+                  <div className='control'>
+                    <input
+                      className='input'
+                      name="password"
+                      type='password'
+                      placeholder='password'
+                      autoComplete='password'
+                      onChange={(e) => this.formHandleChange(e, 'password')}
+                      required='yes'
+                      value={this.state.Password}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className='field is-grouped is-grouped-centered'>
-              <div className='control'>
-                <button id='signonSubmitBtn'
-                  className='button is-small is-dark is-outlined'
-                  onClick={this.submitForm}
-                >Submit</button>
+              <div className='field is-grouped is-grouped-centered'>
+                <div className='control'>
+                  <button id='signonSubmitBtn'
+                    className='button is-small is-dark is-outlined'
+                    onClick={this.submitForm}
+                  >Submit</button>
+                </div>
               </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
     )

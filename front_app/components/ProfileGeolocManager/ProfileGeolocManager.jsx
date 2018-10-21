@@ -43,7 +43,6 @@ const ProfileGeolocManager = (props) => {
     if (rep.ok) {
       const repData = await rep.json()
       console.log('+repData ==>', repData)
-      
     }
   }
 
@@ -82,11 +81,14 @@ const ProfileGeolocManager = (props) => {
       </div>
 
       <div className='box container has-text-centered'>
-      <h3 className='title is-5'>data :{`${props.geolocContext.data.label}`}</h3>
+      <h3 className='title is-5'>data :{
+        props.geolocContext.data.label.length > 1 ? `${props.geolocContext.data.label}` : `${props.geolocContext.data.city}`
+      }</h3>
       </div>
 
       <ManualLocationHandler
         geolocContext={props.geolocContext}
+        userContext={props.userContext}
       ></ManualLocationHandler>
 
     </div>

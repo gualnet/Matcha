@@ -111,15 +111,28 @@ export const GeolocationCtrl = {
     }))
   },
 
-  manualGeoloc (req, res) {
-    console.log('\n\n manualGeoloc')
+  async manualGeoloc (req, res) {
+    console.log('\n\n manualGeoloc', req.body.location)
 
+    const url = `https://api-adresse.data.gouv.fr/search/?q=${req.body.location}`
+    try {
+      const response = await axios.get(url)
+      var data = response.data
+      // console.log('response', response)
+      console.log('data', {...data})
+    } catch (error) {
+      console.error(error)
+      return (res.status('204').type('json').json({
+        success: false,
+        msg: 'nok',
+        result: {}
+      }))
+    }
 
-
-    return (res.status('666').type('json').json({
-      success: false,
-      msg: 'nok',
-      result: {}
+    return (res.status('200').type('json').json({
+      success: true,
+      msg: 'ok',
+      result: { ...data }
     }))
   }
 

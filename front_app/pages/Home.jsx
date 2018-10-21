@@ -2,7 +2,7 @@
 import React from 'react'
 
 // COMPONENT
-import SinginForm from '../components/SignForms/SignIn.jsx'
+import RegistrationForm from '../components/SignForms/RegistrationForm.jsx'
 import SingonForm from '../components/SignForms/SignOn.jsx'
 import MsgPop from '../components/MsgPop/MsgPop.jsx'
 
@@ -45,8 +45,8 @@ class Home extends React.Component {
             {(context) => {
               return (
                 <div>
-                  <SinginForm userContext={context} />
-                  <SingonForm userContext={context} />
+                  <RegistrationForm></RegistrationForm>
+                  {/* <SingonForm userContext={context} /> */}
                 </div>
               )
             }}

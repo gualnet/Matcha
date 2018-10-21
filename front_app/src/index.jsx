@@ -10,7 +10,7 @@ import { UserProvider, UserContext } from '../contexts/UserContext'
 import { GeolocProvider } from '../contexts/GeolocContext'
 
 // CSS
-import '../assets/scss/pages/Default.scss'
+import './index.scss'
 /* eslint-enable no-unused-vars */
 import ReactDom from 'react-dom'
 

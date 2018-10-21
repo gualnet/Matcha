@@ -2,21 +2,33 @@
 @import '../../assets/scss/palette.scss';
 
 .navbar {
-	background-color: rgba(0, 0, 0, 0.1);
-	border-bottom: solid 1px rgba(255, 255, 255, 0.5);
+	background-color: $color2;
+	// background-color: rgb(68, 92, 149); // facebook blue
+	// border-bottom: solid 1px rgba(255, 255, 255, 0.5);
 	// border: solid 1px rgba(120, 120, 120, 0.5);
 
-	.navbar-item:hover{
-		// padding: 0 0 0 0;
-		// background-color: rgba(0, 0, 0, 0.2);
-	}
+	
+}
 
-	a {
-		color: $color5-75;
+.navbar-start {
+	margin-left: 12vw;
+}
 
-	}
-	a:hover {
-		color: $color1-75;
+.navbar-end {
+	margin-right: 12vw;
+}
+
+.navbar-item:hover{
+	// padding: 0 0 0 0;
+	// background-color: rgba(0, 0, 0, 0.2);
+}
+
+.navbar a {
+	color: white;
+	// color: $color5-75;
+
+	&:hover {
+		// color: $color1-75;
 		// background-color: rgba(0, 0, 0, 0.2);
 	}
 }

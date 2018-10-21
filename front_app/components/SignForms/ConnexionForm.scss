@@ -1,0 +1,46 @@
+@import '../../assets/scss/palette.scss';
+
+#ConnexionFormWrapper {
+	
+	display: none;
+	transition: display 2s;
+}
+
+#ConnexionFormWrapper .modal-background {
+	background-color: rgba(40, 40, 40, 0.5);
+}
+
+#ConnexionFormWrapper .modal-content {
+	transform: translate(650px, 52px);
+}
+#ConnexionFormWrapper .box {
+	// margin-top: 52px;
+	width: 300px;
+}
+
+#ConnexionFormWrapper .errorMsg {
+	display: none;
+	font-size: 11px;
+	color: red;
+}
+
+#ConnexionFormWrapper #recovPassMsg {
+	font-size: 11px;
+	// color: blue;
+	color: $color2;;
+	transform: translate(149px, -39px);
+	border-bottom: 1px solid;
+	width: 43%;
+}
+
+@keyframes ModalAppear{
+	0%{
+			opacity: 0;
+			// color: #FFFFFF;
+			}
+	100%{
+			transform: rotate(xx);
+			opacity: 1;
+			// color: #FFFFFF;
+			}
+}

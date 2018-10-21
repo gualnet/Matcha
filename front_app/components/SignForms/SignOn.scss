@@ -23,6 +23,11 @@
 		border: none;
 		color: $color5-75;
 	}
+
+	.input.is-danger {
+		border: 1px solid #ff0936;
+	}
+
 }
 
 #signonWrapper_back {

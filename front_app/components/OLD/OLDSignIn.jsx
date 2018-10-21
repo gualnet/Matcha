@@ -98,8 +98,6 @@ export default class SignInForm extends Component {
         } else {
           console.log('%c response NOK: ', 'color: red', response)
         }
-        // this.setState({ redirect: response.data.docInfo.redirectTo })
-        // window.location.replace('/profile')
       })
       .catch((error) => {
         MsgPop.showPopup({ id: 'loginMsgpop' })

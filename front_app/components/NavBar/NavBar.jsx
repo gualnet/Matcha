@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 
 // COMPONENT
 import SingoutForm from '../SignForms/SignOut.jsx'
+import ConnexionForm from '../SignForms/ConnexionForm.jsx'
 
 // CONTEXT
 import { UserContext } from '../../contexts/UserContext'
@@ -26,6 +27,9 @@ export default class NavBar extends Component {
 
       // turn register form from side to face
       registerElem.id = `${registerElem.id.replace('_back', '')}`
+      this.setState({
+        swapFormBtnName: 'Sign In'
+      })
     } else {
       // swapToSignIn
       // turn login form from side to face
@@ -35,40 +39,69 @@ export default class NavBar extends Component {
       // turn register form from face to side
       registerElem = document.getElementById('signonWrapper')
       registerElem.id = `${registerElem.id}_back`
+      this.setState({
+        swapFormBtnName: 'Register'
+      })
     }
   }
 
-  render () {
-    // console.log('%c NavBar RENDER: ', 'color: ;', this.props)
-    const registerBtnIsVisible = () => {
-      return (this.props.userContext.uid < 0 ? 'is-visible' : 'is-invisible')
+  leftItems = () => {
+    var arrItems = []
+
+    if (this.props.userContext.uid === -1) {
+      arrItems.push(
+        <div className='navbar-item' key='0'><Link to='/'>Home</Link></div>
+      )
+    } else if (this.props.userContext.uid > 0) {
+      arrItems.push(
+        <div className='navbar-item' key='0'><Link to='/'>Home</Link></div>)
+      arrItems.push(
+        <div className='navbar-item' key='1'><Link to='/profile'>Profile</Link></div>)
+      arrItems.push(
+        <div className='navbar-item' key='2'><Link to='/members'>Members</Link></div>)
+      arrItems.push(
+        <div className='navbar-item' key='3'><Link to='/search'>Search</Link></div>)
+      arrItems.push(
+        <div className='navbar-item' key='4'><Link to='/message'>Message</Link></div>)
     }
+    return (arrItems)
+  }
+
+  render () {
+    console.log('%c NavBar RENDER: ', 'color: ;', this.props)
 
     return (
       <div id='NavBarWrapper'>
         <nav className='navbar'>
           <div className='navbar-menu is-active'>
+
             <div className='navbar-start'>
-              <div className='navbar-item'><Link to='/'>Home</Link></div>
-              <div className='navbar-item'><Link to='/profile'>Profile</Link></div>
-              <div className='navbar-item'><Link to='/members'>Members</Link></div>
-              <div className='navbar-item'><Link to='/search'>Search</Link></div>
-              <div className='navbar-item'><Link to='/message'>Message</Link></div>
+              {this.leftItems()}
             </div>
+
             <div className='navbar-end'>
-              <div className={`navbar-item ${registerBtnIsVisible()}`}
-                onClick={(e) => this.swapSignForm(e)}
-              >
-                <Link to='/'>
-                Register
-                </Link>
-              </div>
-              <UserContext.Consumer>
-                {(context) => <SingoutForm userContext={context} />}
-              </UserContext.Consumer>
+              {
+                this.props.userContext.uid === -1 &&
+                <div className='navbar-item' onClick={ConnexionForm.showConForm}>
+                  <Link to='/'>Connexion</Link>
+                </div>
+              }
+              {
+                this.props.userContext.uid !== -1 &&
+                <div className='navbar-item'>
+                  <UserContext.Consumer>
+                    {(context) => <SingoutForm userContext={context} />}
+                  </UserContext.Consumer>
+                </div>
+              }
             </div>
           </div>
+
         </nav>
+
+        <UserContext.Consumer>
+          {(context) => <ConnexionForm userContext={context}/>}
+        </UserContext.Consumer>
 
       </div>
     )
