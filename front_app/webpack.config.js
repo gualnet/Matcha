@@ -83,7 +83,8 @@ module.exports = {
     historyApiFallback: true,
     port: 8881,
     proxy: {
-      '/api': 'http://localhost:8880'
+      '/api': 'http://localhost:8880',
+      '/public': 'http://localhost:8880'
     }
     // headers: {
     //   'Access-Control-Allow-Origin': '*',

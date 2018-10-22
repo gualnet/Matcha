@@ -59,7 +59,8 @@ export default class UsersMdl extends Models {
         Password: passHashed,
         UserToken: tokenHashed,
         FirstName: params.FirstName,
-        lastName: params.LastName
+        LastName: params.LastName,
+        Age: params.Age
       }
     }
     try {

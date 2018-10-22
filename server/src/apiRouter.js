@@ -4,6 +4,8 @@ import { UsersCtrl } from '../controlers/UsersCtrl'
 import { PicturesCtrl } from '../controlers/PicturesCtrl'
 import { TagsCtrl } from '../controlers/TagsCtrl'
 import { GeolocationCtrl } from '../controlers/GeolocationCtrl'
+import { SearchCtrl } from '../controlers/SearchCtrl'
+
 const Express = require('express')
 
 // Routes
@@ -45,7 +47,8 @@ exports.router = () => {
   apiRouter.route('/geoloc/man')
     .post(verifCreds, GeolocationCtrl.manualGeoloc)
 
-  apiRouter.route('/members')
+  apiRouter.route('/search/getAll')
+    .post(verifCreds, SearchCtrl.getAllMembers)
 
   return apiRouter
 }

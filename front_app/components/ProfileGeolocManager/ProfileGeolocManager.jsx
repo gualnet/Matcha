@@ -15,16 +15,12 @@ const ProfileGeolocManager = (props) => {
   const geolocContext = props.geolocContext
   console.log('ProfileGeolocManager geolocData: ', geolocContext.data)
 
-  // window.setTimeout(props.geolocContext.updateCurrentPos(true), 10000)
-  // props.geolocContext.updateCurrentPos(true)
-  // googleMapInsert
-
   const gotoGoogleMap = () => {
     window.open(`https://www.google.fr/maps/@${geolocContext.data.latitude},${geolocContext.data.longitude},18z`)
   }
 
   const locateMe = () => {
-  props.geolocContext.updateCurrentPos()
+    props.geolocContext.updateCurrentPos()
   }
 
   const getGeolocDB = async () => {
@@ -46,9 +42,14 @@ const ProfileGeolocManager = (props) => {
     }
   }
 
+  if (navigator.geolocation) {
+    alert('Geolocation is ok')
+  } else { 
+    alert('Geolocation is not supported by this browser.')
+  }
+
   return (
     <div>
-
       <div className='box container'>
       <div className='container has-text-left'>
         <p>{`Coordinatesaccuracy: ${geolocContext.data.Coordinatesaccuracy}`}</p>

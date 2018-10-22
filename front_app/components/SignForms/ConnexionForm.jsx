@@ -1,7 +1,7 @@
 
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
-import Axios from 'axios'
+import axios from 'axios'
 
 import MsgPop from '../MsgPop/MsgPop.jsx'
 
@@ -73,8 +73,8 @@ class ConnexionForm extends Component {
       Password: this.state.passVal
     }
 
-    Axios({
-      method: 'post',
+    axios({
+      method: 'POST',
       url: '/api/user/login/',
       data: valTab
     })
@@ -89,7 +89,7 @@ class ConnexionForm extends Component {
             uid: newUid,
             token: newToken
           })
-          this.hideConForm()
+          // this.hideConForm()
         } else {
           console.log('%c response NOK: ', 'color: red', response)
           MsgPop.showPopup({ id: 'ConnexionFormErr' })

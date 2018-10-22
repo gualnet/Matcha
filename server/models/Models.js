@@ -33,6 +33,7 @@ export default class Models {
       throw error
     }
   }
+
   /**
    * * func find
    * @param values: {where: {column: value, ...}}

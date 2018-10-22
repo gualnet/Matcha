@@ -9,7 +9,7 @@ import { UserContext } from '../contexts/UserContext'
 import Home from '../pages/Home.jsx'
 import Profile from '../pages/Profile.jsx'
 import Message from '../pages/Message.jsx'
-import Members from '../pages/Members.jsx'
+import Search from '../pages/Search.jsx'
 import NotFound from '../pages/404.jsx'
 /* eslint-enable no-unused-vars */
 
@@ -35,8 +35,8 @@ const AppRouter = () => {
               render={(props) => <Message userContext={userContextProp} />}
             />
 
-            <Route exact path='/Members'
-              render = {() => <Members/> }
+            <Route exact path='/Search'
+              render = {() => <Search/>}
             />
 
             <Route component={ NotFound } />

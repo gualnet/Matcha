@@ -84,7 +84,7 @@ class RegistrationForm extends Component {
     var err = 0
     if (this.state.step === 1) {
       if (this.state.FirstName.length === 0) {
-        console.log('...')
+        // console.log('...')
         err += 1
         const elem = document.getElementById('inputRegFirstName')
         elem.style.border = '1px solid red'
@@ -93,7 +93,7 @@ class RegistrationForm extends Component {
         setTimeout(() => { elem.style.backgroundColor = '' }, 3000)
       }
       if (this.state.LastName.length === 0) {
-        console.log('...')
+        // console.log('...')
         err += 1
         const elem = document.getElementById('inputRegLastName')
         elem.style.border = '1px solid red'
@@ -102,7 +102,7 @@ class RegistrationForm extends Component {
         setTimeout(() => { elem.style.backgroundColor = '' }, 4000)
       }
       if (this.state.Age < 18 || this.state.Age > 120) {
-        console.log('AGE ', this.state.Age)
+        // console.log('AGE ', this.state.Age)
         err += 1
         const elem = document.getElementById('inputRegAge')
         elem.style.border = '1px solid red'

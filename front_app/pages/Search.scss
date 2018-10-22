@@ -1,0 +1,19 @@
+
+#searchWrapper #memberPres {
+	// border: 2px solid red;
+	display: flex;
+	justify-content: space-around;
+}
+
+#searchWrapper .card {
+	width: 256px;
+	// border: 1px solid red;
+
+	:hover {
+		// background-color: aliceblue;
+		// width: 260px;
+		// border-radius: 2px;
+		box-shadow: 2px 2px 10px 0px rgb(219, 217, 248);
+	}
+
+}

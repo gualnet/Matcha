@@ -49,10 +49,10 @@ export class GeolocProvider extends Component {
   }
 
   updateCurrentPos = (accurate = false) => {
-    // console.log('%c CALL updateCurrentPos: ', 'color: green;')
+    console.log('%c CALL updateCurrentPos: ', 'color: green;')
 
     const reverseGeoloc = async () => {
-      // console.log('------------------->', props.geolocContext.data.longitude)
+      console.log('------------------->', props.geolocContext.data.longitude)
       const dataToSend = {
         uid: this.uid,
         token: this.token,
@@ -86,8 +86,8 @@ export class GeolocProvider extends Component {
 
     const geolocSuccess = (response) => {
       const coordsData = response.coords
-      // console.log('%c updateCurrentPos success: ', 'color: orange;', {response})
-      // console.log('%c updateCurrentPos success: ', 'color: orange;', {coordsData})
+      console.log('%c updateCurrentPos success: ', 'color: orange;', {response})
+      console.log('%c updateCurrentPos success: ', 'color: orange;', {coordsData})
 
       this.setState({
         Coordinatesaccuracy: coordsData.accuracy,
@@ -103,7 +103,7 @@ export class GeolocProvider extends Component {
     }
 
     const geolocError = (err) => {
-      // console.log('%c updateCurrentPos error: ', 'color: red;', err)
+      console.log('%c updateCurrentPos error: ', 'color: red;', err)
       console.warn(`ERROR(${err.code}): ${err.message}`)
     }
 
@@ -113,9 +113,9 @@ export class GeolocProvider extends Component {
       maximumAge: Infinity
     }
 
-    // console.log('%c CALL updateCurrentPos STEP1: ', 'color: green;')
+    console.log('%c CALL updateCurrentPos STEP1: ', 'color: green;')
     window.navigator.geolocation.getCurrentPosition(geolocSuccess, geolocError, options)
-    // console.log('%c CALL updateCurrentPos END: ', 'color: green;')
+    console.log('%c CALL updateCurrentPos END: ', 'color: green;')
   }
 
   updateManualPos = async (city = '') => {

@@ -2,7 +2,7 @@
   position: absolute;
   width: 20vw;
   right: -30vw;
-  top: 6vh;
+  top: 60px;
   z-index: 1000;
 
   transition: 1s;
@@ -19,8 +19,7 @@
 }
 
 .notification.visible {
-  right: 5px;
-  top: 6vh;
+  right: 3px;
   border-radius: 20px;
   transition: 1.5s;
 }

@@ -1,6 +1,6 @@
 // IMPORT
-import axios from 'axios'
 import Models from '../models/Models'
+import axios from 'axios'
 // import UsersMdl from '../models/UsersMdl'
 
 /* eslint-disable */

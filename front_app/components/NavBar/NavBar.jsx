@@ -98,11 +98,12 @@ export default class NavBar extends Component {
           </div>
 
         </nav>
-
-        <UserContext.Consumer>
-          {(context) => <ConnexionForm userContext={context}/>}
-        </UserContext.Consumer>
-
+        {
+          this.props.userContext.uid === -1 &&
+          <UserContext.Consumer>
+            {(context) => <ConnexionForm userContext={context}/>}
+          </UserContext.Consumer>
+        }
       </div>
     )
   }
