@@ -127,7 +127,7 @@ class ConnexionForm extends Component {
               <p className='errorMsg' id='errorMsgPassword'>Password length is not correct</p>
             </div>
 
-            <button className='button is-primary' onClick={this.submitValues}>Connect</button>
+            <button className='button is-link' onClick={this.submitValues}>Connect</button>
             <p id='recovPassMsg'>recover my password</p>
 
           </div>

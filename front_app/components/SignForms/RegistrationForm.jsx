@@ -224,7 +224,7 @@ class RegistrationForm extends Component {
           </div>
         </div>
 
-        <button className='button is-primary' id='btnNext' onClick={this.nextStep}>Next >></button>
+        <button className='button is-link' id='btnNext' onClick={this.nextStep}>Next >></button>
 
       </div>
     )
@@ -255,7 +255,7 @@ class RegistrationForm extends Component {
           </div>
         </div>
 
-        <button className='button is-primary' id='btnNext' onClick={this.submitRegistration}>Register ></button>
+        <button className='button is-link' id='btnNext' onClick={this.submitRegistration}>Register ></button>
 
       </div>
     )

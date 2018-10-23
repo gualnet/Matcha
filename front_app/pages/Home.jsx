@@ -27,7 +27,8 @@ class Home extends React.Component {
           <p>Welcome {this.props.userContext.uid}</p>
 
           <MsgPop
-            level='info'
+            // level='info'
+            level='link'
             id='popup test'
             message='popup test message...'
           ></MsgPop>
