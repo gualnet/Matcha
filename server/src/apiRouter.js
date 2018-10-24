@@ -49,6 +49,8 @@ exports.router = () => {
 
   apiRouter.route('/search/getAll')
     .post(verifCreds, SearchCtrl.getAllMembers)
+  apiRouter.route('/search/getFiltered')
+    .post(verifCreds, SearchCtrl.getFiltered)
 
   return apiRouter
 }

@@ -92,14 +92,13 @@ async function credsInParams (req, res) {
       result: {}
     }))
   }
-  // console.log('LAAAAAAAAAAAAAAA', req.params)
   req.params = {
     AUTH_USER: { ...sqlRsp[0] }
   }
-  // console.log('LAAAAAAAAAAAAAAA', req.params)
 }
 
 export const verifCreds = async (req, res, next) => {
+  console.log('\n\n')
   console.log('verif creds: ')
   // console.log('req.headers: ', req.headers)
   // console.log('req.params: ', req.params)
@@ -111,6 +110,8 @@ export const verifCreds = async (req, res, next) => {
     await credsInParams(req)
   }
 
-  console.log('END VERIF CREDS\n\n\n')
+  console.log('END VERIF CREDS: ok')
+  // console.log('END VERIF CREDS: ok', req.body)
+  console.log('\n\n')
   next()
 }

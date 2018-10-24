@@ -1,8 +1,9 @@
-// IMPORT
 /* eslint-disable no-unused-vars */
+// IMPORT
 import React from 'react'
 import axios from 'axios'
-import MemberModal from '../components/memberModal/MemberModal.jsx'
+import MemberModal from '../components/SearchMemberModal/MemberModal.jsx'
+import SearchPanel from '../components/SearchPanel/SearchPanel.jsx'
 
 // Dev
 import ReactJson from 'react-json-view'
@@ -14,12 +15,10 @@ import './Search.scss'
 /* eslint-disable */
 export default class Search extends React.Component {
 	state = {
+		TOJSON: undefined,
 		data: { 0: null },
-		searchParam: {
-			Age: 18,
-			Distance: 30,
-
-		}
+		filter: [false, false, false, false, false]
+		
 	}
 
 	initData = () => {
@@ -36,6 +35,13 @@ export default class Search extends React.Component {
 			.catch((error) => {
 				console.error('%c AXIOS response: ', 'color: red', error)
 			})
+	}
+
+	getChildGenderFilter = (childFilter) => {
+		console.log('getChildGenderFilter', childFilter)
+		this.setState({
+			filter: [...childFilter]
+		})
 	}
 
 	displayEachMember = () => {
@@ -74,56 +80,49 @@ export default class Search extends React.Component {
 
 	}
 
+	getFilteredData = () => {
+		const dataToSend = {
+			uid: this.props.userContext.uid,
+			token: this.props.userContext.token,
+			filter: {
+				gender: []
+			}
+		}
+		console.log('%c getFilteredData: ', 'color: cyan;', dataToSend)
+		axios({
+			method: 'POST',
+			url: '/api/search/getFiltered',
+			data: dataToSend
+		})
+			.then((response) => {
+				console.log('%c AXIOS response: ', 'color: green', response.data)
+				this.setState({
+					TOJSON: response.data,
+					data: response.data
+				})
+			})
+			.catch((error) => {
+				console.error('%c AXIOS response: ', 'color: red', error)
+			})
+	}
+
 	render () {
 		return (
 			<div className='gridWrapper' id='searchWrapper'>
 
-				{/* {
-					this.state.data[0] !== null &&
-					<ReactJson src={this.state} name='state.data' collapsed='2'/>
-				} */}
+					<ReactJson src={this.state.filter} name='' collapsed='1'/>
+				{
+					this.state.TOJSON != null &&
+					<ReactJson src={this.state.TOJSON} name='' collapsed='1'/>
+				}
 
-					{/* Filtres
-					Age (min max)
-					Distance (max)
-					Gender / interest
-					Tags */}
-					<aside className='menu' id='paramPanel'>
-						<p className='menu-label'>MENU</p>
-						<ul className='menu-list'>
-							<li><a>Age : {this.state.searchParam.Age}</a></li>
-							<input className='slider has-output'
-							step='1' min='18' max='120'
-							defaultValue='0' type='range'
-							onChange={this.setWeight}>
-							</input>
-
-							<li><a>Distance : {this.state.searchParam.Distance}</a></li>
-							{`>option indiferent<`}
-							<input className='slider has-output'
-							step='10' min='10' max='1000'
-							defaultValue='0' type='range'
-							onChange={this.setWeight}>
-							</input>
-
-							<li><a>Gender</a>
-								<ul>
-									<li><a>Gender01</a></li>
-									<li><a>Gender02</a></li>
-									<li><a>Gender03</a></li>
-								</ul>
-							</li>
-
-							<li><a className=''>Tags</a>
-								<ul>
-									<li><a>?? Tag01 ??</a></li>
-									<li><a>?? Tag02 ??</a></li>
-									<li><a>?? Tag03 ??</a></li>
-								</ul>
-							</li>
-						</ul>
-						<button className='button is-link' onClick={this.initData}>Get Data..</button>
-					</aside>
+				<SearchPanel 
+					setParentFilter={this.getChildGenderFilter}
+					parentStateFilter={this.state.filter}
+					initData={this.initData}
+					getFilteredData={this.getFilteredData}
+				></SearchPanel>
+					
 
 
 				<div className='container' id='memberPres'>

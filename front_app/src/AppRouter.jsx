@@ -36,7 +36,7 @@ const AppRouter = () => {
             />
 
             <Route exact path='/Search'
-              render = {() => <Search/>}
+              render = {(props) => <Search userContext={userContextProp}/>}
             />
 
             <Route component={ NotFound } />
