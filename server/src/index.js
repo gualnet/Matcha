@@ -10,6 +10,7 @@ const server = Express()
 
 // Static serv..
 server.use('/public', Express.static('./UsersStorage'))
+server.use('/assets', Express.static('./assets'))
 // Body Parser config
 server.use(BodyParser.json({
   limit: '2mb'

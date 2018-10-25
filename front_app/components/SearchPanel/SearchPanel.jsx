@@ -14,9 +14,12 @@ export default class SearchPanel extends Component {
   }
 
   setAge = (event) => {
-    this.setState({
-      Age: event.target.value
-    })
+    console.log('setAge: ', event.target.value)
+    const min = Number(event.target.value)
+    this.props.getChildAgeFilter([min, 0])
+    // TODO max value
+    // TODO const max = ???
+    // TODO this.props.getChildAgeFilter([min, max])
   }
 
   setDisatance = (event) => {
@@ -27,29 +30,28 @@ export default class SearchPanel extends Component {
 
   handleGenderClick = (event) => {
     // event.persist()
-    console.log('handleCheckboxClick: ', event._targetInst.key)
+    // console.log('handleCheckboxClick: ', event._targetInst.key)
     // console.log('handleCheckboxClick: ', key, event.target.checked)
     const key = event._targetInst.key
-    let filter = this.props.parentStateFilter
-    filter[key] = event.target.checked
-    this.props.setParentFilter(filter)
+    let gender = this.props.parentStateFilters.Gender
+    gender[key] = event.target.checked
+    this.props.setParentGender(gender)
   }
 
   render () {
 
     return (
-
       <aside className='menu' id='searchPanel'>
         <p className='menu-label'>MENU</p>
         <ul className='menu-list'>
-          <li><a>Age : {this.state.Age}</a></li>
+          <li><a>Age Min: {this.props.parentStateFilters.AgeMin}</a></li>
           <input className='slider has-output'
             step='1' min='18' max='120'
             defaultValue='0' type='range'
             onChange={this.setAge}>
           </input>
 
-          <li><a>Distance : {this.state.Distance}</a></li>
+          <li><a>Distance : {this.props.parentStateFilters.Distance}</a></li>
           {/* {`>option indiferent<`} */}
           <input className='slider has-output'
             step='10' min='10' max='500'
@@ -62,8 +64,8 @@ export default class SearchPanel extends Component {
                 <div><input key='0' className='checkbox' type='checkbox' onClick={this.handleGenderClick}/>Hetero</div>
                 <div><input key='1' className='checkbox' type='checkbox' onClick={this.handleGenderClick}/>Bisex</div>
                 <div><input key='2' className='checkbox' type='checkbox' onClick={this.handleGenderClick}/>Homo</div>
-                <div><input key='3' className='checkbox' type='checkbox' onClick={this.handleGenderClick}/>Pansex</div>
-                <div><input key='4' className='checkbox' type='checkbox' onClick={this.handleGenderClick}/>Asex</div>
+                {/* <div><input key='3' className='checkbox' type='checkbox' onClick={this.handleGenderClick}/>Pansex</div> */}
+                {/* <div><input key='4' className='checkbox' type='checkbox' onClick={this.handleGenderClick}/>Asex</div> */}
             </div>
           </div>
 

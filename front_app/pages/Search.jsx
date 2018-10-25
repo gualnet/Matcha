@@ -17,7 +17,12 @@ export default class Search extends React.Component {
 	state = {
 		TOJSON: undefined,
 		data: { 0: null },
-		filter: [false, false, false, false, false]
+		filters: {
+			AgeMin: 18,
+			AgeMax: 120,
+			Gender: [false, false, false],//, false, false],
+			Distance: 40,
+		}
 		
 	}
 
@@ -38,9 +43,26 @@ export default class Search extends React.Component {
 	}
 
 	getChildGenderFilter = (childFilter) => {
-		console.log('getChildGenderFilter', childFilter)
+		// console.log('getChildGenderFilter', childFilter)
 		this.setState({
-			filter: [...childFilter]
+			filters: {
+				...this.state.filters,
+				Gender: [...childFilter]
+			}
+		})
+	}
+
+	getChildAgeFilter = (childAge = []) => {
+		console.log('getChildAgeFilter', childAge)
+		if (childAge.length < 2) {
+			return
+		}
+		this.setState({
+			filters: {
+				...this.state.filters,
+				AgeMin: childAge[0],
+				AgeMax: childAge[1]
+			}
 		})
 	}
 
@@ -84,9 +106,7 @@ export default class Search extends React.Component {
 		const dataToSend = {
 			uid: this.props.userContext.uid,
 			token: this.props.userContext.token,
-			filter: {
-				gender: []
-			}
+			filters: this.state.filters
 		}
 		console.log('%c getFilteredData: ', 'color: cyan;', dataToSend)
 		axios({
@@ -110,17 +130,19 @@ export default class Search extends React.Component {
 		return (
 			<div className='gridWrapper' id='searchWrapper'>
 
-					<ReactJson src={this.state.filter} name='' collapsed='1'/>
-				{
+					<ReactJson src={this.state.filters} collapsed='1'/>
+					{/* <ReactJson src={this.state} collapsed='1'/> */}
+				{/* {
 					this.state.TOJSON != null &&
 					<ReactJson src={this.state.TOJSON} name='' collapsed='1'/>
-				}
+				} */}
 
 				<SearchPanel 
-					setParentFilter={this.getChildGenderFilter}
-					parentStateFilter={this.state.filter}
+					setParentGender={this.getChildGenderFilter}
+					parentStateFilters={this.state.filters}
 					initData={this.initData}
 					getFilteredData={this.getFilteredData}
+					getChildAgeFilter={this.getChildAgeFilter}
 				></SearchPanel>
 					
 

@@ -85,7 +85,6 @@ const SearchCtrl = {
         //je suis F et je cherche M
         // je cherche un M Hetero -> 0 - 0
         // je cherche un M Bi -> 0 - 1
-
       } else if (user.Orientation === 1) {
         // je suis F et je cherche M + F
         // je cherche un F homo -> 1 - 2
