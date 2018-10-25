@@ -77,7 +77,7 @@ export class PicturesCtrl {
 
   async addNewPicture (req, res) {
     console.log('addNewPicture')
-    // console.log('addNewPicture', req.body)
+    // console.log('addNewPicture', req.body.IsMain)
     // console.log('addNewPicture')
     const userMdl = new UsersMdl()
     let rspUserData = await userMdl.find({
@@ -136,7 +136,8 @@ export class PicturesCtrl {
     const sqlRep = await PicturesMdl.insert({
       where: {
         PicPath: servDir,
-        PicOwner: rspUserData.UserId
+        PicOwner: rspUserData.UserId,
+        IsMain: req.body.IsMain
       }
     })
     console.log('sqlRep: ', sqlRep)
