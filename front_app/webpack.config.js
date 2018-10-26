@@ -22,15 +22,6 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: 'eslint-loader'
-          // options: {
-          //   // presets: ['env', 'react'],
-          //   overrides: [{
-          //     'files': ['*.config.js', '*.spec.js'],
-          //     'rules': {
-          //       'no-unused-expressions': 'off'
-          //     }
-          //   }]
-          // }
         }
       },
       {
@@ -38,10 +29,6 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader'
-          // options: {
-          //   presets: ['@babel/env', '@babel/react'],
-          //   plugins: ['@babel/plugin-proposal-class-properties']
-          // }
         }
       },
       {
@@ -84,7 +71,8 @@ module.exports = {
     port: 8881,
     proxy: {
       '/api': 'http://localhost:8880',
-      '/public': 'http://localhost:8880'
+      '/public': 'http://localhost:8880',
+      '/assets': 'http://localhost:8880'
     }
     // headers: {
     //   'Access-Control-Allow-Origin': '*',

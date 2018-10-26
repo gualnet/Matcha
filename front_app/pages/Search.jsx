@@ -5,7 +5,7 @@ import axios from 'axios'
 import MemberModal from '../components/SearchMemberModal/MemberModal.jsx'
 import SearchPanel from '../components/SearchPanel/SearchPanel.jsx'
 
-// Dev
+// ! Dev
 import ReactJson from 'react-json-view'
 
 // CSS
@@ -42,8 +42,11 @@ export default class Search extends React.Component {
 			})
 	}
 
-	getChildGenderFilter = (childFilter) => {
+	getChildGenderFilter = (childFilter = []) => {
 		// console.log('getChildGenderFilter', childFilter)
+		if (childFilter.length !== 3) {
+			return
+		}
 		this.setState({
 			filters: {
 				...this.state.filters,
@@ -51,10 +54,9 @@ export default class Search extends React.Component {
 			}
 		})
 	}
-
 	getChildAgeFilter = (childAge = []) => {
-		console.log('getChildAgeFilter', childAge)
-		if (childAge.length < 2) {
+		// console.log('getChildAgeFilter', childAge)
+		if (childAge.length !== 2) {
 			return
 		}
 		this.setState({
@@ -62,6 +64,18 @@ export default class Search extends React.Component {
 				...this.state.filters,
 				AgeMin: childAge[0],
 				AgeMax: childAge[1]
+			}
+		})
+	}
+	getChildDistanceFilter = (distance = 555) => {
+		// console.log('getChildAgeFilter', childAge)
+		if (distance === 555) {
+			return
+		}
+		this.setState({
+			filters: {
+				...this.state.filters,
+				Distance: distance
 			}
 		})
 	}
@@ -80,8 +94,6 @@ export default class Search extends React.Component {
 						<img src={`${obj.MainPic}`}></img>
 					</figure>
 
-					{/* <div>{`${obj.LastName}`}</div>
-					<div>{`${obj.Age}`}</div> */}
 					{`${obj.Login}`} - {`${obj.FirstName}`} {`${obj.LastName}`} - {`${obj.Age}`}
 
 				</div>
@@ -130,22 +142,21 @@ export default class Search extends React.Component {
 		return (
 			<div className='gridWrapper' id='searchWrapper'>
 
-					<ReactJson src={this.state.filters} collapsed='1'/>
-					{/* <ReactJson src={this.state} collapsed='1'/> */}
+					{/* <ReactJson src={this.state.tags} collapsed='1'/> */}
 				{/* {
 					this.state.TOJSON != null &&
 					<ReactJson src={this.state.TOJSON} name='' collapsed='1'/>
 				} */}
 
 				<SearchPanel 
-					setParentGender={this.getChildGenderFilter}
-					parentStateFilters={this.state.filters}
 					initData={this.initData}
+					parentStateFilters={this.state.filters}
 					getFilteredData={this.getFilteredData}
-					getChildAgeFilter={this.getChildAgeFilter}
+					setParentGender={this.getChildGenderFilter}
+					setParentAge={this.getChildAgeFilter}
+					setParentDistance={this.getChildDistanceFilter}
+					userContext={this.props.userContext}
 				></SearchPanel>
-					
-
 
 				<div className='container' id='memberPres'>
 					{this.displayEachMember()}

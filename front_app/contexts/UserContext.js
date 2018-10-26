@@ -61,7 +61,7 @@ export class UserProvider extends Component {
   }
 
   render () {
-    console.log('%c UserContextProvider RENDER: ', 'color: green;', { ...this })
+    // console.log('%c UserContextProvider RENDER: ', 'color: green;', { ...this })
     return (
       <UserContext.Provider value={{
         ...this.state,

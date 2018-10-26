@@ -68,7 +68,7 @@ export default class NavBar extends Component {
   }
 
   render () {
-    console.log('%c NavBar RENDER: ', 'color: ;', this.props)
+    // console.log('%c NavBar RENDER: ', 'color: ;', this.props)
 
     return (
       <div id='NavBarWrapper'>

@@ -14,7 +14,8 @@ export class PicturesCtrl {
     const userMdl = new Models('Pictures')
 
     // reset all pic MainFlag to 0
-    let sqlRep = await userMdl.update({
+    // let sqlRep = await userMdl.update({
+    await userMdl.update({
       set: {
         IsMain: 0
       },
@@ -23,7 +24,8 @@ export class PicturesCtrl {
       }
     })
     // set main pic flag
-    sqlRep = await userMdl.update({
+    // sqlRep = await userMdl.update({
+    await userMdl.update({
       set: {
         IsMain: 1
       },
@@ -33,7 +35,7 @@ export class PicturesCtrl {
     })
     return (res.status('200').type('json').json({
       success: true,
-      msg: '',
+      msg: 'ok',
       result: {}
     }))
     // console.log('sqlRep: ', sqlRep)

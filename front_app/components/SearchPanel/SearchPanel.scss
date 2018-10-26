@@ -23,12 +23,26 @@
 	}
 
 	.underPan {
-		margin: 0px 0px 0px 12px;
-		font-size: small;
 	}
 
 	.checkbox {
 		margin: 0px 6px 0px 0px;
+	}
+
+	.box {
+		padding: 2px;
+    // min-height: 100px;
+    // transform: translate(-5px);
+	}
+
+	.tag {
+		// border: 1px solid red;
+		margin: 2px;
+		transition: .5s;
+
+		&:hover {
+			cursor: pointer;
+		}
 	}
 }
 

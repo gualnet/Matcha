@@ -165,7 +165,7 @@ export class GeolocProvider extends Component {
     if (this.dataToDb()) {
       console.log('%c Geoloc data sent to database', 'color: green')
     } else {
-      console.log('%c Geoloc data NOT sent to database', 'color: red')
+      // console.log('%c Geoloc data NOT sent to database', 'color: red')
     }
     // console.log('\n\n\n\n\n')
     return (

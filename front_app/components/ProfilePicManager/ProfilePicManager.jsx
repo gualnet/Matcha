@@ -68,11 +68,16 @@ export default class ProfilePicManager extends Component {
   }
 
   handleTopPicClick (event, key) {
-    console.log('handleTopPicClick', event.target.id)
+    // console.log('handleTopPicClick', event.target.id)
     const otherElem = document.getElementById(event.target.id)
     const mainElem = document.getElementById('picTopMain')
     const oldMainImgUrl = mainElem.style.backgroundImage.replace('url("', '').replace('")', '')
     const newMainImgUrl = otherElem.style.backgroundImage.replace('url("', '').replace('")', '')
+
+    if (newMainImgUrl === NO_PIC_BG) {
+      // avoid changing the main to a background image
+      return
+    }
 
     mainElem.style.backgroundImage = 'url("'.concat(newMainImgUrl, '")')
     otherElem.style.backgroundImage = 'url("'.concat(oldMainImgUrl, '")')
@@ -112,7 +117,10 @@ export default class ProfilePicManager extends Component {
     /* eslint-disable-next-line */
     const reader = new FileReader()
     reader.onload = (e) => {
+      const isMain = (this.state.mainPicAddr.length === 0) ? 0 : 1
+      console.log('%c TEST IS MAIN: ', 'color: cyan', isMain)
       let dataToSend = {
+        IsMain: isMain,
         rawData: e.target.result,
         token: this.props.userContext.token
       }
@@ -140,6 +148,7 @@ export default class ProfilePicManager extends Component {
     reader.readAsDataURL(file)
   }
 
+  // TODO refacto des fetch -> pas besoin du premier fetch pour auth l'utilisateur depuis la mep de verifCreds dans le back
   async getUserPics () {
     // console.log('CALL getUserPics.. ')
 

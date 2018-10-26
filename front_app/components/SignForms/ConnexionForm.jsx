@@ -42,7 +42,11 @@ class ConnexionForm extends Component {
     }
   }
 
-  submitValues = () => {
+  submitValues = (event) => {
+    if (event.type === 'keypress' && event.key !== 'Enter') {
+      return
+    }
+
     if (this.state.loginVal.length < 2) {
       const elem = document.getElementById('errorMsgLogin')
       const elem2 = document.getElementById('inputLogin')
@@ -115,14 +119,14 @@ class ConnexionForm extends Component {
 
             <div className='field'>
               <div className='control'>
-                <input required className='input' type='text' id='inputLogin' placeholder='Login or email' onChange={(e) => this.formHandleChange(e, 'login')}/>
+                <input required className='input' type='text' id='inputLogin' placeholder='Login or email' onChange={(e) => this.formHandleChange(e, 'login')} onKeyPress={this.submitValues}/>
               </div>
               <p className='errorMsg' id='errorMsgLogin'>wrong login or email</p>
             </div>
 
             <div className='field'>
               <div className='control'>
-                <input required className='input' type='password' id='inputPassword' placeholder='Password' onChange={(e) => this.formHandleChange(e, 'password')}/>
+                <input required className='input' type='password' id='inputPassword' placeholder='Password' onChange={(e) => this.formHandleChange(e, 'password')} onKeyPress={this.submitValues}/>
               </div>
               <p className='errorMsg' id='errorMsgPassword'>Password length is not correct</p>
             </div>
