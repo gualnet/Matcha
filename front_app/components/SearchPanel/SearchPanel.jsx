@@ -64,7 +64,7 @@ export default class SearchPanel extends Component {
   // }
 
   tagEnventHandler = (event) => {
-    event.persist()
+    // event.persist()
     // console.log('COUCOU', event.type, event)
     switch (event.type) {
       case ('mouseenter'):
@@ -74,7 +74,7 @@ export default class SearchPanel extends Component {
         event.target.className = 'tag is-primary'
         break
       case ('click'):
-        event.target.style.display = 'none'
+        // event.target.style.display = 'none'
         const Tag = this.state.tags
         const newArr = Tag.filter((val) => {
           return (val !== event.target.innerText)
@@ -206,7 +206,7 @@ export default class SearchPanel extends Component {
           </div>
           <div className="select is-small">
             <select defaultValue='tags' onChange={(e) => {this.handleHadTag(e)}}>
-              {/* <option>...</option> */}
+              <option>...</option>
               {this.makeSelectOptions()}
             </select>
           </div>
