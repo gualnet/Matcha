@@ -168,7 +168,7 @@ export default class SearchPanel extends Component {
     return (
 
       <aside className='menu' id='searchPanel'>
-      <ReactJson src={this.state.tags}></ReactJson>
+      {/* <ReactJson src={this.state.tags}></ReactJson> */}
         <p className='menu-label'>MENU</p>
         <ul className='menu-list'>
           <li><a>Age Min: {this.props.parentStateFilters.AgeMin}</a></li>

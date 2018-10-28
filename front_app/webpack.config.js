@@ -66,9 +66,10 @@ module.exports = {
 
   ],
   devServer: {
+    host: '0.0.0.0',
+    port: 8881,
     contentBase: path.join(__dirname, '/dist'),
     historyApiFallback: true,
-    port: 8881,
     proxy: {
       '/api': 'http://localhost:8880',
       '/public': 'http://localhost:8880',
