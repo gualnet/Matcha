@@ -29,7 +29,7 @@ exports.router = () => {
     .post(verifCreds, picCtrl.addNewPicture)
     .put(verifCreds, picCtrl.setMainPicture)
     .delete(verifCreds, picCtrl.removePicture)
-  apiRouter.route('/picture/userpics')
+  apiRouter.route('/picture/:targetUID')
     .post(verifCreds, picCtrl.getAllPicture)
 
   const tagsCtrl = new TagsCtrl()

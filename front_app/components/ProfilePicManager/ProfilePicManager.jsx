@@ -155,7 +155,7 @@ export default class ProfilePicManager extends Component {
     const dataToSend = {
       token: this.props.userContext.token
     }
-    const fetchRsp = await window.fetch(`/api/picture/userpics`,
+    const fetchRsp = await window.fetch(`/api/picture/${this.props.userContext.uid}`,
       {
         method: 'POST',
         headers: {

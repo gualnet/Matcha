@@ -42,13 +42,16 @@ export class PicturesCtrl {
   }
 
   async getAllPicture (req, res) {
+    // ! modifs to handle targetUID
     console.log('getAllPicture')
     // console.log('getAllPicture', req.body)
+    console.log('getAllPicture', req.params)
 
     const picturesMdl = new Models('Pictures')
     const result = await picturesMdl.find({
       where: {
-        PicOwner: req.body.AUTH_USER.UserId
+        PicOwner: req.params.targetUID
+        // PicOwner: req.body.AUTH_USER.UserId
       }
     })
     console.log('Sql Return:', result)

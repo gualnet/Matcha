@@ -159,7 +159,7 @@ export default class SearchPanel extends Component {
   }
 
   render () {
-    console.log('%c Panel RENDER', 'color: cyan')
+    // console.log('%c Panel RENDER', 'color: cyan')
     return (
 
       <aside className='menu' id='searchPanel'>

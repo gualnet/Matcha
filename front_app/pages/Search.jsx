@@ -22,7 +22,8 @@ export default class Search extends React.Component {
       AgeMax: 120,
       Gender: [false, false, false],//, false, false],
       Distance: 0
-    }
+    },
+    memberSelected: undefined
   }
 
   initData = () => {
@@ -88,18 +89,18 @@ export default class Search extends React.Component {
     }
     var arrMembers = []
     Object.entries(data.result).forEach(([key, obj]) => {
-      console.log('DATA => ', 'key: ', key, 'value: ', obj)
+      // console.log('DATA => ', 'key: ', key, 'value: ', obj)
       arrMembers.push(
         <div className='card ' key={key} onClick={this.showMemberModal}>
-          <figure className='image is-256x256'>
+          <figure className='image is-256x256' key={key}>
           {
             obj.MainPic === undefined &&
-            <img src={`${obj.PicPath}`}></img>
+            <img src={`${obj.PicPath}`} key={key}></img>
           }
           {
             // ! pour test (click on get all data btn)
             obj.MainPic !== undefined &&
-            <img src={`${obj.MainPic}`}></img>
+            <img src={`${obj.MainPic}`} key={key}></img>
           }
           </figure>
 
@@ -111,14 +112,21 @@ export default class Search extends React.Component {
     return (arrMembers)
   }
 
-  showMemberModal = () => {
+  showMemberModal = (event) => {
+    // event.persist()
+    // console.log('showMemberModal: ', event)
+    // console.log('showMemberModal: ', event._targetInst.key)
     const modal = document.getElementsByClassName('modal')[0]
     if (modal === undefined) {
-      console.log('%c Modal not found', 'color: red', modal)
+      // console.log('%c Modal not found', 'color: red', modal)
       return
     }
 
-    console.log('%c Modal found', 'color: green', modal)
+    this.setState({
+      memberSelected: this.state.data.result[event._targetInst.key]
+    })
+
+    // console.log('%c Modal found', 'color: green', modal)
     modal.className = 'modal is-visible'
   }
 
@@ -150,7 +158,8 @@ export default class Search extends React.Component {
     return (
       <div className='gridWrapper' id='searchWrapper'>
 
-        <ReactJson src={this.state.data} collapsed='1'/>
+        <ReactJson src={this.props} collapsed='1'/>
+        {/* <ReactJson src={this.state.data} collapsed='1'/> */}
         {/* {
           this.state.TOJSON != null &&
           <ReactJson src={this.state.TOJSON} name='' collapsed='1'/>
@@ -174,7 +183,10 @@ export default class Search extends React.Component {
             <ReactJson src={this.state.data.result[2]}></ReactJson>
           } */}
 
-          <MemberModal></MemberModal>
+          <MemberModal
+            userContext={this.props.userContext}
+            memberInfo={this.state.memberSelected}
+          ></MemberModal>
 
         </div>
 
