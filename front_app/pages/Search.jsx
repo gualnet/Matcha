@@ -14,163 +14,171 @@ import './Search.scss'
 
 /* eslint-disable */
 export default class Search extends React.Component {
-	state = {
-		TOJSON: undefined,
-		data: { 0: null },
-		filters: {
-			AgeMin: 18,
-			AgeMax: 120,
-			Gender: [false, false, false],//, false, false],
-			Distance: 40,
-		}
-		
-	}
+  state = {
+    TOJSON: undefined, // ! pour tests
+    data: { 0: null },
+    filters: {
+      AgeMin: 18,
+      AgeMax: 120,
+      Gender: [false, false, false],//, false, false],
+      Distance: 0
+    }
+  }
 
-	initData = () => {
-		axios({
-			method: 'POST',
-			url: '/api/search/getAll'
-		})
-			.then((response) => {
-				console.log('%c AXIOS response: ', 'color: green', response)
-				this.setState({
-					data: response.data
-				})
-			})
-			.catch((error) => {
-				console.error('%c AXIOS response: ', 'color: red', error)
-			})
-	}
+  initData = () => {
+    axios({
+      method: 'POST',
+      url: '/api/search/getAll'
+    })
+      .then((response) => {
+        console.log('%c AXIOS response: ', 'color: green', response)
+        this.setState({
+          data: response.data
+        })
+      })
+      .catch((error) => {
+        console.error('%c AXIOS response: ', 'color: red', error)
+      })
+  }
 
-	getChildGenderFilter = (childFilter = []) => {
-		// console.log('getChildGenderFilter', childFilter)
-		if (childFilter.length !== 3) {
-			return
-		}
-		this.setState({
-			filters: {
-				...this.state.filters,
-				Gender: [...childFilter]
-			}
-		})
-	}
-	getChildAgeFilter = (childAge = []) => {
-		// console.log('getChildAgeFilter', childAge)
-		if (childAge.length !== 2) {
-			return
-		}
-		this.setState({
-			filters: {
-				...this.state.filters,
-				AgeMin: childAge[0],
-				AgeMax: childAge[1]
-			}
-		})
-	}
-	getChildDistanceFilter = (distance = 555) => {
-		// console.log('getChildAgeFilter', childAge)
-		if (distance === 555) {
-			return
-		}
-		this.setState({
-			filters: {
-				...this.state.filters,
-				Distance: distance
-			}
-		})
-	}
+  getChildGenderFilter = (childFilter = []) => {
+    // console.log('getChildGenderFilter', childFilter)
+    if (childFilter.length !== 3) {
+      return
+    }
+    this.setState({
+      filters: {
+        ...this.state.filters,
+        Gender: [...childFilter]
+      }
+    })
+  }
 
-	displayEachMember = () => {
-		const data = this.state.data
-		if (data.result == undefined) {
-			return
-		}
-		var arrMembers = []
-		Object.entries(data.result).forEach(([key, obj]) => {
-			console.log('DATA => ', 'key: ', key, 'value: ', obj)
-			arrMembers.push(
-				<div className='card ' key={key} onClick={this.showMemberModal}>
-					<figure className='image is-256x256'>
-						<img src={`${obj.MainPic}`}></img>
-					</figure>
+  getChildAgeFilter = (childAge = []) => {
+    // console.log('getChildAgeFilter', childAge)
+    if (childAge.length !== 2) {
+      return
+    }
+    this.setState({
+      filters: {
+        ...this.state.filters,
+        AgeMin: childAge[0],
+        AgeMax: childAge[1]
+      }
+    })
+  }
 
-					{`${obj.Login}`} - {`${obj.FirstName}`} {`${obj.LastName}`} - {`${obj.Age}`}
+  getChildDistanceFilter = (distance = 555) => {
+    // console.log('getChildDistanceFilter', childAge)
+    if (distance === 555) {
+      return
+    }
+    this.setState({
+      filters: {
+        ...this.state.filters,
+        Distance: distance
+      }
+    })
+  }
 
-				</div>
-			)
-		})
-		return (arrMembers)
-	}
+  displayEachMember = () => {
+    const data = this.state.data
+    if (data.result === undefined) {
+      return
+    }
+    var arrMembers = []
+    Object.entries(data.result).forEach(([key, obj]) => {
+      console.log('DATA => ', 'key: ', key, 'value: ', obj)
+      arrMembers.push(
+        <div className='card ' key={key} onClick={this.showMemberModal}>
+          <figure className='image is-256x256'>
+          {
+            obj.MainPic === undefined &&
+            <img src={`${obj.PicPath}`}></img>
+          }
+          {
+            // ! pour test (click on get all data btn)
+            obj.MainPic !== undefined &&
+            <img src={`${obj.MainPic}`}></img>
+          }
+          </figure>
 
-	showMemberModal = () => {
-		const modal = document.getElementsByClassName('modal')[0]
-		if (modal == undefined) {
-			console.log('%c Modal not found', 'color: red', modal)
-			return
-		}
+          {`${obj.Login}`} - {`${obj.FirstName}`} {`${obj.LastName}`} - {`${obj.Age}`}
 
-		console.log('%c Modal found', 'color: green', modal)
-		modal.className = 'modal is-visible'
+        </div>
+      )
+    })
+    return (arrMembers)
+  }
 
-	}
+  showMemberModal = () => {
+    const modal = document.getElementsByClassName('modal')[0]
+    if (modal === undefined) {
+      console.log('%c Modal not found', 'color: red', modal)
+      return
+    }
 
-	getFilteredData = () => {
-		const dataToSend = {
-			uid: this.props.userContext.uid,
-			token: this.props.userContext.token,
-			filters: this.state.filters
-		}
-		console.log('%c getFilteredData: ', 'color: cyan;', dataToSend)
-		axios({
-			method: 'POST',
-			url: '/api/search/getFiltered',
-			data: dataToSend
-		})
-			.then((response) => {
-				console.log('%c AXIOS response: ', 'color: green', response.data)
-				this.setState({
-					TOJSON: response.data,
-					data: response.data
-				})
-			})
-			.catch((error) => {
-				console.error('%c AXIOS response: ', 'color: red', error)
-			})
-	}
+    console.log('%c Modal found', 'color: green', modal)
+    modal.className = 'modal is-visible'
+  }
 
-	render () {
-		return (
-			<div className='gridWrapper' id='searchWrapper'>
+  getFilteredData = () => {
+    const dataToSend = {
+      uid: this.props.userContext.uid,
+      token: this.props.userContext.token,
+      filters: this.state.filters
+    }
+    console.log('%c getFilteredData: ', 'color: cyan;', dataToSend)
+    axios({
+      method: 'POST',
+      url: '/api/search/getFiltered',
+      data: dataToSend
+    })
+      .then((response) => {
+        console.log('%c AXIOS response: ', 'color: green', response.data)
+        this.setState({
+          TOJSON: response.data,
+          data: response.data
+        })
+      })
+      .catch((error) => {
+        console.error('%c AXIOS response: ', 'color: red', error)
+      })
+  }
 
-					{/* <ReactJson src={this.state.tags} collapsed='1'/> */}
-				{/* {
-					this.state.TOJSON != null &&
-					<ReactJson src={this.state.TOJSON} name='' collapsed='1'/>
-				} */}
+  render () {
+    return (
+      <div className='gridWrapper' id='searchWrapper'>
 
-				<SearchPanel 
-					initData={this.initData}
-					parentStateFilters={this.state.filters}
-					getFilteredData={this.getFilteredData}
-					setParentGender={this.getChildGenderFilter}
-					setParentAge={this.getChildAgeFilter}
-					setParentDistance={this.getChildDistanceFilter}
-					userContext={this.props.userContext}
-				></SearchPanel>
+        <ReactJson src={this.state.data} collapsed='1'/>
+        {/* {
+          this.state.TOJSON != null &&
+          <ReactJson src={this.state.TOJSON} name='' collapsed='1'/>
+        } */}
 
-				<div className='container' id='memberPres'>
-					{this.displayEachMember()}
+        <SearchPanel
+          initData={this.initData}
+          parentStateFilters={this.state.filters}
+          getFilteredData={this.getFilteredData}
+          setParentGender={this.getChildGenderFilter}
+          setParentAge={this.getChildAgeFilter}
+          setParentDistance={this.getChildDistanceFilter}
+          userContext={this.props.userContext}
+        ></SearchPanel>
 
-					{/* {
-						this.state.data.result != undefined &&
-						<ReactJson src={this.state.data.result[2]}></ReactJson>
-					} */}
+        <div className='container' id='memberPres'>
+          {this.displayEachMember()}
 
-					<MemberModal></MemberModal>
+          {/* {
+            this.state.data.result != undefined &&
+            <ReactJson src={this.state.data.result[2]}></ReactJson>
+          } */}
 
-				</div>
+          <MemberModal></MemberModal>
 
-			</div>
-		)
-	}
+        </div>
+
+      </div>
+    )
+  }
 }

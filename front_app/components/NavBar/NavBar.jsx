@@ -67,12 +67,12 @@ export default class NavBar extends Component {
     return (arrItems)
   }
 
+  /* eslint-disable */
   render () {
     // console.log('%c NavBar RENDER: ', 'color: ;', this.props)
-
     return (
       <div id='NavBarWrapper'>
-        <nav className='navbar'>
+        <nav className='navbar is-mobile'>
           <div className='navbar-menu is-active'>
 
             <div className='navbar-start'>
@@ -106,5 +106,6 @@ export default class NavBar extends Component {
         }
       </div>
     )
+
   }
 }

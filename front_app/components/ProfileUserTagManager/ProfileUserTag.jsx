@@ -20,7 +20,7 @@ class ProfileUserTag extends Component {
   createCheckbox (tags = []) {
     console.log('CALL createCheckbox')
 
-    const UsrInterest = this.props.userContext.userData.Intersest.split(',')
+    const UsrInterest = this.props.userContext.userData.Interest.split(',')
     let checkboxArr = []
 
     for (let index in tags) {
@@ -76,25 +76,25 @@ class ProfileUserTag extends Component {
   async unselectTag (event, index) {
     index = Number(index)
     console.log('%c Unselect tag ', 'color: red', { event, index })
-    const oldIntersest = this.props.userContext.userData.Intersest
-    console.log('oldIntersest: ', { oldIntersest })
+    const oldInterest = this.props.userContext.userData.Interest
+    console.log('oldInterest: ', { oldInterest })
 
-    // const newIntersest = Array(oldIntersest).splice(1, (oldIntersest.indexOf(index)))
-    let newIntersest = []
-    oldIntersest.split(',').map((val, id) => { newIntersest[id] = Number(val) })
-    // console.log('newIntersest: ', {newIntersest}, newIntersest.indexOf(index))
-    newIntersest.splice(newIntersest.indexOf(index), 1)
-    newIntersest = String(newIntersest)
-    console.log('newIntersest: ', { newIntersest })
+    // const newInterest = Array(oldInterest).splice(1, (oldInterest.indexOf(index)))
+    let newInterest = []
+    oldInterest.split(',').map((val, id) => { newInterest[id] = Number(val) })
+    // console.log('newInterest: ', {newInterest}, newInterest.indexOf(index))
+    newInterest.splice(newInterest.indexOf(index), 1)
+    newInterest = String(newInterest)
+    console.log('newInterest: ', { newInterest })
     this.props.userContext.setState({
       userData: {
         ...this.props.userContext.userData,
-        Intersest: newIntersest
+        Interest: newInterest
       }
     })
 
     let newUserData = this.props.userContext.userData
-    newUserData.Intersest = newIntersest
+    newUserData.Interest = newInterest
     let dataToSend = {
       uid: this.props.userContext.uid,
       token: this.props.userContext.token,
@@ -107,29 +107,29 @@ class ProfileUserTag extends Component {
     console.log('handleClick props ', this.props)
     console.log('handleClick key: ', index)
 
-    const oldIntersest = this.props.userContext.userData.Intersest
-    if (oldIntersest.split(',').length >= 5) {
+    const oldInterest = this.props.userContext.userData.Interest
+    if (oldInterest.split(',').length >= 5) {
       console.log('Trop d\'interets selectionne')
       return (false)
     }
-    let newIntersest = ''
-    console.log('oldIntersest: ', oldIntersest, 'len:', oldIntersest.length)
+    let newInterest = ''
+    console.log('oldInterest: ', oldInterest, 'len:', oldInterest.length)
 
-    if (oldIntersest.length !== 0) {
-      newIntersest = oldIntersest.concat(`,${index}`)
+    if (oldInterest.length !== 0) {
+      newInterest = oldInterest.concat(`,${index}`)
     } else {
-      newIntersest = `${index}`
+      newInterest = `${index}`
     }
-    console.log('newIntersest: ', { newIntersest })
+    console.log('newInterest: ', { newInterest })
     this.props.userContext.setState({
       userData: {
         ...this.props.userContext.userData,
-        Intersest: newIntersest
+        Interest: newInterest
       }
     })
 
     let newUserData = this.props.userContext.userData
-    newUserData.Intersest = newIntersest
+    newUserData.Interest = newInterest
     let dataToSend = {
       uid: this.props.userContext.uid,
       token: this.props.userContext.token,
@@ -143,7 +143,7 @@ class ProfileUserTag extends Component {
    * @returns: (int) the number of interest in the userData.Interest array
   **/
   getNumberOfInterests () {
-    const interest = this.props.userContext.userData.Intersest
+    const interest = this.props.userContext.userData.Interest
     // console.log('interest-->', interest)
     if (interest === '' || interest === undefined) {
       // console.log('Num to 0..')

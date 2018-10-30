@@ -13,22 +13,33 @@ import { promisify } from 'util'
 /* eslint-disable */
 export default class SearchPanel extends Component {
   state = {
-    Age: 18,
-    Distance: 30,
+    // Age: 0,
+    // Distance: 0,
     tags: [],
     tagList: []
 
   }
 
-  setAge = (event) => {
+  setAge = (event, key) => {
     // console.log('setAge: ', event.target.value)
-    const min = Number(event.target.value)
-    this.props.setParentAge([min, 0])
+    const ageVal = Number(event.target.value)
+    if (key === 0) {
+      if (ageVal >= this.props.parentStateFilters.AgeMax) {
+        return
+      }
+      this.props.setParentAge([
+        ageVal, this.props.parentStateFilters.AgeMax])
+    } else if (key === 1) {
+      if (ageVal <= this.props.parentStateFilters.AgeMin) {
+        return
+      }
+      this.props.setParentAge([
+        this.props.parentStateFilters.AgeMin, ageVal])
+    }
 
     // TODO max value
     // TODO const max = ???
     // TODO this.props.setParentAge([min, max])
-
   }
 
   setDistance = (event) => {
@@ -46,22 +57,6 @@ export default class SearchPanel extends Component {
     gender[key] = event.target.checked
     this.props.setParentGender(gender)
   }
-
-  // handleTagChanges = (event) => {
-  //   event.persist()
-  //   if (event.type === 'keypress') {
-  //     console.log('handleTagChanges', event.type, ' --> ', event.key)
-  //   } else {
-  //     console.log('handleTagChanges', event.type)
-  //   }
-  //   // console.log('handleTagChanges event.target', event.target)
-  //   // console.log('handleTagChanges event.target.value', event.target.value)
-  //   const splitVal = event.target.value.split(',')
-  //   console.log('splitVal', splitVal)
-  //   this.setState({
-  //     tags: splitVal
-  //   })
-  // }
 
   tagEnventHandler = (event) => {
     // event.persist()
@@ -83,7 +78,7 @@ export default class SearchPanel extends Component {
           tags: newArr
         })
         break
-        
+
       default:
         break
     }
@@ -124,7 +119,7 @@ export default class SearchPanel extends Component {
 
   makeSelectOptions = () => {
     const tags = this.state.tagList
-    if (tags == undefined) {
+    if (tags === undefined) {
       return
     }
     const options = []
@@ -155,7 +150,7 @@ export default class SearchPanel extends Component {
             tagList: response.data.result
           })
         } else {
-          console.error('%c Get tag list from server returned: ', 'color: red', response.data.msg, response.data) 
+          console.error('%c Get tag list from server returned: ', 'color: red', response.data.msg, response.data)
         }
       })
       .catch((error) => {
@@ -168,44 +163,52 @@ export default class SearchPanel extends Component {
     return (
 
       <aside className='menu' id='searchPanel'>
-      {/* <ReactJson src={this.state.tags}></ReactJson> */}
+        {/* <ReactJson src={this.state.tags}></ReactJson> */}
         <p className='menu-label'>MENU</p>
         <ul className='menu-list'>
           <li><a>Age Min: {this.props.parentStateFilters.AgeMin}</a></li>
           <input className='slider has-output'
             step='1' min='18' max='120'
-            defaultValue='0' type='range'
-            onChange={this.setAge}>
+            defaultValue='18' type='range'
+            onChange={(e) => this.setAge(e, 0)}>
+          </input>
+
+          <li><a>Age Max: {this.props.parentStateFilters.AgeMax}</a></li>
+          <input className='slider has-output'
+            step='1' min='18' max='120'
+            defaultValue='120' type='range'
+            onChange={(e) => this.setAge(e, 1)}>
           </input>
 
           <li><a>Distance : {this.props.parentStateFilters.Distance}</a></li>
           {/* {`>option indiferent<`} */}
           <input className='slider has-output'
             step='10' min='10' max='500'
-            defaultValue={this.state.Distance} type='range'
+            defaultValue='0' type='range'
             onChange={this.setDistance}>
           </input>
 
           <div className=''><a>Gender</a>
             <div className='underPan is-close'>
-                <div><input key='0' className='checkbox' type='checkbox' onClick={this.handleGenderClick}/><img className='svg' src={`/assets/icons/maleGenderSym.svg`}/></div>
-                <div><input key='1' className='checkbox' type='checkbox' onClick={this.handleGenderClick}/><img className='svg' src={`/assets/icons/femaleGenderSym.svg`}/></div>
-                <div><input key='1' className='checkbox' type='checkbox' onClick={this.handleGenderClick}/><img className='svg' src={`/assets/icons/BiGenderSymb.svg`}/></div>
+              <div><input key='0' className='checkbox' type='checkbox' onClick={this.handleGenderClick}/><img className='svg' src={`/assets/icons/maleGenderSym.svg`}/></div>
+              <div><input key='1' className='checkbox' type='checkbox' onClick={this.handleGenderClick}/><img className='svg' src={`/assets/icons/femaleGenderSym.svg`}/></div>
+              <div><input key='1' className='checkbox' type='checkbox' onClick={this.handleGenderClick}/><img className='svg' src={`/assets/icons/BiGenderSymb.svg`}/></div>
 
             </div>
           </div>
 
           <div className=''><a>Tags</a>
-          {/* <input className='input is-small' type='tags' placeholder='Add Tag'/> */}
-          {
-            this.state.tags.length !== 0 &&
-            <div className='box'>
-              {this.displayTags()}
-            </div>
-          }
+            {/* <input className='input is-small' type='tags' placeholder='Add Tag'/> */}
+            {
+              this.state.tags.length !== 0 &&
+              <div className='box'>
+                {this.displayTags()}
+              </div>
+            }
           </div>
           <div className="select is-small">
-            <select defaultValue='tags' onChange={(e) => {this.handleHadTag(e)}}>
+            <select defaultValue='tags'
+              onChange={(e) => { this.handleHadTag(e) }}>
               <option>...</option>
               {this.makeSelectOptions()}
             </select>
@@ -214,7 +217,7 @@ export default class SearchPanel extends Component {
 
         <div className='section'>
           <button className='button is-link' onClick={this.props.initData}>Get All Data..</button>
-          <button className='button is-link' onChange={this.props.getFilteredData}>Get Filtered Data..</button>
+          <button className='button is-link' onClick={this.props.getFilteredData}>Get Filtered Data..</button>
         </div>
       </aside>
 

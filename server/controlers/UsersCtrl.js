@@ -325,24 +325,6 @@ exports.UsersCtrl = {
         'error': `Wrong activation token`
       })
     } else if (response.affectedRows === 1) {
-      // res.status(201).type('json').json({
-      //   'paramReceived': {
-      //     'ul': req.query.ul,
-      //     'ua': req.query.ua
-      //   },
-      //   'docInfo': {
-      //     'currentPage': 'accountActivation',
-      //     'redirectTo': 'home'
-      //   },
-      //   'success': {
-
-      //   },
-      //   'userState': {
-      //     'login': 'false',
-      //     'usrId': '',
-      //     'userToken': ''
-      //   }
-      // })
       res.status(201).redirect(serverConf.frontURL)
     } else {
       res.status(400).type('json').json({
@@ -415,7 +397,7 @@ exports.UsersCtrl = {
     // ! voir pour arranger ca
     const { UserId, Login, FirstName,
       LastName, Age, Gender, Orientation, Bio,
-      Intersest, GeolocAuth, Height, Weight, EyeColor, HairColor } = { ...req.body.userData }
+      Interest, GeolocAuth, Height, Weight, EyeColor, HairColor } = { ...req.body.userData }
     const fields = {
       UserId: UserId,
       Login: Login,
@@ -425,7 +407,7 @@ exports.UsersCtrl = {
       Gender: Gender,
       Orientation: Orientation,
       Bio: Bio,
-      Intersest: Intersest,
+      Interest: Interest,
       GeolocAuth: GeolocAuth,
       Height: Height,
       Weight: Weight,

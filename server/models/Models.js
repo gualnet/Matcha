@@ -65,7 +65,7 @@ export default class Models {
       return (response)
     } catch (error) {
       console.error('Error: ', error)
-      return (null)
+      return (undefined)
     }
   }
 
@@ -110,7 +110,7 @@ export default class Models {
       return (response)
     } catch (error) {
       console.error('Error: ', error)
-      return (null)
+      return (undefined)
     }
   }
 
@@ -189,4 +189,5 @@ export default class Models {
       throw error
     }
   }
+
 }
