@@ -25,7 +25,7 @@ export default class ProfilePicManager extends Component {
   async deletePic (event) {
     console.log('deletePic: ', event.target.id)
     let rmSrc = event.target.parentElement.childNodes[1].style.backgroundImage
-    rmSrc = rmSrc.replace('url("http://localhost:8880', '').replace('")', '')
+    rmSrc = rmSrc.replace(`url("${window.location.origin}`, '').replace('")', '')
     console.log('source to rm: ', rmSrc)
     if (rmSrc === NO_PIC_BG) {
       console.log('deletePic: NO ACTION')
@@ -48,7 +48,7 @@ export default class ProfilePicManager extends Component {
       }
     }
 
-    const imgName = rmSrc.replace('http://localhost:8880', '')
+    const imgName = rmSrc.replace(`${window.location.origin}`, '')
     let dataToSend = {
       token: this.props.userContext.token,
       rmPic: imgName
@@ -93,7 +93,7 @@ export default class ProfilePicManager extends Component {
     // changement en base
     let dataToSend = {
       token: this.props.userContext.token,
-      mainPicName: newMainImgUrl.replace('http://localhost:8880', '')
+      mainPicName: newMainImgUrl.replace(`${window.location.origin}`, '')
     }
 
     window.fetch('/api/picture', {

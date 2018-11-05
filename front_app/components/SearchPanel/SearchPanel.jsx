@@ -58,6 +58,16 @@ export default class SearchPanel extends Component {
     this.props.setParentGender(gender)
   }
 
+  handleOrientationClick = (event) => {
+    // event.persist()
+    // console.log('handleCheckboxClick: ', event._targetInst.key)
+    // console.log('handleCheckboxClick: ', key, event.target.checked)
+    const key = event._targetInst.key
+    let orientation = this.props.parentStateFilters.Orientation
+    orientation[key] = event.target.checked
+    this.props.setParentOrientation(orientation)
+  }
+
   tagEnventHandler = (event) => {
     // event.persist()
     // console.log('COUCOU', event.type, event)
@@ -164,7 +174,7 @@ export default class SearchPanel extends Component {
 
       <aside className='menu' id='searchPanel'>
         {/* <ReactJson src={this.state.tags}></ReactJson> */}
-        <p className='menu-label'>MENU</p>
+        <p className='menu-label'>FILTERS</p>
         <ul className='menu-list'>
           <li><a>Age Min: {this.props.parentStateFilters.AgeMin}</a></li>
           <input className='slider has-output'
@@ -188,12 +198,19 @@ export default class SearchPanel extends Component {
             onChange={this.setDistance}>
           </input>
 
-          <div className=''><a>Gender</a>
+          <div className=''><a>Gender:</a>
             <div className='underPan is-close'>
               <div><input key='0' className='checkbox' type='checkbox' onClick={this.handleGenderClick}/><img className='svg' src={`/assets/icons/maleGenderSym.svg`}/></div>
               <div><input key='1' className='checkbox' type='checkbox' onClick={this.handleGenderClick}/><img className='svg' src={`/assets/icons/femaleGenderSym.svg`}/></div>
-              <div><input key='1' className='checkbox' type='checkbox' onClick={this.handleGenderClick}/><img className='svg' src={`/assets/icons/BiGenderSymb.svg`}/></div>
+              <div><input key='2' className='checkbox' type='checkbox' onClick={this.handleGenderClick}/><img className='svg' src={`/assets/icons/BiGenderSymb.svg`}/></div>
+            </div>
+          </div>
 
+          <div className=''><a>Orientation:</a>
+            <div className='underPan is-close'>
+              <div><input key='0' className='checkbox' type='checkbox' onClick={this.handleOrientationClick}/><img className='svg' src={`/assets/icons/maleGenderSym.svg`}/></div>
+              <div><input key='1' className='checkbox' type='checkbox' onClick={this.handleOrientationClick}/><img className='svg' src={`/assets/icons/femaleGenderSym.svg`}/></div>
+              <div><input key='2' className='checkbox' type='checkbox' onClick={this.handleOrientationClick}/><img className='svg' src={`/assets/icons/BiGenderSymb.svg`}/></div>
             </div>
           </div>
 
@@ -217,7 +234,7 @@ export default class SearchPanel extends Component {
 
         <div className='section'>
           <button className='button is-link' onClick={this.props.initData}>Get All Data..</button>
-          <button className='button is-link' onClick={this.props.getFilteredData}>Get Filtered Data..</button>
+          <button className='button is-link' onClick={this.props.getFilteredData}>Get 1-Filtered Data..</button>
         </div>
       </aside>
 

@@ -21,6 +21,7 @@ export default class Search extends React.Component {
       AgeMin: 18,
       AgeMax: 120,
       Gender: [false, false, false],//, false, false],
+      Orientation: [false, false, false],//, false, false],
       Distance: 0
     },
     memberSelected: undefined
@@ -34,6 +35,7 @@ export default class Search extends React.Component {
       .then((response) => {
         console.log('%c AXIOS response: ', 'color: green', response)
         this.setState({
+          TOJSON: response.data,
           data: response.data
         })
       })
@@ -51,6 +53,19 @@ export default class Search extends React.Component {
       filters: {
         ...this.state.filters,
         Gender: [...childFilter]
+      }
+    })
+  }
+
+  getChildOrientationFilter = (childFilter = []) => {
+    // console.log('getChildOrientationFilter', childFilter)
+    if (childFilter.length !== 3) {
+      return
+    }
+    this.setState({
+      filters: {
+        ...this.state.filters,
+        Orientation: [...childFilter]
       }
     })
   }
@@ -97,14 +112,9 @@ export default class Search extends React.Component {
             obj.MainPic === undefined &&
             <img src={`${obj.PicPath}`} key={key}></img>
           }
-          {
-            // ! pour test (click on get all data btn)
-            obj.MainPic !== undefined &&
-            <img src={`${obj.MainPic}`} key={key}></img>
-          }
           </figure>
 
-          {`${obj.Login}`} - {`${obj.FirstName}`} {`${obj.LastName}`} - {`${obj.Age}`}
+          <div id='dispDist'><img className='image is-16x16' src='/assets/icons/geoloc.svg' />{`${obj.Distance}km`} - {`${obj.Login}`} - {`${obj.Age}`} </div>
 
         </div>
       )
@@ -122,12 +132,39 @@ export default class Search extends React.Component {
       return
     }
 
-    this.setState({
-      memberSelected: this.state.data.result[event._targetInst.key]
-    })
-
+    this.collectTargetPictures(this.state.data.result[event._targetInst.key], event._targetInst.key)
     // console.log('%c Modal found', 'color: green', modal)
     modal.className = 'modal is-visible'
+  }
+
+  collectTargetPictures = (targetData, targetId = -1) => {
+    // console.log('collectTargetPictures')
+    if (targetId === -1) {
+      return
+    }
+
+    const dataToSend = {
+      uid: this.props.userContext.uid,
+      token: this.props.userContext.token
+    }
+    axios({
+      method: 'POST',
+      url: `/api/picture/${this.state.data.result[targetId].UserId}`,
+      data: dataToSend
+    })
+      .then((response) => {
+        console.log('%c AXIOS response: ', 'color: green', response.data.result)
+
+        this.setState({
+          memberSelected: {
+            ...targetData,
+            pictures: response.data.result.picsAddr
+          }
+        })
+      })
+      .catch((error) => {
+        console.error('%c AXIOS response: ', 'color: red', error)
+      })
   }
 
   getFilteredData = () => {
@@ -144,9 +181,11 @@ export default class Search extends React.Component {
     })
       .then((response) => {
         console.log('%c AXIOS response: ', 'color: green', response.data)
+
         this.setState({
           TOJSON: response.data,
-          data: response.data
+          dataFromSrv: response.data, // data received from server
+          data: response.data // data filtered on user side
         })
       })
       .catch((error) => {
@@ -158,21 +197,27 @@ export default class Search extends React.Component {
     return (
       <div className='gridWrapper' id='searchWrapper'>
 
-        <ReactJson src={this.props} collapsed='1'/>
+        <div id='tests'>
+        <ReactJson src={this.props} name='props' collapsed='1'/>
+        <ReactJson src={this.state} name='state' collapsed='1'/>
         {/* <ReactJson src={this.state.data} collapsed='1'/> */}
         {/* {
           this.state.TOJSON != null &&
           <ReactJson src={this.state.TOJSON} name='' collapsed='1'/>
         } */}
 
+        </div>
+
         <SearchPanel
           initData={this.initData}
           parentStateFilters={this.state.filters}
           getFilteredData={this.getFilteredData}
           setParentGender={this.getChildGenderFilter}
+          setParentOrientation={this.getChildOrientationFilter}
           setParentAge={this.getChildAgeFilter}
           setParentDistance={this.getChildDistanceFilter}
           userContext={this.props.userContext}
+          pic2={this.getPictures}
         ></SearchPanel>
 
         <div className='container' id='memberPres'>

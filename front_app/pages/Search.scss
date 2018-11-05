@@ -21,11 +21,18 @@
 
 }
 
-#searchWrapper .card figure {
-	width: 256px;
-	border: solid 10px rgba(36, 64, 177, 0.0);
-	// box-shadow: 0px 0px 5px rgba(36, 64, 177, 0.1);
-	// margin: 10px 10px 0px 10px;
+#searchWrapper .card {
+	figure {
+		width: 256px;
+		border: solid 10px rgba(36, 64, 177, 0.0);
+		// box-shadow: 0px 0px 5px rgba(36, 64, 177, 0.1);
+		// margin: 10px 10px 0px 10px;
+	}
+
+	#dispDist {
+		display: inline-flex;
+		line-height: 16px;
+	}
 }
 
 #searchWrapper .underPan {

@@ -4,7 +4,7 @@
 
 		&.is-visible {
 			display: block;
-			// animation: modalShow 1.5s 1 0s ease-in;
+			animation: modalShow 0.8s 0 0s ease-in;
 	
 			color: white;
 		}
@@ -18,11 +18,37 @@
 	}
 	#searchWrapper .modal .modal-content .box {
 		height: 50vh;
+		display: grid;
+		grid-template-columns: 200px 200px auto;
+		grid-gap: 10px;
 	}
 
-	#searchWrapper .modal .carousel-nav-left {
+	#searchWrapper .modal .carousel-items {
 		
+		height: 140px;
+		width: 200px;
+
+		img {
+			height: 140px;
+			width: 200px;
+		}
+
+		.nav-left {
+			position: absolute;
+			top: 80px;
+			background-color: rgba(255, 255, 255, 0.15);
+			border-radius: 5px;
+		}
+
+		.nav-right {
+			position: absolute;
+			top: 80px;
+			left: 210px;
+			background-color: rgba(255, 255, 255, 0.15);
+			border-radius: 5px;
+		}
 	}
+
 }
 
 @keyframes modalShow{
