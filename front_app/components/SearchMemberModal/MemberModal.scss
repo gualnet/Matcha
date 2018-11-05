@@ -4,7 +4,7 @@
 
 		&.is-visible {
 			display: block;
-			animation: modalShow 0.8s 0 0s ease-in;
+			animation: modalShow 0.8s 1 0s ease-out;
 	
 			color: white;
 		}

@@ -29,7 +29,8 @@
     "jsonwebtoken": "^8.3.0",
     "mysql": "^2.16.0",
     "nodemailer": "^4.6.8",
-    "promisify": "0.0.3"
+    "promisify": "0.0.3",
+    "socket.io": "^2.1.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",

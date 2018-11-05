@@ -1,41 +1,58 @@
 'use strict'
 // IMPORTS
+import http from 'http'
 import serverConf from '../utils/server'
 import { router as apiRouter } from './apiRouter'
+// import io from 'socket.io'
+const socketIo = require('socket.io')
+
 const Express = require('express')
 const BodyParser = require('body-parser')
 
 // Initialisation
-const server = Express()
+const app = Express()
 
 // Static serv..
-server.use('/public', Express.static('./UsersStorage'))
-server.use('/assets', Express.static('./assets'))
+app.use('/public', Express.static('./UsersStorage'))
+app.use('/assets', Express.static('./assets'))
 // Body Parser config
-server.use(BodyParser.json({
+app.use(BodyParser.json({
   limit: '2mb'
 }))
-server.use(BodyParser.urlencoded({
+app.use(BodyParser.urlencoded({
   limit: '2mb',
   extended: true
 }))
 
 // CORS auth
-server.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*')
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*/*')
   res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS')
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
   next()
 })
 
 // Routes
-server.get('/', (req, res) => {
+app.get('/', (req, res) => {
   res.setHeader('Content-Type', 'application/json')
   // res.setHeader('Content-Type', 'text/html')
   res.status(200).send('Welcome sur l\'api Matcha')
 })
 
-server.use('/api/', apiRouter())
+app.use('/api/', apiRouter())
+
+const server = http.createServer(app)
+
+// /* eslint-disable */
+const io = socketIo(server)
+
+io.on('connection', (socket) => {
+  console.log('New client connected ', socket)
+
+  socket.on('disconnect', () => console.log('Client disconnected'))
+
+  socket.on('test', () => console.log('socket received event \'test\''))
+})
 
 server.listen(serverConf.serverPORT, () => {
   console.log('Listen on ', serverConf.serverIP, serverConf.serverPORT)
