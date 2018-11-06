@@ -3,12 +3,20 @@ import GVARS from '../utils/globalVars'
 import openSocket from 'socket.io-client'
 
 const socket = openSocket(GVARS.backendURL)
+socket.emit('openSocket', { msg: 'openSocket' })
 
-function connect (cb) {
-  socket.on('chat', (message) => {
-    console.log(message)
-    cb(message)
-  })
+const socketHandlers = {
+  connect (data) {
+    socket.emit('test', data)
+  }
 }
 
-export { connect }
+// function connect (cb) {
+//   socket.on('chat', (message) => {
+//     console.log(message)
+//     cb(message)
+//   })
+// }
+
+export default socketHandlers
+export { socket }

@@ -39,16 +39,16 @@ export default class MemberModal extends Component {
     console.log('Start idx: ', idx, elem.src.replace(window.location.origin, ''), arr)
 
     if (go === 'next' && idx + 1 < arr.length) {
-      console.log('Cas0 ', idx, idx + 1)
+      // console.log('Cas0 ', idx, idx + 1)
       elem.src = arr[idx + 1]
     } else if (go === 'next' && idx + 1 === arr.length) {
-      console.log('Cas1 ', idx, 0)
+      // console.log('Cas1 ', idx, 0)
       elem.src = arr[0]
     } else if (go === 'prev' && idx - 1 > 0) {
-      console.log('Cas2 ', idx, idx - 1)
+      // console.log('Cas2 ', idx, idx - 1)
       elem.src = arr[idx - 1]
     } else if (go === 'prev') {
-      console.log('Cas3 ', idx, arr.length - 1)
+      // console.log('Cas3 ', idx, arr.length - 1)
       elem.src = arr[arr.length - 1]
     }
   }
