@@ -235,11 +235,13 @@ exports.UsersCtrl = {
   **/
   login: async (req, res) => {
     console.log('UsersCtrl func login')
+    // console.log('UsersCtrl func login', req.body)
+
     const userMdl = new UsersMdl()
-    console.log('req.body: ', req.body)
-    console.log('req.query: ', req.body.Login)
+    // console.log('req.body: ', req.body)
+    // console.log('req.query: ', req.body.Login)
     const { Login, Password } = { ...req.body }
-    console.log(`login:${Login} and password:${Password}`)
+    // console.log(`login:${Login} and password:${Password}`)
 
     const response = await userMdl.getUser({
       Login: Login,
@@ -250,6 +252,7 @@ exports.UsersCtrl = {
     if (Object.values(response).length !== 0 &&
     bcrypt.compareSync(Password, response[0].Password)) {
       // console.log('login response ', response[0].Password)
+
       if (response[0].UserToken !== 'activated' && response[0].UserToken !== 'disconnected') {
         return (res.status(401).type('json').json({
           error: 'bad authentification'
@@ -265,12 +268,13 @@ exports.UsersCtrl = {
           UserId: r.UserId
         }
       })
+      delete r.Password
+
+      // console.log('RESPONSE: ', r)
       return (res.status(201).type('json').json({
-        'success': 'login',
-        'userState': {
-          uid: r.UserId,
-          token: r.UserToken
-        }
+        success: true,
+        msg: 'Login Ok',
+        result: r
       }))
     } else {
       console.log('bad authentification')

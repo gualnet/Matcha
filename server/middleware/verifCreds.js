@@ -19,6 +19,7 @@ const handleExpiredToken = (res, decoded) => {
    * @returns true if creds are ok, else false
   **/
 async function credsInBody (req, res) {
+  // console.log('credsInBody req.body: ', req.body)
   try {
     /* eslint-disable-next-line */
     Object.entries(req.body.token).length
@@ -39,7 +40,7 @@ async function credsInBody (req, res) {
     })
 
     // verif token
-    console.log('RESPONSE FIND: ', sqlRsp)
+    // console.log('RESPONSE FIND: ', sqlRsp)
     try {
       jwt.verify(req.body.token, serverConf.jwtSignSecret)
       // console.log('DECODE: ', decode)

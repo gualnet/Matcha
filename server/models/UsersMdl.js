@@ -99,7 +99,7 @@ export default class UsersMdl extends Models {
       ([key, val]) => {
         wrapper[key] = val
       })
-    console.log('wrapper: ', wrapper)
+    // console.log('wrapper: ', wrapper)
     const response = await this.find({
       where: wrapper
     }, andOr)

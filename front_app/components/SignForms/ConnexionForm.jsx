@@ -4,6 +4,8 @@ import React, { Component } from 'react'
 import axios from 'axios'
 
 import MsgPop from '../MsgPop/MsgPop.jsx'
+// ! Dev
+import ReactJson from 'react-json-view'
 
 // CSS
 import './ConnexionForm.scss'
@@ -84,14 +86,15 @@ class ConnexionForm extends Component {
     })
       .then((response) => {
         console.log('%c response ok: ', 'color: green', response)
-        if (response.data.success === 'login') {
+        if (response.data.success) {
           // window.alert('login success')
-          const newUid = response.data.userState.uid
-          const newToken = response.data.userState.token
+          const newUid = response.data.result.UserId
+          const newToken = response.data.result.UserToken
           console.log('newUid & newToken: ', newUid, newToken)
           this.props.userContext.setState({
-            uid: newUid,
-            token: newToken
+            uid: response.data.result.UserId,
+            token: response.data.result.UserToken,
+            userData: response.data.result
           })
           // this.hideConForm()
         } else {
@@ -106,6 +109,7 @@ class ConnexionForm extends Component {
   }
 
   render () {
+    console.log('ConnexionForm RENDER', this.props.userContext)
     return (
       <div className='modal' id='ConnexionFormWrapper'>
         <MsgPop
