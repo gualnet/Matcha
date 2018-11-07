@@ -175,11 +175,22 @@ export default class ProfilePicManager extends Component {
     let mainPicAddr = NO_PIC_BG
     let j = 0
     for (let i = 0; i < 5; i++) {
+      console.log('TEST [', i, ']', rspData.result.picsAddr[i])
       if (i !== mainPicNum && rspData.result.picsAddr[i] !== undefined) {
-        picsAddrArr[j] = GVARS.backendURL.concat(rspData.result.picsAddr[i])
+        if (!rspData.result.picsAddr[i].includes('randomuser')) {
+          console.log('CAS2')
+          picsAddrArr[j] = GVARS.backendURL.concat(rspData.result.picsAddr[i])
+        } else {
+          picsAddrArr[j] = rspData.result.picsAddr[i]
+        }
         j++
       } else if (i === mainPicNum && rspData.result.picsAddr[i] !== undefined) {
-        mainPicAddr = GVARS.backendURL.concat(rspData.result.picsAddr[i])
+        if (!rspData.result.picsAddr[i].includes('randomuser')) {
+          console.log('CAS3')
+          mainPicAddr = GVARS.backendURL.concat(rspData.result.picsAddr[i])
+        } else {
+          mainPicAddr = rspData.result.picsAddr[i]
+        }
       } else {
         picsAddrArr[j] = undefined
         j++

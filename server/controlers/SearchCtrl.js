@@ -78,7 +78,7 @@ const SearchCtrl = {
             sqlReq = sqlReq.concat(') ')
           }
         }
-      });
+      })
       // sqlReq = sqlReq.concat(`WHERE (USR.UserId=PIC.PicOwner And PIC.IsMain='1' AND USR.Gender='1' AND (USR.Orientation='1' OR USR.Orientation='2')) `)
       console.log('REQ: ', sqlReq)
       return

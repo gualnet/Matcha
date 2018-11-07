@@ -83,8 +83,6 @@ const randomMerge = () => {
     let gender = nameObj[randName].Gender
     let surname = surnameObj[randSurname].Surname
     console.log(`${i}:`, name.replace('(1)', '').replace('(2)', ''), surname, '\t', gender, '\trandom:', randName, '| ', randSurname)
-
-
   }
 }
 randomMerge()

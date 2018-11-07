@@ -6,11 +6,15 @@ import { TagsCtrl } from '../controlers/TagsCtrl'
 import { GeolocationCtrl } from '../controlers/GeolocationCtrl'
 import { SearchCtrl } from '../controlers/SearchCtrl'
 
+import seederRU from '../utils/seeder_randomUser'
+
 const Express = require('express')
 
 // Routes
 exports.router = () => {
   const apiRouter = Express.Router()
+
+  apiRouter.route('/admin/createRandomUser').get(seederRU.createRandomUser)
 
   apiRouter.route('/user/register').post(UsersCtrl.registerNewUser)
   apiRouter.route('/user/login').post(UsersCtrl.login)

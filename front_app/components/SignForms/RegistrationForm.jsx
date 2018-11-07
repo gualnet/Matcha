@@ -38,7 +38,10 @@ class RegistrationForm extends Component {
         this.setState({ LastName: value })
         break
       case 'age':
-        this.setState({ Age: Number(value) })
+        console.log(this.state.Age, 'change', value, Number(value), !isNaN(Number(value)))
+        if (!isNaN(Number(value))) {
+          this.setState({ Age: Number(value) })
+        }
         break
       case 'mail':
         this.setState({ Mail: value })
@@ -121,7 +124,7 @@ class RegistrationForm extends Component {
 
     axios({
       method: 'post',
-      url: 'http://localhost:8880/api/user/register/',
+      url: '/api/user/register/',
       data: dataToSend
     })
       .then((response) => {
@@ -220,7 +223,10 @@ class RegistrationForm extends Component {
 
         <div className='field'>
           <div className='control'>
-            <input required className='input' type='text' id='inputRegAge' placeholder='Age' onChange={(e) => this.formHandleChange(e, 'age')}/>
+            <input required className='input' type='text' id='inputRegAge' 
+            placeholder='Age'
+            value={ (this.state.Age > 0) ? this.state.Age : ''}
+            onChange={(e) => this.formHandleChange(e, 'age')}/>
           </div>
         </div>
 

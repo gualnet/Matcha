@@ -74,6 +74,7 @@ module.exports = {
       '/api': 'http://localhost:8880',
       '/public': 'http://localhost:8880',
       '/assets': 'http://localhost:8880'
+      // '/randomuser': 'https://randomuser.me'
     }
     // headers: {
     //   'Access-Control-Allow-Origin': '*',

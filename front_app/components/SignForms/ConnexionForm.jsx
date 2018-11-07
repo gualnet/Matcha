@@ -4,8 +4,6 @@ import React, { Component } from 'react'
 import axios from 'axios'
 
 import MsgPop from '../MsgPop/MsgPop.jsx'
-// ! Dev
-import ReactJson from 'react-json-view'
 
 // CSS
 import './ConnexionForm.scss'

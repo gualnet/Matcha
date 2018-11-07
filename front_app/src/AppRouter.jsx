@@ -11,6 +11,8 @@ import Profile from '../pages/Profile.jsx'
 import Message from '../pages/Message.jsx'
 import Search from '../pages/Search.jsx'
 import NotFound from '../pages/404.jsx'
+
+import Admin from '../pages/Admin.jsx'
 /* eslint-enable no-unused-vars */
 
 const AppRouter = () => {
@@ -37,6 +39,10 @@ const AppRouter = () => {
 
             <Route exact path='/Search'
               render = {(props) => <Search userContext={userContextProp}/>}
+            />
+
+            <Route exact path='/Admin'
+              render = {(props) => <Admin userContext={userContextProp}/>}
             />
 
             <Route component={ NotFound } />
