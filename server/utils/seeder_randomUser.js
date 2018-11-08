@@ -86,7 +86,6 @@ async function mappedInsertRandomUser (data) {
   const picRep = await picturesMdl.insert({
     where: {
       PicOwner: newUID,
-      // PicPath: data.picture.large.replace('https://randomuser.me', '/randomuser'),
       PicPath: data.picture.large,
       IsMain: 1
     }

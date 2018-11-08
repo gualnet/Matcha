@@ -57,8 +57,9 @@ const SearchCtrl = {
 
     // ! mep de la requete non terminee
     if (filters.Gender.indexOf(true) !== -1 || filters.Orientation.indexOf(true) !== -1) {
-      // console.log('\nBingo: \n')
-      // console.log(`${filters.Gender}\n${filters.Orientation}\n`)
+      console.log('\nCustom filters (Gender / Orientation):')
+      console.log(`${filters.Gender}\n${filters.Orientation}\n`)
+
       // override the basic search params
       let sqlReq = `SELECT `
       sqlReq = sqlReq.concat(`UserId, Popularity, Login, Age, Gender, Orientation, Bio, Interest, BlockedUsers, Reported, Height, Weight, EyeColor, HairColor, PicPath, IsMain `)
