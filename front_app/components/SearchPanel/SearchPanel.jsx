@@ -42,6 +42,24 @@ export default class SearchPanel extends Component {
     // TODO this.props.setParentAge([min, max])
   }
 
+  setPopularity = (event, key) => {
+    // console.log('setPopularity: ', event.target.value)
+    const popVal = Number(event.target.value)
+    if (key === 0) {
+      if (popVal >= this.props.parentStateFilters.PopMax) {
+        return
+      }
+      this.props.setParentPopularity([
+        popVal, this.props.parentStateFilters.PopMax])
+    } else if (key === 1) {
+      if (popVal <= this.props.parentStateFilters.PopMin) {
+        return
+      }
+      this.props.setParentPopularity([
+        this.props.parentStateFilters.PopMin, popVal])
+    }
+  }
+
   setDistance = (event) => {
     // console.log('setDistance', event.target.value)
     const dist = Number(event.target.value)
@@ -194,25 +212,43 @@ export default class SearchPanel extends Component {
           {/* {`>option indiferent<`} */}
           <input className='slider has-output'
             step='10' min='10' max='500'
-            defaultValue='0' type='range'
+            defaultValue='500' type='range'
             onChange={this.setDistance}>
           </input>
 
-          <div className=''><a>Gender:</a>
+          <div>
+            interval de popularité
+            <li><a>Pop Min: {this.props.parentStateFilters.PopMin}</a></li>
+          <input className='slider has-output'
+            step='1' min='18' max='120'
+            defaultValue='18' type='range'
+            onChange={(e) => this.setPopularity(e, 0)}>
+          </input>
+
+          <li><a>Pop Max: {this.props.parentStateFilters.PopMax}</a></li>
+          <input className='slider has-output'
+            step='1' min='18' max='120'
+            defaultValue='120' type='range'
+            onChange={(e) => this.setPopularity(e, 1)}>
+          </input>
+          </div>
+
+
+          {/* <div className=''><a>Gender:</a>
             <div className='underPan is-close'>
               <div><input key='0' className='checkbox' type='checkbox' onClick={this.handleGenderClick}/><img className='svg' src={`/assets/icons/maleGenderSym.svg`}/></div>
               <div><input key='1' className='checkbox' type='checkbox' onClick={this.handleGenderClick}/><img className='svg' src={`/assets/icons/femaleGenderSym.svg`}/></div>
               <div><input key='2' className='checkbox' type='checkbox' onClick={this.handleGenderClick}/><img className='svg' src={`/assets/icons/BiGenderSymb.svg`}/></div>
             </div>
-          </div>
+          </div> */}
 
-          <div className=''><a>Orientation:</a>
+          {/* <div className=''><a>Orientation:</a>
             <div className='underPan is-close'>
               <div><input key='0' className='checkbox' type='checkbox' onClick={this.handleOrientationClick}/><img className='svg' src={`/assets/icons/maleGenderSym.svg`}/></div>
               <div><input key='1' className='checkbox' type='checkbox' onClick={this.handleOrientationClick}/><img className='svg' src={`/assets/icons/femaleGenderSym.svg`}/></div>
               <div><input key='2' className='checkbox' type='checkbox' onClick={this.handleOrientationClick}/><img className='svg' src={`/assets/icons/BiGenderSymb.svg`}/></div>
             </div>
-          </div>
+          </div> */}
 
           <div className=''><a>Tags</a>
             {/* <input className='input is-small' type='tags' placeholder='Add Tag'/> */}

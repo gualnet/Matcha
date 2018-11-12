@@ -20,9 +20,11 @@ export default class Search extends React.Component {
     filters: {
       AgeMin: 18,
       AgeMax: 120,
+      PopMin: -100,
+      PopMax: 100,
       Gender: [false, false, false],//, false, false],
       Orientation: [false, false, false],//, false, false],
-      Distance: 0
+      Distance: 500
     },
     memberSelected: undefined
   }
@@ -84,6 +86,20 @@ export default class Search extends React.Component {
     })
   }
 
+  getChildPopularityFilter = (childPopularity = []) => {
+    // console.log('getChildPopularityFilter', childPopularity)
+    if (childPopularity.length !== 2) {
+      return
+    }
+    this.setState({
+      filters: {
+        ...this.state.filters,
+        PopMin: childPopularity[0],
+        PopMax: childPopularity[1]
+      }
+    })
+  }
+
   getChildDistanceFilter = (distance = 555) => {
     // console.log('getChildDistanceFilter', childAge)
     if (distance === 555) {
@@ -104,20 +120,29 @@ export default class Search extends React.Component {
     }
     var arrMembers = []
     Object.entries(data.result).forEach(([key, obj]) => {
-      // console.log('DATA => ', 'key: ', key, 'value: ', obj)
-      arrMembers.push(
-        <div className='card ' key={key} onClick={this.showMemberModal}>
-          <figure className='image is-256x256' key={key}>
-          {
-            obj.MainPic === undefined &&
-            <img src={`${obj.PicPath}`} key={key}></img>
-          }
-          </figure>
+      console.log('THIS => ', this)
+      console.log('DATA => ', 'key: ', key, 'value: ', obj)
+      const critAge = (obj.Age < this.state.filters.AgeMax 
+        && obj.Age > this.state.filters.AgeMin) ? true : false
+      const critPop = (obj.Popularity < this.state.filters.PopMax 
+        && obj.Popularity > this.state.filters.PopMin) ? true: false
+      const critDist = (obj.Distance < this.state.filters.Distance) ? true : false
 
-          <div id='dispDist'><img className='image is-16x16' src='/assets/icons/geoloc.svg' />{`${obj.Distance}km`} - {`${obj.Login}`} - {`${obj.Age}`} </div>
-
-        </div>
-      )
+      if (critAge &&  critPop && critDist) {
+        arrMembers.push(
+          <div className='card ' key={key} onClick={this.showMemberModal}>
+            <figure className='image is-256x256' key={key}>
+            {
+              obj.MainPic === undefined &&
+              <img src={`${obj.PicPath}`} key={key}></img>
+            }
+            </figure>
+  
+            <div id='dispDist'><img className='image is-16x16' src='/assets/icons/geoloc.svg' />{`${obj.Distance}km`} - {`${obj.Login}`} - {`${obj.Age}`} </div>
+  
+          </div>
+        )
+      }
     })
     return (arrMembers)
   }
@@ -205,7 +230,6 @@ export default class Search extends React.Component {
           this.state.TOJSON != null &&
           <ReactJson src={this.state.TOJSON} name='' collapsed='1'/>
         } */}
-
         </div>
 
         <SearchPanel
@@ -215,6 +239,7 @@ export default class Search extends React.Component {
           setParentGender={this.getChildGenderFilter}
           setParentOrientation={this.getChildOrientationFilter}
           setParentAge={this.getChildAgeFilter}
+          setParentPopularity={this.getChildPopularityFilter}
           setParentDistance={this.getChildDistanceFilter}
           userContext={this.props.userContext}
           pic2={this.getPictures}
@@ -223,18 +248,12 @@ export default class Search extends React.Component {
         <div className='container' id='memberPres'>
           {this.displayEachMember()}
 
-          {/* {
-            this.state.data.result != undefined &&
-            <ReactJson src={this.state.data.result[2]}></ReactJson>
-          } */}
-
           <MemberModal
             userContext={this.props.userContext}
             memberInfo={this.state.memberSelected}
           ></MemberModal>
 
         </div>
-
       </div>
     )
   }

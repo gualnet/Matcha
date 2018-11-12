@@ -51,41 +51,21 @@ const SearchCtrl = {
   },
 
   async getFiltered (req, res) {
-    console.log('\n\n getFiltered ', req.body)
+    console.log('\n getFiltered ', req.body, '\n')
     const user = req.body.AUTH_USER
     const filters = req.body.filters
 
-    // ! mep de la requete non terminee
     if (filters.Gender.indexOf(true) !== -1 || filters.Orientation.indexOf(true) !== -1) {
       console.log('\nCustom filters (Gender / Orientation):')
-      console.log(`${filters.Gender}\n${filters.Orientation}\n`)
+      // console.log(`${filters.Gender}\n${filters.Orientation}\n`)
 
       // override the basic search params
-      let sqlReq = `SELECT `
-      sqlReq = sqlReq.concat(`UserId, Popularity, Login, Age, Gender, Orientation, Bio, Interest, BlockedUsers, Reported, Height, Weight, EyeColor, HairColor, PicPath, IsMain `)
-      sqlReq = sqlReq.concat(`FROM Users As USR, Pictures AS PIC `)
-
-      filters.Gender.forEach((val, key) => {
-        if (filters.Gender[key]) {
-          sqlReq = sqlReq.concat(`WHERE (USR.UserId=PIC.PicOwner And PIC.IsMain='1' AND USR.Gender=\'${key}\' `)
-
-          if (filters.Orientation.indexOf(true) !== -1) {
-            sqlReq = sqlReq.concat('AND (')
-            filters.Orientation.forEach((val, key) => {
-              if (filters.Orientation[key]) {
-                sqlReq = sqlReq.concat(`USR.Orientation='${key}' `)
-              }
-            })
-            sqlReq = sqlReq.concat(') ')
-          }
-        }
-      })
-      // sqlReq = sqlReq.concat(`WHERE (USR.UserId=PIC.PicOwner And PIC.IsMain='1' AND USR.Gender='1' AND (USR.Orientation='1' OR USR.Orientation='2')) `)
-      console.log('REQ: ', sqlReq)
+      SearchMdl.customFilteredRequest(user, filters)
       return
     }
 
     // recup des geoloc data du user pour les injecter dans la func de calcule de distance
+    console.log('\nStandard requests:')
     const geolocMdl = new Models('Geolocation')
     let userGeolocData = await geolocMdl.find({
       where: {
@@ -97,7 +77,6 @@ const SearchCtrl = {
     var coordsUser = [userGeolocData.Latitude, userGeolocData.Longitude]
     console.log('\n coordsUser', coordsUser)
     
-
     let {reqRep, msg} = await __basicFilteredRequests(user)
 
     
@@ -106,7 +85,7 @@ const SearchCtrl = {
       elem.Distance = __calculateDistance(coordsUser, [elem.Latitude, elem.Longitude])
     });
     
-    // console.log('\n retour de la requete test', reqRep)
+    console.log('\n retour de la requete test', reqRep)
     return (res.status('200').type('json').json({
       success: true,
       msg: msg,

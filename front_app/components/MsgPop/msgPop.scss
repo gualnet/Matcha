@@ -1,25 +1,32 @@
-.notification {
-  position: absolute;
-  width: 20vw;
-  right: -30vw;
-  top: 60px;
-  z-index: 1000;
-
-  transition: 1s;
-  
-  &.is-primary {
-    border: 2px solid rgb(40, 147, 218);
-  }
-  &.is-warning {
-    border: 2px solid rgb(243, 202, 56);
-  }
-  &.is-danger {
-    border: 2px solid rgb(229, 18, 236);
+@media screen and (max-width: 1024px) {
+  .notification {
+    display: none;
   }
 }
-
-.notification.visible {
-  right: 3px;
-  border-radius: 20px;
-  transition: 1.5s;
+@media screen and (min-width: 1024px) {
+  .notification {
+    position: absolute;
+    width: 20vw;
+    right: -30vw;
+    top: 60px;
+    z-index: 1000;
+  
+    transition: 1s;
+    
+    &.is-primary {
+      border: 2px solid rgb(40, 147, 218);
+    }
+    &.is-warning {
+      border: 2px solid rgb(243, 202, 56);
+    }
+    &.is-danger {
+      border: 2px solid rgb(229, 18, 236);
+    }
+  }
+  
+  .notification.visible {
+    right: 3px;
+    border-radius: 20px;
+    transition: 1.5s;
+  }
 }

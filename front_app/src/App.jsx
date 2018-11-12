@@ -6,6 +6,7 @@ import { BrowserRouter, Route } from 'react-router-dom'
 // COMPONENT
 import AppRouter from './AppRouter.jsx'
 import NavBar from '../components/NavBar/NavBar.jsx'
+import OldNavBar from '../components/NavBar/old_NavBar.jsx'
 // import Profile from '../pages/Profile.jsx'
 
 // CONTEXT
@@ -18,8 +19,11 @@ export default class App extends Component {
     return (
       <BrowserRouter>
         <div className='appWrapper'>
-          <UserContext.Consumer>
+          {/* <UserContext.Consumer>
             {(context) => <NavBar userContext={context} />}
+          </UserContext.Consumer> */}
+          <UserContext.Consumer>
+            {(context) => <OldNavBar userContext={context} />}
           </UserContext.Consumer>
           <AppRouter />
         </div>
