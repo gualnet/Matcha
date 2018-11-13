@@ -15,9 +15,8 @@ export default class SearchPanel extends Component {
   state = {
     // Age: 0,
     // Distance: 0,
-    tags: [],
-    tagList: []
-
+    Tags: [],
+    // TagList: []
   }
 
   setAge = (event, key) => {
@@ -89,6 +88,7 @@ export default class SearchPanel extends Component {
   tagEnventHandler = (event) => {
     // event.persist()
     // console.log('COUCOU', event.type, event)
+
     switch (event.type) {
       case ('mouseenter'):
         event.target.className = 'tag is-danger'
@@ -98,22 +98,21 @@ export default class SearchPanel extends Component {
         break
       case ('click'):
         // event.target.style.display = 'none'
-        const Tag = this.state.tags
-        const newArr = Tag.filter((val) => {
+        const tag = this.state.Tags
+        const newArr = tag.filter((val) => {
           return (val !== event.target.innerText)
         })
         this.setState({
-          tags: newArr
+          Tags: newArr
         })
         break
-
       default:
         break
     }
   }
 
   displayTags = () => {
-    const tags = this.state.tags
+    const tags = this.state.Tags
     var arr = []
     tags.map((val, key) => {
       // console.log('MAP', val, key)
@@ -127,26 +126,27 @@ export default class SearchPanel extends Component {
       )
     })
     // console.log('ARR', arr)
-
     return (arr)
   }
 
-  handleHadTag = (event) => {
-    // console.log('handleHadTag', event.target.value)
-    for (let val in this.state.tags) {
-      if (this.state.tags[val] === event.target.value) {
+  handleAddTag = (event) => {
+    // console.log('handleAddTag', event.target.value)
+    for (let val in this.state.Tags) {
+      if (this.state.Tags[val] === event.target.value) {
         return
       }
     }
 
+    const newTags = [...this.state.Tags, `${event.target.value}`]
     this.setState({
-      tags: [...this.state.tags, `${event.target.value}`]
+      Tags: newTags
     })
-    // console.log('handleHadTag', event.target.value)
+    this.props.setParentTags(newTags)
+    // console.log('handleAddTag', event.target.value)
   }
 
   makeSelectOptions = () => {
-    const tags = this.state.tagList
+    const tags = this.props.TagList
     if (tags === undefined) {
       return
     }
@@ -166,24 +166,24 @@ export default class SearchPanel extends Component {
   }
 
   componentWillMount () {
-    Axios({
-      method: 'GET',
-      url: `/api/tags/${this.props.userContext.uid}/${this.props.userContext.token}`
-    })
-      .then((response) => {
-        console.log('%c response ok: ', 'color: green', response)
-        if (response.data.success) {
-          // console.log('---> ', response.data.result)
-          this.setState({
-            tagList: response.data.result
-          })
-        } else {
-          console.error('%c Get tag list from server returned: ', 'color: red', response.data.msg, response.data)
-        }
-      })
-      .catch((error) => {
-        console.error('%c error getting the tag list from server: ', 'color: red', error)
-      })
+    // Axios({
+    //   method: 'GET',
+    //   url: `/api/tags/${this.props.userContext.uid}/${this.props.userContext.token}`
+    // })
+    //   .then((response) => {
+    //     console.log('%c response ok: ', 'color: green', response)
+    //     if (response.data.success) {
+    //       // console.log('---> ', response.data.result)
+    //       this.setState({
+    //         tagList: response.data.result
+    //       })
+    //     } else {
+    //       console.error('%c Get tag list from server returned: ', 'color: red', response.data.msg, response.data)
+    //     }
+    //   })
+    //   .catch((error) => {
+    //     console.error('%c error getting the tag list from server: ', 'color: red', error)
+    //   })
   }
 
   render () {
@@ -191,7 +191,7 @@ export default class SearchPanel extends Component {
     return (
 
       <aside className='menu' id='searchPanel'>
-        {/* <ReactJson src={this.state.tags}></ReactJson> */}
+        <ReactJson src={this.state}></ReactJson>
         <p className='menu-label'>FILTERS</p>
         <ul className='menu-list'>
           <li><a>Age Min: {this.props.parentStateFilters.AgeMin}</a></li>
@@ -253,7 +253,7 @@ export default class SearchPanel extends Component {
           <div className=''><a>Tags</a>
             {/* <input className='input is-small' type='tags' placeholder='Add Tag'/> */}
             {
-              this.state.tags.length !== 0 &&
+              this.state.Tags.length !== 0 &&
               <div className='box'>
                 {this.displayTags()}
               </div>
@@ -261,7 +261,7 @@ export default class SearchPanel extends Component {
           </div>
           <div className="select is-small">
             <select defaultValue='tags'
-              onChange={(e) => { this.handleHadTag(e) }}>
+              onChange={(e) => { this.handleAddTag(e) }}>
               <option>...</option>
               {this.makeSelectOptions()}
             </select>

@@ -79,12 +79,11 @@ const SearchCtrl = {
     
     let {reqRep, msg} = await __basicFilteredRequests(user)
 
-    
     // console.log('\n retour de la requete test', reqRep)
     reqRep.forEach(elem => {
       elem.Distance = __calculateDistance(coordsUser, [elem.Latitude, elem.Longitude])
     });
-    
+
     console.log('\n retour de la requete test', reqRep)
     return (res.status('200').type('json').json({
       success: true,

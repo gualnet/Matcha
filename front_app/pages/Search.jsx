@@ -1,9 +1,11 @@
 /* eslint-disable no-unused-vars */
 // IMPORT
 import React from 'react'
-import axios from 'axios'
+import Axios from 'axios'
 import MemberModal from '../components/SearchMemberModal/MemberModal.jsx'
 import SearchPanel from '../components/SearchPanel/SearchPanel.jsx'
+
+import fromEntries from 'object.fromentries'
 
 // ! Dev
 import ReactJson from 'react-json-view'
@@ -22,15 +24,38 @@ export default class Search extends React.Component {
       AgeMax: 120,
       PopMin: -100,
       PopMax: 100,
-      Gender: [false, false, false],//, false, false],
-      Orientation: [false, false, false],//, false, false],
-      Distance: 500
+      Gender: [false, false, false], //, false, false],
+      Orientation: [false, false, false], //, false, false],
+      Distance: 500,
+      Tags: [],
     },
-    memberSelected: undefined
+    memberSelected: undefined,
+    tagList: [],
+  }
+
+  componentWillMount () {
+    Axios({
+      method: 'GET',
+      url: `/api/tags/${this.props.userContext.uid}/${this.props.userContext.token}`
+    })
+      .then((response) => {
+        console.log('%c response ok: ', 'color: green', response)
+        if (response.data.success) {
+          // console.log('---> ', response.data.result)
+          this.setState({
+            tagList: response.data.result
+          })
+        } else {
+          console.error('%c Get tag list from server returned: ', 'color: red', response.data.msg, response.data)
+        }
+      })
+      .catch((error) => {
+        console.error('%c error getting the tag list from server: ', 'color: red', error)
+      })
   }
 
   initData = () => {
-    axios({
+    Axios({
       method: 'POST',
       url: '/api/search/getAll'
     })
@@ -113,35 +138,58 @@ export default class Search extends React.Component {
     })
   }
 
+  getChildTagsFilter = (childTags = []) => {
+    // console.log('getChildTagsFilter', childTags)
+    if (childTags.length === 0) {
+      return
+    }
+
+    const tagRef = this.state.tagList
+    let arrNbr = []
+    Object.entries(tagRef).forEach((elem, key) => {
+      if (childTags.includes(elem[1].Name)) {
+        arrNbr.push(Number(elem[1].TagsId))
+      }
+    })
+
+    this.setState({
+      filters: {
+        ...this.state.filters,
+        Tags: arrNbr
+      }
+    })
+  }
+
   displayEachMember = () => {
     const data = this.state.data
+    console.log('displayEachMember', data.result)
     if (data.result === undefined) {
       return
     }
     var arrMembers = []
+    // console.log('THIS => ', this)
     Object.entries(data.result).forEach(([key, obj]) => {
-      console.log('THIS => ', this)
-      console.log('DATA => ', 'key: ', key, 'value: ', obj)
-      const critAge = (obj.Age < this.state.filters.AgeMax 
-        && obj.Age > this.state.filters.AgeMin) ? true : false
-      const critPop = (obj.Popularity < this.state.filters.PopMax 
-        && obj.Popularity > this.state.filters.PopMin) ? true: false
-      const critDist = (obj.Distance < this.state.filters.Distance) ? true : false
-
-      if (critAge &&  critPop && critDist) {
+      // console.log('DATA => ', 'key: ', key, 'value: ', obj)
+      const critAge = (obj.Age < this.state.filters.AgeMax && obj.Age > this.state.filters.AgeMin) ? true : false
+      const critPop = (obj.Popularity < this.state.filters.PopMax && obj.Popularity > this.state.filters.PopMin) ? true: false
+      // const critDist = (obj.Distance < this.state.filters.Distance) ? true : false
+      const critDist = true // ! TEST
+      // console.log(`critAge[${critAge}] && critPop[${critPop}] && critDist[${critDist}]`)
+      if (critAge && critPop && critDist) {
+        // console.log('displayEachMember crit ok for ', key)
         arrMembers.push(
           <div className='card ' key={key} onClick={this.showMemberModal}>
             <figure className='image is-256x256' key={key}>
-            {
-              obj.MainPic === undefined &&
-              <img src={`${obj.PicPath}`} key={key}></img>
-            }
+              {
+                obj.MainPic === undefined &&
+                <img src={`${obj.PicPath}`} key={key}></img>
+              }
             </figure>
-  
             <div id='dispDist'><img className='image is-16x16' src='/assets/icons/geoloc.svg' />{`${obj.Distance}km`} - {`${obj.Login}`} - {`${obj.Age}`} </div>
-  
           </div>
         )
+      } else {
+        // console.log('displayEachMember crit NOK for ', key)
       }
     })
     return (arrMembers)
@@ -172,7 +220,7 @@ export default class Search extends React.Component {
       uid: this.props.userContext.uid,
       token: this.props.userContext.token
     }
-    axios({
+    Axios({
       method: 'POST',
       url: `/api/picture/${this.state.data.result[targetId].UserId}`,
       data: dataToSend
@@ -199,7 +247,7 @@ export default class Search extends React.Component {
       filters: this.state.filters
     }
     console.log('%c getFilteredData: ', 'color: cyan;', dataToSend)
-    axios({
+    Axios({
       method: 'POST',
       url: '/api/search/getFiltered',
       data: dataToSend
@@ -218,15 +266,85 @@ export default class Search extends React.Component {
       })
   }
 
+  filterByTagsMatch = () => {
+    // console.log(this.state.data.result)
+    if (this.state.data.result == undefined) {
+      console.log('BINGO')
+      return
+    }
+
+    console.log('OU PAS')
+    const data = this.state.data
+    Object.entries(data.result).forEach(([key, obj]) => {
+      // console.log('DATA => ', 'key: ', key, 'value: ', obj)
+      // console.log('TEST1 => ', obj.Interest, typeof obj.Interest)
+
+      var strInterest = obj.Interest
+      if (obj.Interest.endsWith(',')) {
+        strInterest = obj.Interest.slice(0, obj.Interest.length - 1)
+      }
+
+      // convertion de la string en array
+      // recherche des occurences 
+      const arrInterest = strInterest.split(',').map((str) => Number(str))
+      let count = 1
+      // console.log('COMPARE', this.state.filters.Tags, ' / ', arrInterest)
+      arrInterest.forEach((elem) => {
+        // console.log('elem->', elem, this.state.filters.Tags)
+        if (this.state.filters.Tags.includes(elem)) {
+          // console.log('Matching on', elem)
+          count++
+        }
+      })
+      obj.tagMatchCount = count
+      console.log('obj.tagMatchCount', obj.tagMatchCount)
+    })
+    console.log('-----', data.result, typeof data.result)
+    this.sortByNumberTagMatching()
+  }
+
+  sortByNumberTagMatching = () => {
+    console.log('sortByNumberTagMatching...')
+    let data = this.state.data.result
+    var arrData = []
+    Object.entries(data).forEach((elem) => {
+      console.log(elem, elem[1].tagMatchCount)
+      if (elem[1].tagMatchCount > 0) {
+        arrData.push(elem)
+      }
+    })
+
+    // console.log('BEFORE SORT', arrData)
+    arrData.sort((a, b) => {
+      // console.log('SORT', a, b)
+      return (b[1].tagMatchCount - a[1].tagMatchCount)
+    })
+    console.log('AFTER SORT', arrData)
+    if (!Object.fromEntries) {
+      console.log('No native fromEntries', Object.fromEntries)
+      var sortedDataObject = fromEntries(Object.entries(arrData))
+    } else {
+      console.log('Native fromEntries ok')
+    }
+    console.log('EX', this.state.data.result)
+    console.log('sortedDataObject', sortedDataObject)
+    // arrData.forEach((elem) => {
+
+    // })
+  }
+
   render () {
     return (
       <div className='gridWrapper' id='searchWrapper'>
 
         <div id='tests'>
-        <ReactJson src={this.props} name='props' collapsed='1'/>
-        <ReactJson src={this.state} name='state' collapsed='1'/>
-        {/* <ReactJson src={this.state.data} collapsed='1'/> */}
-        {/* {
+          {/* <ReactJson src={this.props} name='props' collapsed='1'/> */}
+
+          <ReactJson src={this.state} name='state' collapsed=''/>
+          <ReactJson src={this.state.data} name='' collapsed='2'/>
+
+          {/* <ReactJson src={this.state.data} collapsed='1'/> */}
+          {/* {
           this.state.TOJSON != null &&
           <ReactJson src={this.state.TOJSON} name='' collapsed='1'/>
         } */}
@@ -241,18 +359,21 @@ export default class Search extends React.Component {
           setParentAge={this.getChildAgeFilter}
           setParentPopularity={this.getChildPopularityFilter}
           setParentDistance={this.getChildDistanceFilter}
+          setParentTags={this.getChildTagsFilter}
           userContext={this.props.userContext}
           pic2={this.getPictures}
+          TagList={this.state.tagList}
         ></SearchPanel>
 
         <div className='container' id='memberPres'>
+          <button className='button is-link' onClick={this.filterByTagsMatch}>filter by tags</button>
+
           {this.displayEachMember()}
 
           <MemberModal
             userContext={this.props.userContext}
             memberInfo={this.state.memberSelected}
           ></MemberModal>
-
         </div>
       </div>
     )

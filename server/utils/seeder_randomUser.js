@@ -9,7 +9,7 @@ const DEFAULT_PWD = '$2b$10$w31EDrOF8vbIhGr6qigdBe.4y4BiYFGhuex24dFZmPIvqkUiw.ZB
 
 const seederRU = {
   createRandomUser (req, res) {
-    https.get(`https://randomuser.me/api/?results=${NBR_RESULTS}&?nat=FR,GB`, (result) => {
+    https.get(`https://randomuser.me/api/?results=${NBR_RESULTS}&?nat=FR`, (result) => {
       const { statusCode } = result
       const contentType = result.headers['content-type']
       console.log('statusCode', statusCode)
