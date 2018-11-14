@@ -87,7 +87,7 @@ export default class SearchPanel extends Component {
 
   tagEnventHandler = (event) => {
     // event.persist()
-    // console.log('COUCOU', event.type, event)
+    console.log('COUCOU', event.type, event)
 
     switch (event.type) {
       case ('mouseenter'):
@@ -99,12 +99,15 @@ export default class SearchPanel extends Component {
       case ('click'):
         // event.target.style.display = 'none'
         const tag = this.state.Tags
+        console.log('AV', tag)
         const newArr = tag.filter((val) => {
           return (val !== event.target.innerText)
         })
+        console.log('AP', newArr)
         this.setState({
           Tags: newArr
         })
+        this.props.setParentTags(newArr)
         break
       default:
         break
@@ -130,7 +133,7 @@ export default class SearchPanel extends Component {
   }
 
   handleAddTag = (event) => {
-    // console.log('handleAddTag', event.target.value)
+    console.log('handleAddTag', event.target.value)
     for (let val in this.state.Tags) {
       if (this.state.Tags[val] === event.target.value) {
         return
@@ -165,33 +168,12 @@ export default class SearchPanel extends Component {
     return (options)
   }
 
-  componentWillMount () {
-    // Axios({
-    //   method: 'GET',
-    //   url: `/api/tags/${this.props.userContext.uid}/${this.props.userContext.token}`
-    // })
-    //   .then((response) => {
-    //     console.log('%c response ok: ', 'color: green', response)
-    //     if (response.data.success) {
-    //       // console.log('---> ', response.data.result)
-    //       this.setState({
-    //         tagList: response.data.result
-    //       })
-    //     } else {
-    //       console.error('%c Get tag list from server returned: ', 'color: red', response.data.msg, response.data)
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.error('%c error getting the tag list from server: ', 'color: red', error)
-    //   })
-  }
-
   render () {
-    // console.log('%c Panel RENDER', 'color: cyan')
+    console.log('%c  Panel RENDER', 'color: cyan')
     return (
 
       <aside className='menu' id='searchPanel'>
-        <ReactJson src={this.state}></ReactJson>
+        {/* <ReactJson src={this.state}></ReactJson> */}
         <p className='menu-label'>FILTERS</p>
         <ul className='menu-list'>
           <li><a>Age Min: {this.props.parentStateFilters.AgeMin}</a></li>
@@ -233,23 +215,6 @@ export default class SearchPanel extends Component {
           </input>
           </div>
 
-
-          {/* <div className=''><a>Gender:</a>
-            <div className='underPan is-close'>
-              <div><input key='0' className='checkbox' type='checkbox' onClick={this.handleGenderClick}/><img className='svg' src={`/assets/icons/maleGenderSym.svg`}/></div>
-              <div><input key='1' className='checkbox' type='checkbox' onClick={this.handleGenderClick}/><img className='svg' src={`/assets/icons/femaleGenderSym.svg`}/></div>
-              <div><input key='2' className='checkbox' type='checkbox' onClick={this.handleGenderClick}/><img className='svg' src={`/assets/icons/BiGenderSymb.svg`}/></div>
-            </div>
-          </div> */}
-
-          {/* <div className=''><a>Orientation:</a>
-            <div className='underPan is-close'>
-              <div><input key='0' className='checkbox' type='checkbox' onClick={this.handleOrientationClick}/><img className='svg' src={`/assets/icons/maleGenderSym.svg`}/></div>
-              <div><input key='1' className='checkbox' type='checkbox' onClick={this.handleOrientationClick}/><img className='svg' src={`/assets/icons/femaleGenderSym.svg`}/></div>
-              <div><input key='2' className='checkbox' type='checkbox' onClick={this.handleOrientationClick}/><img className='svg' src={`/assets/icons/BiGenderSymb.svg`}/></div>
-            </div>
-          </div> */}
-
           <div className=''><a>Tags</a>
             {/* <input className='input is-small' type='tags' placeholder='Add Tag'/> */}
             {
@@ -262,7 +227,7 @@ export default class SearchPanel extends Component {
           <div className="select is-small">
             <select defaultValue='tags'
               onChange={(e) => { this.handleAddTag(e) }}>
-              <option>...</option>
+              <option selected>...</option>
               {this.makeSelectOptions()}
             </select>
           </div>
@@ -273,7 +238,22 @@ export default class SearchPanel extends Component {
           <button className='button is-link' onClick={this.props.getFilteredData}>Get 1-Filtered Data..</button>
         </div>
       </aside>
-
     )
   }
 }
+
+{/* <div className=''><a>Gender:</a>
+  <div className='underPan is-close'>
+    <div><input key='0' className='checkbox' type='checkbox' onClick={this.handleGenderClick}/><img className='svg' src={`/assets/icons/maleGenderSym.svg`}/></div>
+    <div><input key='1' className='checkbox' type='checkbox' onClick={this.handleGenderClick}/><img className='svg' src={`/assets/icons/femaleGenderSym.svg`}/></div>
+    <div><input key='2' className='checkbox' type='checkbox' onClick={this.handleGenderClick}/><img className='svg' src={`/assets/icons/BiGenderSymb.svg`}/></div>
+  </div>
+</div> */}
+
+{/* <div className=''><a>Orientation:</a>
+  <div className='underPan is-close'>
+    <div><input key='0' className='checkbox' type='checkbox' onClick={this.handleOrientationClick}/><img className='svg' src={`/assets/icons/maleGenderSym.svg`}/></div>
+    <div><input key='1' className='checkbox' type='checkbox' onClick={this.handleOrientationClick}/><img className='svg' src={`/assets/icons/femaleGenderSym.svg`}/></div>
+    <div><input key='2' className='checkbox' type='checkbox' onClick={this.handleOrientationClick}/><img className='svg' src={`/assets/icons/BiGenderSymb.svg`}/></div>
+  </div>
+</div> */}

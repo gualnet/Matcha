@@ -6,13 +6,18 @@
 }
 
 #searchWrapper #memberPres {
-	// display: flex;
-	justify-content: space-around;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
 }
 
 #searchWrapper .card {
-	// width: 276px;
-	height: 250px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	width: 256px;
+	height: 256px;
 	margin: 10px;
 
 	:hover {

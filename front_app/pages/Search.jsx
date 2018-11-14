@@ -5,8 +5,6 @@ import Axios from 'axios'
 import MemberModal from '../components/SearchMemberModal/MemberModal.jsx'
 import SearchPanel from '../components/SearchPanel/SearchPanel.jsx'
 
-import fromEntries from 'object.fromentries'
-
 // ! Dev
 import ReactJson from 'react-json-view'
 
@@ -19,6 +17,7 @@ export default class Search extends React.Component {
   state = {
     TOJSON: undefined, // ! pour tests
     data: { 0: null },
+    sortedList: undefined,
     filters: {
       AgeMin: 18,
       AgeMax: 120,
@@ -27,10 +26,10 @@ export default class Search extends React.Component {
       Gender: [false, false, false], //, false, false],
       Orientation: [false, false, false], //, false, false],
       Distance: 500,
-      Tags: [],
+      Tags: []
     },
     memberSelected: undefined,
-    tagList: [],
+    tagList: []
   }
 
   componentWillMount () {
@@ -138,9 +137,9 @@ export default class Search extends React.Component {
     })
   }
 
-  getChildTagsFilter = (childTags = []) => {
+  getChildTagsFilter = (childTags = undefined) => {
     // console.log('getChildTagsFilter', childTags)
-    if (childTags.length === 0) {
+    if (childTags.length === undefined) {
       return
     }
 
@@ -160,15 +159,14 @@ export default class Search extends React.Component {
     })
   }
 
-  displayEachMember = () => {
-    const data = this.state.data
-    console.log('displayEachMember', data.result)
-    if (data.result === undefined) {
+  displayEachMember = (data = {}) => {
+    // console.log('displayEachMember', data)
+    if (data === undefined) {
       return
     }
     var arrMembers = []
     // console.log('THIS => ', this)
-    Object.entries(data.result).forEach(([key, obj]) => {
+    Object.entries(data).forEach(([key, obj]) => {
       // console.log('DATA => ', 'key: ', key, 'value: ', obj)
       const critAge = (obj.Age < this.state.filters.AgeMax && obj.Age > this.state.filters.AgeMin) ? true : false
       const critPop = (obj.Popularity < this.state.filters.PopMax && obj.Popularity > this.state.filters.PopMin) ? true: false
@@ -185,7 +183,10 @@ export default class Search extends React.Component {
                 <img src={`${obj.PicPath}`} key={key}></img>
               }
             </figure>
-            <div id='dispDist'><img className='image is-16x16' src='/assets/icons/geoloc.svg' />{`${obj.Distance}km`} - {`${obj.Login}`} - {`${obj.Age}`} </div>
+
+            {/* <div id='dispDist'>{`${obj.Login}`} - {`${obj.Age}`} </div> */}
+
+            {/* <div id='dispDist'><img className='image is-16x16' src='/assets/icons/geoloc.svg' />{`${obj.Distance}km`} - {`${obj.Login}`} - {`${obj.Age}`} </div> */}
           </div>
         )
       } else {
@@ -254,7 +255,6 @@ export default class Search extends React.Component {
     })
       .then((response) => {
         console.log('%c AXIOS response: ', 'color: green', response.data)
-
         this.setState({
           TOJSON: response.data,
           dataFromSrv: response.data, // data received from server
@@ -268,12 +268,12 @@ export default class Search extends React.Component {
 
   filterByTagsMatch = () => {
     // console.log(this.state.data.result)
+    /* eslint-disable-next-line */
     if (this.state.data.result == undefined) {
-      console.log('BINGO')
+      // console.log('BINGO')
       return
     }
-
-    console.log('OU PAS')
+    // console.log('OU PAS')
     const data = this.state.data
     Object.entries(data.result).forEach(([key, obj]) => {
       // console.log('DATA => ', 'key: ', key, 'value: ', obj)
@@ -285,7 +285,7 @@ export default class Search extends React.Component {
       }
 
       // convertion de la string en array
-      // recherche des occurences 
+      // recherche des occurences
       const arrInterest = strInterest.split(',').map((str) => Number(str))
       let count = 1
       // console.log('COMPARE', this.state.filters.Tags, ' / ', arrInterest)
@@ -297,58 +297,67 @@ export default class Search extends React.Component {
         }
       })
       obj.tagMatchCount = count
-      console.log('obj.tagMatchCount', obj.tagMatchCount)
+      // console.log('obj.tagMatchCount', obj.tagMatchCount)
     })
-    console.log('-----', data.result, typeof data.result)
+    // console.log('-----', data.result, typeof data.result)
     this.sortByNumberTagMatching()
   }
 
   sortByNumberTagMatching = () => {
-    console.log('sortByNumberTagMatching...')
+    // console.log('sortByNumberTagMatching...')
     let data = this.state.data.result
     var arrData = []
     Object.entries(data).forEach((elem) => {
-      console.log(elem, elem[1].tagMatchCount)
+      // console.log(elem, elem[1].tagMatchCount)
       if (elem[1].tagMatchCount > 0) {
         arrData.push(elem)
       }
     })
 
-    // console.log('BEFORE SORT', arrData)
     arrData.sort((a, b) => {
-      // console.log('SORT', a, b)
       return (b[1].tagMatchCount - a[1].tagMatchCount)
     })
-    console.log('AFTER SORT', arrData)
-    if (!Object.fromEntries) {
-      console.log('No native fromEntries', Object.fromEntries)
-      var sortedDataObject = fromEntries(Object.entries(arrData))
-    } else {
-      console.log('Native fromEntries ok')
-    }
-    console.log('EX', this.state.data.result)
-    console.log('sortedDataObject', sortedDataObject)
-    // arrData.forEach((elem) => {
 
-    // })
+    let sortedDataObject = {}
+    arrData.forEach((elem, id) => {
+      sortedDataObject[id] = elem[1]
+    })
+    // console.log('EX', this.state.data.result)
+    // console.log('sortedDataObject', sortedDataObject)
+    this.setState({
+      sortedList: sortedDataObject
+    })
+  }
+
+  componentDidUpdate (prevProps, prevState) {
+    // console.log('prevState', prevState.filters.Tags, prevState.sortedList)
+    // console.log('thisState', this.state.filters.Tags, this.state.sortedList)
+    if (prevState.filters.Tags.length !== this.state.filters.Tags.length) {
+      // console.log('display with sortedList')
+      this.filterByTagsMatch()
+    } else if (prevState.filters.Tags.length === 0 &&
+    this.state.filters.Tags.length === 0 &&
+    this.state.sortedList !== undefined) {
+      // console.log('display with not sorted')
+      this.setState({
+        sortedList: undefined
+      })
+    } else {
+      // console.log('display with same as previously')
+    }
+  }
+
+  componentDidMount () {
+    this.initData()
   }
 
   render () {
     return (
       <div className='gridWrapper' id='searchWrapper'>
 
-        <div id='tests'>
-          {/* <ReactJson src={this.props} name='props' collapsed='1'/> */}
-
+        {/* <div id='tests'>
           <ReactJson src={this.state} name='state' collapsed=''/>
-          <ReactJson src={this.state.data} name='' collapsed='2'/>
-
-          {/* <ReactJson src={this.state.data} collapsed='1'/> */}
-          {/* {
-          this.state.TOJSON != null &&
-          <ReactJson src={this.state.TOJSON} name='' collapsed='1'/>
-        } */}
-        </div>
+        </div> */}
 
         <SearchPanel
           initData={this.initData}
@@ -366,9 +375,18 @@ export default class Search extends React.Component {
         ></SearchPanel>
 
         <div className='container' id='memberPres'>
-          <button className='button is-link' onClick={this.filterByTagsMatch}>filter by tags</button>
+          {/* <button className='button is-link' onClick={this.filterByTagsMatch}>filter by tags</button> */}
 
-          {this.displayEachMember()}
+          {
+            this.state.sortedList === undefined &&
+            this.displayEachMember(this.state.data.result)
+            // console.log('DISPLAY CAS 1')
+          }
+          {
+            this.state.sortedList !== undefined &&
+            this.displayEachMember(this.state.sortedList)
+            // console.log('DISPLAY CAS 2')
+          }
 
           <MemberModal
             userContext={this.props.userContext}
