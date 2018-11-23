@@ -4,7 +4,6 @@ import React, { Component } from 'react'
 
 // CSS
 import './SearchPanel.scss'
-import Axios from 'axios'
 // ! Dev
 import ReactJson from 'react-json-view'
 import { promisify } from 'util'
@@ -202,15 +201,15 @@ export default class SearchPanel extends Component {
             interval de popularité
             <li><a>Pop Min: {this.props.parentStateFilters.PopMin}</a></li>
           <input className='slider has-output'
-            step='1' min='18' max='120'
-            defaultValue='18' type='range'
+            step='10' min='-100' max='0'
+            defaultValue='-100' type='range'
             onChange={(e) => this.setPopularity(e, 0)}>
           </input>
 
           <li><a>Pop Max: {this.props.parentStateFilters.PopMax}</a></li>
           <input className='slider has-output'
-            step='1' min='18' max='120'
-            defaultValue='120' type='range'
+            step='10' min='0' max='100'
+            defaultValue='100' type='range'
             onChange={(e) => this.setPopularity(e, 1)}>
           </input>
           </div>
@@ -227,7 +226,7 @@ export default class SearchPanel extends Component {
           <div className="select is-small">
             <select defaultValue='tags'
               onChange={(e) => { this.handleAddTag(e) }}>
-              <option selected>...</option>
+              <option>...</option>
               {this.makeSelectOptions()}
             </select>
           </div>

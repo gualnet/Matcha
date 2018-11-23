@@ -71,9 +71,9 @@ module.exports = {
     contentBase: path.join(__dirname, '/dist'),
     historyApiFallback: true,
     proxy: {
-      '/api': 'http://localhost:8880',
-      '/public': 'http://localhost:8880',
-      '/assets': 'http://localhost:8880'
+      '/api': 'http://localhost:7770',
+      '/public': 'http://localhost:7770',
+      '/assets': 'http://localhost:7770'
       // '/randomuser': 'https://randomuser.me'
     }
     // headers: {

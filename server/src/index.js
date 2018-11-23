@@ -17,6 +17,7 @@ const app = Express()
 // Static serv..
 app.use('/public', Express.static('./UsersStorage'))
 app.use('/assets', Express.static('./assets'))
+
 // Body Parser config
 app.use(BodyParser.json({
   limit: '2mb'
@@ -57,6 +58,9 @@ io.on('connection', (socket) => {
   socket.on('disconnect', (rcv) => socketHandlers.disconnect(rcv))
 
   socket.on('load message page', (rcv) => socketHandlers.LoadMessagePage(socket, rcv))
+
+  socket.on('login', (rcv) => socketHandlers.login(rcv))
+  socket.on('logout', (rcv) => socketHandlers.logout(rcv))
 })
 
 server.listen(serverConf.serverPORT, () => {

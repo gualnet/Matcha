@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import socketHandlers from '../../utils/socket'
 
 // CSS
 import './SignOut.scss'
@@ -24,6 +25,17 @@ export default class SignOut extends Component {
       .then((response) => {
         console.log('response ok: ', response)
         if (response.data.success === 'logout') {
+          // socket emit logout
+          console.log('oooooooo', this.props.userContext)
+          console.log('oooooooo', this.props.userContext.uid)
+          console.log('oooooooo', this.props.userContext.token)
+          const payload = {
+            uid: this.props.userContext.uid,
+            token: this.props.userContext.token
+          }
+          console.log('payload', payload)
+          socketHandlers.logout(payload)
+
           this.props.userContext.setState({
             uid: -1,
             token: 'none',

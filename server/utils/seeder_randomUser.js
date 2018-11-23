@@ -54,7 +54,7 @@ async function mappedInsertRandomUser (data) {
   let interets = ''
   for (let i = 0; i < 5; i++) {
     let rand = getRandomInt(0, 53)
-    if (rand >= 23 && rand <= 52) {
+    if (rand >= 23 && rand <= 52 && interets.includes(String(rand))) {
       interets = interets.concat(`${String(rand)},`)
     }
   }
@@ -114,7 +114,6 @@ function dbAddRandomUser (parsedData) {
     // console.log('val', val)
     if (key === 'results') {
       mappedInsertRandomUser(...val)
-
     }
   });
 

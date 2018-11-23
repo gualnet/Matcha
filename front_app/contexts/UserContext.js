@@ -31,15 +31,17 @@ export class UserProvider extends Component {
    *
    * @return : void
   **/
-  async getUserInfos () {
+  async getUserInfos (puid = -999, ptoken = -999) {
     // console.log('CALL getUserInfos ')
     // console.log('this.uid: ', this.uid)
-    if (this.uid === -1 || this.token === '') {
+    if ((this.uid === -1 && puid === -999) || (this.token === '' && ptoken === -999)) {
       return
     }
 
-    const fetchRsp = await window.fetch(`/api/user/profil/${this.uid}/${this.token}`)
-    // console.log('UserContext fetchRsp: ', fetchRsp)
+    let url = (puid !== -999 && ptoken !== -999) ? `/api/user/profil/${puid}/${ptoken}` : `/api/user/profil/${this.uid}/${this.token}`
+
+    const fetchRsp = await window.fetch(url)
+    console.log('UserContext fetchRsp: ', fetchRsp)
     if (fetchRsp.ok) {
       const responseData = await fetchRsp.json()
       console.log('fetchRsp.body: ', responseData)

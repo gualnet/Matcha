@@ -1,8 +1,10 @@
 // IMPORT
+import Models from '../models/Models'
 import UsersMdl from '../models/UsersMdl'
 import bcrypt from 'bcrypt'
 import tokenUtil from '../utils/token_util'
 import serverConf from '../utils/server'
+import { LikesCtrl } from '../controlers/LikesCtrl'
 
 // CONST
 const FILENAME = __filename.replace(`${__dirname}/`, '')
@@ -341,7 +343,8 @@ exports.UsersCtrl = {
     console.log('reset account password')
   },
 
-  profilGetUser: (req, res) => {
+  /* eslint-disable */
+  profilGetUser: async (req, res) => {
     console.log('get user profile')
     // console.log('req: ', req)
     // console.log('req.headers: ', req.headers)
@@ -359,7 +362,7 @@ exports.UsersCtrl = {
         UserToken: req.params.token
       }
     })
-      .then((response) => {
+      .then(async (response) => {
         if (Object.keys(response).length !== 0) {
           response = response[0]
           console.log('Response Raw: ', response)
@@ -371,6 +374,11 @@ exports.UsersCtrl = {
           // delete response.GeolocAuth
           // delete response.BlockedUsers
           // response.LastName = String(response.LastName).slice(0, 1).concat('***').toUpperCase()
+
+          // * add likes info
+          const likesArr = await LikesCtrl.getUserLikes(response.UserId)
+          response.Likes = likesArr
+
           console.log('Response After: ', response)
           return (res.status('201').type('json').json({
             success: true,
@@ -388,7 +396,6 @@ exports.UsersCtrl = {
       })
   },
 
-  /* eslint-disable */
   profilUpdateUser: async (req, res) => {
     console.log('update user profil')
     // Todo -------------------------------------
@@ -482,8 +489,37 @@ exports.UsersCtrl = {
     return (res.status('200').type('json').json({
       success: true,
       msg: 'Test en cours',
-      result: {ret: goNoGo}
+      result: { ret: goNoGo }
     }))
+  },
+
+  /* eslint-disable */
+  // used trough socket
+  setUserAsConnected: (payload) => {
+    console.log('setUserAsConnected')
+    const userMdl = new Models('Users')
+    userMdl.update({
+      set: {
+        Connected: 1
+      },
+      where: {
+        UserId: payload.uid,
+        UserToken: payload.token
+      }
+    })
+  },
+
+  setUserAsDisconnected: (payload) => {
+    console.log('setUserAsDisconnected')
+    const userMdl = new Models('Users')
+    userMdl.update({
+      set: {
+        Connected: 0
+      },
+      where: {
+        UserId: payload.uid,
+      }
+    })
   }
 
 }

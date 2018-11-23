@@ -1,24 +1,40 @@
+import { UsersCtrl } from '../controlers/UsersCtrl'
 
 // /* eslint-disable */
 const socketHandlers = {
-  openSocket (data) {
-    console.log('Client opened Socket [', data.msg, ']\n')
+  openSocket (payload) {
+    console.log('Client opened Socket [', payload, ']\n')
   },
 
-  disconnect (data) {
-    if (data === undefined) {
-      data = 'none'
+  disconnect (payload) {
+    if (payload === undefined) {
+      payload = 'none'
     }
-    console.log('Client disconnected [', data, ']\n')
+    console.log('Client disconnected [', payload, ']\n')
   },
 
-  LoadMessagePage (socket, data) {
-    if (data === undefined) {
-      data = 'none'
+  LoadMessagePage (socket, payload) {
+    if (payload === undefined) {
+      payload = 'none'
     }
-    console.log('User [', data.Login, '] arrived on message page \n')
+    console.log('User [', payload.Login, '] arrived on message page \n')
 
     socket.emit('welcome', { msg: 'BIMGOUZ' })
+  },
+
+  /* eslint-disable */
+  login (payload) {
+    console.log('\nsocket handler login', payload, '\n')
+    if (payload.uid !== null && payload.token !== null) {
+      UsersCtrl.setUserAsConnected(payload)
+    }
+  },
+
+  logout (payload) {
+    console.log('\nsocket handler logout', payload, '\n')
+    if (payload.uid !== null && payload.token !== null) {
+      UsersCtrl.setUserAsDisconnected(payload)
+    }
   }
 
 }

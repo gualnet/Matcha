@@ -5,6 +5,7 @@ import { PicturesCtrl } from '../controlers/PicturesCtrl'
 import { TagsCtrl } from '../controlers/TagsCtrl'
 import { GeolocationCtrl } from '../controlers/GeolocationCtrl'
 import { SearchCtrl } from '../controlers/SearchCtrl'
+import { LikesCtrl } from '../controlers/LikesCtrl'
 
 import seederRU from '../utils/seeder_randomUser'
 
@@ -55,6 +56,9 @@ exports.router = () => {
     .post(verifCreds, SearchCtrl.getAllMembers)
   apiRouter.route('/search/getFiltered')
     .post(verifCreds, SearchCtrl.getFiltered)
+
+  apiRouter.route('/interact/like')
+    .post(verifCreds, LikesCtrl.createNewLike)
 
   return apiRouter
 }

@@ -270,14 +270,10 @@ export default class Search extends React.Component {
     // console.log(this.state.data.result)
     /* eslint-disable-next-line */
     if (this.state.data.result == undefined) {
-      // console.log('BINGO')
       return
     }
-    // console.log('OU PAS')
     const data = this.state.data
     Object.entries(data.result).forEach(([key, obj]) => {
-      // console.log('DATA => ', 'key: ', key, 'value: ', obj)
-      // console.log('TEST1 => ', obj.Interest, typeof obj.Interest)
 
       var strInterest = obj.Interest
       if (obj.Interest.endsWith(',')) {
@@ -288,18 +284,13 @@ export default class Search extends React.Component {
       // recherche des occurences
       const arrInterest = strInterest.split(',').map((str) => Number(str))
       let count = 1
-      // console.log('COMPARE', this.state.filters.Tags, ' / ', arrInterest)
       arrInterest.forEach((elem) => {
-        // console.log('elem->', elem, this.state.filters.Tags)
         if (this.state.filters.Tags.includes(elem)) {
-          // console.log('Matching on', elem)
           count++
         }
       })
       obj.tagMatchCount = count
-      // console.log('obj.tagMatchCount', obj.tagMatchCount)
     })
-    // console.log('-----', data.result, typeof data.result)
     this.sortByNumberTagMatching()
   }
 
@@ -308,7 +299,6 @@ export default class Search extends React.Component {
     let data = this.state.data.result
     var arrData = []
     Object.entries(data).forEach((elem) => {
-      // console.log(elem, elem[1].tagMatchCount)
       if (elem[1].tagMatchCount > 0) {
         arrData.push(elem)
       }
@@ -322,8 +312,6 @@ export default class Search extends React.Component {
     arrData.forEach((elem, id) => {
       sortedDataObject[id] = elem[1]
     })
-    // console.log('EX', this.state.data.result)
-    // console.log('sortedDataObject', sortedDataObject)
     this.setState({
       sortedList: sortedDataObject
     })
@@ -338,12 +326,10 @@ export default class Search extends React.Component {
     } else if (prevState.filters.Tags.length === 0 &&
     this.state.filters.Tags.length === 0 &&
     this.state.sortedList !== undefined) {
-      // console.log('display with not sorted')
       this.setState({
         sortedList: undefined
       })
     } else {
-      // console.log('display with same as previously')
     }
   }
 
@@ -355,9 +341,9 @@ export default class Search extends React.Component {
     return (
       <div className='gridWrapper' id='searchWrapper'>
 
-        {/* <div id='tests'>
-          <ReactJson src={this.state} name='state' collapsed=''/>
-        </div> */}
+        <div id='tests'>
+          <ReactJson src={this.props.userContext.userData} name='state' collapsed='1'/>
+        </div>
 
         <SearchPanel
           initData={this.initData}
@@ -391,6 +377,7 @@ export default class Search extends React.Component {
           <MemberModal
             userContext={this.props.userContext}
             memberInfo={this.state.memberSelected}
+            tagList={this.state.tagList}
           ></MemberModal>
         </div>
       </div>

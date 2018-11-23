@@ -2,21 +2,45 @@
 import GVARS from '../utils/globalVars'
 import openSocket from 'socket.io-client'
 
-const socket = openSocket(GVARS.backendURL)
-socket.emit('openSocket', { msg: 'openSocket' })
+/* eslint-disable */
 
-const socketHandlers = {
-  connect (data) {
-    socket.emit('test', data)
+const storageContent = JSON.parse(window.localStorage.getItem('userContext'))
+console.log('storageContent', storageContent)
+const socket = openSocket(GVARS.backendURL)
+
+function dataMsg () {
+  if (storageContent &&
+    storageContent.uid !== undefined &&
+    storageContent.token) {
+    return ({
+      uid: storageContent.uid,
+      token: storageContent.token
+    })
+  } else {
+    return ({
+      uid: null,
+      token: null
+    })
   }
 }
 
-// function connect (cb) {
-//   socket.on('chat', (message) => {
-//     console.log(message)
-//     cb(message)
-//   })
-// }
+socket.emit('openSocket', { 
+  payload: {
+    msg: 'openSocket',
+    data: dataMsg()
+  }
+})
 
-export default socketHandlers
+const socketHandlers = {
+  login (payload) {
+    socket.emit('login', payload)
+  },
+
+  logout (payload) {
+    socket.emit('logout', payload)
+  },
+
+}
+
 export { socket }
+export default socketHandlers

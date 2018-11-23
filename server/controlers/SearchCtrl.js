@@ -2,7 +2,7 @@
 import Models from '../models/Models'
 import SearchMdl from '../models/SearchMdl'
 
-/* eslint-disable */
+// /* eslint-disable */
 const SearchCtrl = {
 
   async getAllMembers (req, res) {
@@ -15,7 +15,6 @@ const SearchCtrl = {
       delete item.UserToken
       delete item.Password
       delete item.Mail
-      delete item.Bio
       delete item.BlockedUsers
       delete item.Reported
     })
@@ -41,6 +40,7 @@ const SearchCtrl = {
           IsMain: 1
         }
       })
+      /* eslint-disable-next-line */
       if (sqlRepPic[0] != undefined) {
         // console.log('-->', sqlRepPic[0].PicPath)
         // console.log('\n')
@@ -76,13 +76,13 @@ const SearchCtrl = {
     console.log('\n USER GEOLOC DATA', userGeolocData)
     var coordsUser = [userGeolocData.Latitude, userGeolocData.Longitude]
     console.log('\n coordsUser', coordsUser)
-    
-    let {reqRep, msg} = await __basicFilteredRequests(user)
+
+    let { reqRep, msg } = await __basicFilteredRequests(user)
 
     // console.log('\n retour de la requete test', reqRep)
     reqRep.forEach(elem => {
       elem.Distance = __calculateDistance(coordsUser, [elem.Latitude, elem.Longitude])
-    });
+    })
 
     console.log('\n retour de la requete test', reqRep)
     return (res.status('200').type('json').json({
@@ -90,7 +90,7 @@ const SearchCtrl = {
       msg: msg,
       result: { ...reqRep }
     }))
-  },
+  }
 
 }
 
@@ -109,8 +109,8 @@ function __calculateDistance (coordsUser = [], coordsTarget = []) {
     console.log('\x1b[31m ERROR[002]: __calculateDistance.. handle les negatifs \x1b[0m')
   }
 
-  // console.log(`coordsUser`, coordsUser)
-  // console.log(`coordsTarget`, coordsTarget)  
+  console.log(`\n\ncoordsUser`, coordsUser)
+  console.log(`coordsTarget`, coordsTarget)
   const coordsUserRad = coordsUser.map((deg) => {
     return (deg * (Math.PI / 180))
   })
@@ -123,16 +123,16 @@ function __calculateDistance (coordsUser = [], coordsTarget = []) {
   const tmp = Math.sin(coordsUserRad[0]) * Math.sin(coordsTargetRad[0]) + Math.cos(coordsUserRad[0]) *
   Math.cos(coordsTargetRad[0]) * Math.cos(coordsTargetRad[1] - coordsUserRad[1])
   const res = Math.round((R * Math.acos(tmp)) / 1000)
-  // console.log(`computed result ${res} \n`)
+  console.log(`computed result ${res} \n`)
   return (res)
 }
 
 async function __basicFilteredRequests (user) {
-  let reqRep = undefined
+  let reqRep
   let msg = 'Nothing...'
   // ! 0:Male 1:Female 2:QueerGender
   // ! 0:Heterosex 1:Bisex 2:Homosex 3:Pansex 4:Asex
-  if (user.Gender === 0) {// M
+  if (user.Gender === 0) { // M
     if (user.Orientation === 0) {
       console.log('\n\n1----Req_Male_Hetero')
       msg = 'Request for Male_Hetero'
@@ -149,7 +149,7 @@ async function __basicFilteredRequests (user) {
       // je suis M et je cherche M // je cherche un M homo -> 0 - 1 // M bi -> 0 - 2
       reqRep = await SearchMdl.Req_Male_Homo()
     }
-  } else if (user.Gender === 1) {// F
+  } else if (user.Gender === 1) { // F
     if (user.Orientation === 0) {
       console.log('\n\n1----Req_Fem_Hetero')
       msg = 'Request for Fem_Hetero'
@@ -160,7 +160,6 @@ async function __basicFilteredRequests (user) {
       msg = 'Request for Fem_Bi'
       // je suis F et je cherche M + F // je cherche un F homo -> 1 - 2 // un F bi -> 1 - 1 // une M Hetero -> 0 - 0 // une M bi -> 0 - 1
       reqRep = await SearchMdl.Req_Fem_Bi()
-
     } else if (user.Orientation === 2) {
       console.log('\n\n1----Req_Fem_Homo')
       msg = 'Request for Fem_Homo'
@@ -170,5 +169,5 @@ async function __basicFilteredRequests (user) {
       // ! TODO how to handle this..??
     }
   }
-  return ({reqRep, msg})
+  return ({ reqRep, msg })
 }

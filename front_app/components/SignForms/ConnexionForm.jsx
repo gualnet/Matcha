@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 
 import MsgPop from '../MsgPop/MsgPop.jsx'
+import socketHandlers from '../../utils/socket'
 
 // CSS
 import './ConnexionForm.scss'
@@ -91,10 +92,17 @@ class ConnexionForm extends Component {
           console.log('newUid & newToken: ', newUid, newToken)
           this.props.userContext.setState({
             uid: response.data.result.UserId,
-            token: response.data.result.UserToken,
-            userData: response.data.result
+            token: response.data.result.UserToken
+            // userData: response.data.result
+          })
+
+          // socket send login status
+          socketHandlers.login({
+            uid: response.data.result.UserId,
+            token: response.data.result.UserToken
           })
           // this.hideConForm()
+          this.props.userContext.getUserInfos(response.data.result.UserId, response.data.result.UserToken)
         } else {
           console.log('%c response NOK: ', 'color: red', response)
           MsgPop.showPopup({ id: 'ConnexionFormErr' })
@@ -107,7 +115,7 @@ class ConnexionForm extends Component {
   }
 
   render () {
-    console.log('ConnexionForm RENDER', this.props.userContext)
+    // console.log('ConnexionForm RENDER', this.props.userContext)
     return (
       <div className='modal' id='ConnexionFormWrapper'>
         <MsgPop
