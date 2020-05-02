@@ -23,29 +23,29 @@
   },
   "homepage": "https://github.com/gualnet/Matcha#readme",
   "dependencies": {
-    "axios": "^0.18.0",
-    "bcrypt": "^3.0.0",
-    "express": "^4.16.3",
-    "jsonwebtoken": "^8.3.0",
-    "mysql": "^2.16.0",
-    "nodemailer": "^4.6.8",
+    "axios": "^0.18.1",
+    "bcrypt": "^3.0.8",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mysql": "^2.18.1",
+    "nodemailer": "^4.7.0",
     "promisify": "0.0.3",
-    "socket.io": "^2.1.1"
+    "socket.io": "^2.3.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.0.0",
-    "@babel/core": "^7.0.1",
-    "@babel/node": "^7.0.0",
-    "@babel/plugin-transform-runtime": "^7.0.0",
-    "@babel/polyfill": "^7.0.0",
-    "@babel/preset-env": "^7.0.0",
-    "@babel/runtime": "^7.0.0",
-    "@types/express": "^4.16.0",
-    "eslint": "^5.6.0",
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.6",
+    "@babel/node": "^7.8.7",
+    "@babel/plugin-transform-runtime": "^7.9.6",
+    "@babel/polyfill": "^7.8.7",
+    "@babel/preset-env": "^7.9.6",
+    "@babel/runtime": "^7.9.6",
+    "@types/express": "^4.17.6",
+    "eslint": "^5.16.0",
     "eslint-config-standard": "^12.0.0",
-    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-node": "^7.0.1",
-    "eslint-plugin-promise": "^4.0.1",
-    "eslint-plugin-standard": "^4.0.0"
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1"
   }
 }
