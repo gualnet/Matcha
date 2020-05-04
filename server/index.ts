@@ -1,10 +1,17 @@
 import express from "express";
-import graphql from "express-graphql";
+import graphqlHTTP from 'express-graphql' ;
 import mongoose from "mongoose";
+
+import userSchema from "./src/graphql/User/schema";
+
 
 
 const app = express();
 
+app.use("/graphql", graphqlHTTP({
+  schema: userSchema,
+  graphiql: true,
+}));
 
 const PORT = 4000;
 app.listen(PORT, () =>{
