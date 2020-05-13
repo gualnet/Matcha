@@ -1,10 +1,12 @@
 import UserModel, { IUser } from '../database/User';
 import { Error } from 'mongoose';
 
+import UserType, {inputUpdateUserType} from '../graphql/User/type';
+
 const getAllUsers = async () => {
   try {
     
-    const usersFound = UserModel.find();
+    const usersFound = await UserModel.find();
     return usersFound
   } catch (error) {
     console.error(error)
@@ -14,7 +16,7 @@ const getAllUsers = async () => {
 
 const getUserById = async (id: string) => {
   try {
-    const userFound = UserModel.findById(id)
+    const userFound = await UserModel.findById(id)
     return userFound
   } catch (error) {
     console.error("111", error);
@@ -26,7 +28,7 @@ const createNewUser = async (args: object) => {
   console.log("createNewUser\n", args)
 
   try {
-    const userCreated = UserModel.create(args);
+    const userCreated = await UserModel.create(args);
     return userCreated;
   } catch (error) {
     console.error(error);
@@ -34,9 +36,14 @@ const createNewUser = async (args: object) => {
   }
 }
 
-const updateUser = async (id: string, args: object) => {
-
-  return null
+const updateUser = async (args: any) => {
+  try {
+    const {id, data} = args
+    return await UserModel.findByIdAndUpdate(id, {...data}, {new: true})
+  } catch (error) {
+    console.error(error)
+    return new Error("Internal error")
+  }
 }
 
 export default {

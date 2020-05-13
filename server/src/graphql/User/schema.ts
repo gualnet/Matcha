@@ -1,6 +1,6 @@
 import * as graphql from 'graphql';
 
-import UserType from './type';
+import UserType, {inputUpdateUserType} from './type';
 import UserHandler from '../../handlers/User'
 
 const { GraphQLSchema, GraphQLObjectType, GraphQLList, GraphQLID, GraphQLString } = graphql;
@@ -12,8 +12,8 @@ const userQueries = new GraphQLObjectType({
 			type    : UserType,
 			args    : { id: { type: GraphQLID } },
 
-			resolve(parent, args) {
-        return UserHandler.getUserById(args.id)
+			async resolve(parent, args) {
+        return await UserHandler.getUserById(args.id)
 			}
     },
     users: {
@@ -35,19 +35,18 @@ const userMutation = new GraphQLObjectType({
         mail: { type: GraphQLString },
         password: { type: GraphQLString },
       },
-      resolve(parent, args) {
-        return UserHandler.createNewUser(args)
+      async resolve(parent, args) {
+        return await UserHandler.createNewUser(args)
       }
     },
     updateUser: {
       type: UserType,
       args: {
-        login: { type: GraphQLString },
-        mail: { type: GraphQLString },
-        password: { type: GraphQLString },
+        id: { type: GraphQLString },
+        data: { type: inputUpdateUserType},
       },
-      resolve(parent, args) {
-        return UserHandler.updateUser("0", args)
+      async resolve(parent, args) {
+        return await UserHandler.updateUser(args)
       }
     }
   },

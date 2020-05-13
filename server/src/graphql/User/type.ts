@@ -35,4 +35,29 @@ const UserType = new GraphQLObjectType({
   fields: userFields(),
 });
 
+const inputUpdateUserFields = () => {
+  return {
+    firstName: { type: GraphQLString },
+    lastName: { type: GraphQLString },
+    age: { type: GraphQLInt },
+    gender: { type: GraphQLInt },
+    orientation: { type: GraphQLInt },
+    bio: { type: GraphQLString },
+    interest: { type: GraphQLString },
+    popularity: { type: GraphQLInt },
+    geolocAuth: { type: GraphQLInt },
+    blockedUsers: { type: GraphQLString },
+    reported: { type: GraphQLString },
+    height: { type: GraphQLFloat },
+    eyeColor: { type: GraphQLInt },
+    hairColor: { type: GraphQLInt },
+    connected: { type: GraphQLBoolean }
+  }
+};
+
+export const inputUpdateUserType = new graphql.GraphQLInputObjectType({
+  name: "UpdateUserInput",
+  fields: inputUpdateUserFields(),
+})
+
 export default UserType;
