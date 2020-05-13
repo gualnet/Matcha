@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose";
 
 
 const UserSchema: Schema = new mongoose.Schema({
-  id: {type: String, required: true, unique: true},
+  // id: {type: String, unique: true},
   token: String,
   login: {type: String, unique: true},
   password: String,
@@ -28,7 +28,7 @@ const UserSchema: Schema = new mongoose.Schema({
 export default mongoose.model('User', UserSchema);
 
 export interface IUser extends Document {
-  id: String,
+  // id: String,
   token: String,
   login: String,
   password: String,
