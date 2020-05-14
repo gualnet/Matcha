@@ -1,0 +1,54 @@
+// @import 'NavBarButtons'
+@import '../../assets/scss/palette.scss';
+
+
+@media screen and (max-width: 1024px) {
+	.navbar {
+		// border: 1px solid red;
+		background-color: $color2;
+	}
+	.navbar-menu {
+		// background-color: $color2;
+		// background-color: rgb(243, 122, 122);
+	}
+}
+
+@media screen and (min-width: 1024px) {
+	// .navbar {
+	// 	// background-color: $color2;
+	// 	background-color: rgb(120, 231, 144);
+	// 	// background-color: rgb(68, 92, 149); // facebook blue
+	// 	border-bottom: solid 1px rgba(255, 255, 255, 0.5);
+	// 	// border: solid 1px rgba(120, 120, 120, 0.5);
+	// }
+	.navbar-menu {
+		background-color: $color2;
+		// background-color: rgb(120, 231, 144);
+		// background-color: rgb(68, 92, 149); // facebook blue
+		border-bottom: solid 1px rgba(255, 255, 255, 0.5);
+		// border: solid 1px rgba(120, 120, 120, 0.5);
+	}
+	
+	.navbar-start {
+		margin-left: 12vw;
+	}
+	
+	.navbar-end {
+		margin-right: 12vw;
+	}
+	
+	.navbar-item:hover{
+		// padding: 0 0 0 0;
+		// background-color: rgba(0, 0, 0, 0.2);
+	}
+	
+	.navbar a {
+		color: white;
+		// color: $color5-75;
+		
+		&:hover {
+			// color: $color1-75;
+			// background-color: rgba(0, 0, 0, 0.2);
+		}
+	}
+}

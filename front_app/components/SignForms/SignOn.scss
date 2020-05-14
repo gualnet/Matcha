@@ -1,0 +1,62 @@
+@import '../../assets/scss/palette.scss';
+
+#signonWrapper {
+	// * look
+	background-color: rgba(0, 0, 0, 0.1);
+	border: solid 1px rgba(120, 120, 120, 0.5);
+
+	// * position
+	position: relative;
+	top: -61%;
+	// left: -60%;
+	// margin: 0 0 0 32vw;
+	// width: 30%; height: 35%;
+
+	// * animation
+	transition: transform 2s;
+	transition-delay: 1.7s;
+	transform: rotateY(0deg);
+
+	// * sub-elements
+	input {
+		background-color: rgba(0, 0, 0, 0.11);
+		border: none;
+		color: $color5-75;
+	}
+
+	.input.is-danger {
+		border: 1px solid #ff0936;
+	}
+
+}
+
+#signonWrapper_back {
+
+	background-color: rgba(0, 0, 0, 0.1);
+	border: solid 1px rgba(120, 120, 120, 0.5);
+
+	position: relative;
+	top: -61%;
+	// margin: 0 0 0 32vw;
+	// width: 30%; height: 35%;
+
+	transition: 2s;
+	transform: rotateY(90deg);
+
+	input {
+		background-color: rgba(0, 0, 0, 0.11);
+		border: none;
+		color: $color5-75;
+	}
+}
+
+#signonSubmitBtn {
+	background-color: rgba(0, 0, 0, 0);
+	color: $color5-50;
+	border: solid 1px $color5-25;
+}
+#signonSubmitBtn:hover {
+	background-color: rgba(0, 0, 0, 0);
+	color: $color5;
+	border: solid 2px $color5-25;
+}

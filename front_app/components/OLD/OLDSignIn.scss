@@ -1,0 +1,64 @@
+@import '../../assets/scss/palette.scss';
+
+#signinColumns {
+	
+}
+
+#signinWrapper {
+	// * styling
+	background-color: rgba(0, 0, 0, 0.1);
+	border: solid 1px rgba(120, 120, 120, 0.5);
+
+	// * position
+	// position: absolute;
+	// margin: 0 0 0 32vw;
+	// width: 30%;
+	// height: 20%;
+
+	// * animation
+	transition: transform 2s;
+	transition-delay: 1.7s;
+	transform: rotateY(0deg);
+	transform: height(20%);
+
+	// * sub-elements
+	input {
+		background-color: rgba(0, 0, 0, 0.11);
+		border: none;
+		color: $color5-75;
+// 		// border: solid 1px rgba(0, 0, 0, 0.2);
+	}
+}
+
+#signinWrapper_back {
+
+	background-color: rgba(0, 0, 0, 0.1);
+	border: solid 1px rgba(120, 120, 120, 0.5);
+
+	// position: absolute;
+	// margin: 0 0 0 32vw;
+	// width: 30%;
+	// height: 35%;
+
+	transition: 2s;
+	transform: rotateY(90deg);
+	transform: height(35%);
+
+	input {
+		background-color: rgba(0, 0, 0, 0.11);
+		border: none;
+		color: $color5-75;
+		// border: solid 1px rgba(0, 0, 0, 0.2);
+	}
+}
+
+#signinSubmitBtn {
+	background-color: rgba(0, 0, 0, 0);
+	color: $color5-50;
+	border: solid 1px $color5-25;
+}
+#signinSubmitBtn:hover {
+	background-color: rgba(0, 0, 0, 0);
+	color: $color5;
+	border: solid 2px $color5-25;
+}

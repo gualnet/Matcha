@@ -1,0 +1,54 @@
+@media screen and (max-width: 1024px) {
+}
+
+@media screen and (min-width: 1024px) {
+	#registrationFormWrapper #formBody{
+		// border: 1px solid blue;
+		width: 500px; height: 250px;
+		background-color: rgba(48, 81, 212, 0.025);
+		box-shadow: 1px 1px 20px 2px rgba(48, 81, 212, 0.1);
+	
+		transform: translate(-50%);
+		margin: 0 50% 0 50%;
+	}
+	
+	#registrationFormWrapper #formFooter{
+		// border: 1px solid cyan;
+		width: 500px; height: 50px;
+		background-color: rgba(48, 81, 212, 0.075);
+		border-bottom-right-radius: 10px;
+		border-bottom-left-radius: 10px;
+		box-shadow: 1px 1px 20px 2px rgba(48, 81, 212, 0.1);
+	
+		transform: translate(-50%);
+		margin: 0 50% 0 50%;
+		border: rgba(255, 0, 0, 0.267);
+	}
+	
+	#registrationFormWrapper .input {
+		width: 300px;
+		margin-left: 100px;
+	}
+	
+	#registrationFormWrapper {
+		#loginIndicator {
+			width: 10px; height: 10px;
+			width: 20px; height: 20px;
+			display: inline-block;
+			// transform: translate(25%, 41%);
+			transform: translate(-50%, -50%);
+			border-radius: 20px;
+		}
+	
+		.indicatorOk {
+			// display: inline-block;
+			background-color: rgba(3, 190, 162, 0.9);
+		}
+	
+		.indicatorNok {
+			// display: inline-block;
+			background-color: rgba(255, 0, 0, 0.9);
+		}
+	}	
+}
+

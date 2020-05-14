@@ -1,0 +1,42 @@
+	*Yeux
+noirs
+marron
+noisettes
+bleus
+verts
+gris
+	*Cheveux LONGUEUR
+rasés
+courts
+mi-longs
+longs
+	*Cheveux COULEUR
+blancs
+gris
+poivre et sel
+platine
+blonds
+châtains
+roux
+bruns
+noirs
+couleurs vives
+	*Cheveux STYLE
+raides
+ondulés
+bouclés
+frisés
+afro
+dreads
+crête
+tresses africaines
+frange
+	*Origines
+européennes
+afro
+maghrébines
+asiatiques
+métisses
+eurasiennes
+latines
+antillaises

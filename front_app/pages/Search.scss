@@ -1,0 +1,58 @@
+
+#searchWrapper {
+	display: flex;
+	width: 100vw;
+	height: 93vh;
+}
+#searchWrapper #tests {
+	max-width: 25%;
+}
+
+#searchWrapper #memberPres {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+}
+
+#searchWrapper .card {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	width: 256px;
+	height: 256px;
+	margin: 10px;
+
+	:hover {
+		box-shadow: 2px 2px 10px 0px rgb(219, 217, 248);
+	}
+
+}
+
+#searchWrapper .card {
+	figure {
+		width: 256px;
+		border: solid 10px rgba(36, 64, 177, 0.0);
+		// box-shadow: 0px 0px 5px rgba(36, 64, 177, 0.1);
+		// margin: 10px 10px 0px 10px;
+	}
+
+	#dispDist {
+		display: inline-flex;
+		line-height: 16px;
+	}
+}
+
+#searchWrapper .underPan {
+	display: flex;
+	justify-content: space-evenly;
+}
+
+#searchWrapper .svg {
+	height: 20px;
+}
+
+// ! dev
+#searchWrapper .pretty-json-container {
+	font-size: medium;
+}
