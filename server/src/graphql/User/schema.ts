@@ -8,7 +8,7 @@ const { GraphQLSchema, GraphQLObjectType, GraphQLList, GraphQLID, GraphQLString 
 const userQueries = new GraphQLObjectType({
 	name   : 'userQueries',
 	fields : {
-		user : {
+		getUser : {
 			type    : UserType,
 			args    : { id: { type: GraphQLID } },
 
@@ -16,7 +16,7 @@ const userQueries = new GraphQLObjectType({
         return await UserHandler.getUserById(args.id)
 			}
     },
-    users: {
+    getUsers: {
       type: new GraphQLList(UserType),
       async resolve(parent, args) {
         return UserHandler.getAllUsers()
