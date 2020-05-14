@@ -4,11 +4,11 @@
 			"name": "ROOT_DIR",
 			"path": "../"
 		},{
-			"name": "SERVER",
+			"name": "USER_SERVER",
 			"path": "../server"
 		},{
 			"name": "CLIENT",
-			"path": "../client"
+			"path": "../../MatchaClient"
 		},
 	],
 	"settings": {}
