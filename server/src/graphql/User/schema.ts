@@ -60,6 +60,16 @@ const userMutation = new GraphQLObjectType({
         return await MutationsResolver.login(parent, args, context, info)
       }
     },
+    logout: {
+      type: UserType,
+      args: {
+        id: { type: GraphQLString },
+        token: { type: GraphQLString },
+      },
+      async resolve(parent, args, context, info) {
+        return await MutationsResolver.logout(parent, args, context, info)
+      }
+    },
   },
 });
 
