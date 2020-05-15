@@ -2,6 +2,7 @@ import * as graphql from 'graphql';
 
 import UserType, {inputUpdateUserType} from './type';
 import UserHandler from '../../handlers/User'
+import MutationsResolver from '../../resolvers/Mutations'
 
 const { GraphQLSchema, GraphQLObjectType, GraphQLList, GraphQLID, GraphQLString } = graphql;
 
@@ -12,13 +13,13 @@ const userQueries = new GraphQLObjectType({
 			type    : UserType,
 			args    : { id: { type: GraphQLID } },
 
-			async resolve(parent, args) {
+			async resolve(args) {
         return await UserHandler.getUserById(args.id)
 			}
     },
     getUsers: {
       type: new GraphQLList(UserType),
-      async resolve(parent, args) {
+      async resolve() {
         return UserHandler.getAllUsers()
       }
     },
@@ -35,7 +36,7 @@ const userMutation = new GraphQLObjectType({
         mail: { type: GraphQLString },
         password: { type: GraphQLString },
       },
-      async resolve(parent, args) {
+      async resolve(args) {
         return await UserHandler.createNewUser(args)
       }
     },
@@ -45,10 +46,20 @@ const userMutation = new GraphQLObjectType({
         id: { type: GraphQLString },
         data: { type: inputUpdateUserType},
       },
-      async resolve(parent, args) {
+      async resolve(args) {
         return await UserHandler.updateUser(args)
       }
-    }
+    },
+    login: {
+      type: UserType,
+      args: {
+        login: { type: GraphQLString },
+        password: { type: GraphQLString },
+      },
+      async resolve(parent, args, context, info) {
+        return await MutationsResolver.login(parent, args, context, info)
+      }
+    },
   },
 });
 
