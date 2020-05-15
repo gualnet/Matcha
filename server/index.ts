@@ -1,5 +1,7 @@
 import express from "express";
 import graphqlHTTP from 'express-graphql' ;
+import cors from 'cors';
+
 // import mongoose from "mongoose";
 import db from './src/database/config';
 
@@ -7,10 +9,13 @@ import userSchema from "./src/graphql/User/schema";
 
 
 
-const app = express();
-
 
 async function main(){
+
+  const app = express();
+
+  app.use(cors())
+
   await db.initialiseConnection()
   
   app.use("/graphql", graphqlHTTP({
